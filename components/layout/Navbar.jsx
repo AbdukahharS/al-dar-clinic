@@ -98,7 +98,7 @@ const Navbar = () => {
               Login
             </Button>
           )}
-          {isAuthenticated && !loading && (
+          {/* {isAuthenticated && !loading && (
             <Link href='/cart' className=''>
               <Button
                 variant='outline'
@@ -108,7 +108,7 @@ const Navbar = () => {
                 <FaCartShopping />
               </Button>
             </Link>
-          )}
+          )} */}
           <Drawer />
         </div>
       </div>

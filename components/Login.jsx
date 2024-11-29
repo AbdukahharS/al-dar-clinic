@@ -1,13 +1,14 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { FaCircleXmark } from 'react-icons/fa6'
+import { FaCircleXmark, FaEye, FaEyeSlash } from 'react-icons/fa6' // Icons for show/hide
 import { Poppins } from 'next/font/google'
 import { useForm } from 'react-hook-form'
+import { useState } from 'react'
 
 import useAuth from '@/hooks/useAuth'
 import Button from './Button'
-import illustation from '@/public/images/login.svg'
+import illustration from '@/public/images/login.svg'
 import google from '@/public/icons/google.svg'
 import phone from '@/public/icons/phone.svg'
 
@@ -18,7 +19,7 @@ const variants = {
 
 // Importing Poppins font using next/font
 const poppins = Poppins({
-  weight: ['400', '500', '600'], // Specify weights
+  weight: ['400', '500', '600'],
   subsets: ['latin'],
   display: 'swap',
 })
@@ -26,17 +27,22 @@ const poppins = Poppins({
 const Login = ({ isOpen, onClose }) => {
   const { login } = useAuth()
   const {
-    register, // Register function for form fields
-    handleSubmit, // Function to handle form submission
-    formState: { errors }, // Object to access form errors
+    register,
+    handleSubmit,
+    formState: { errors },
   } = useForm()
 
   const onSubmit = (data) => {
     login(data)
-    onClose()
   }
 
-  // Combine error messages
+  // State to toggle password visibility
+  const [showPassword, setShowPassword] = useState(false)
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev)
+  }
+
   const errorMessage = errors.email?.message || errors.password?.message || null
 
   return (
@@ -47,7 +53,7 @@ const Login = ({ isOpen, onClose }) => {
           className='fixed inset-0 bg-black opacity-50 z-40'
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.6 }}
-          transition={{ duration: 0.3, stiffness: 20 }}
+          transition={{ duration: 0.3 }}
           onClick={onClose}
         />
       )}
@@ -76,7 +82,6 @@ const Login = ({ isOpen, onClose }) => {
             Login to continue to our website
           </p>
 
-          {/* Animated Error Message */}
           <motion.div
             className='bg-black rounded-full text-xs w-fit mx-auto mt-2 text-white py-[10px] px-6 mb-9'
             initial={{ opacity: 0 }}
@@ -94,7 +99,7 @@ const Login = ({ isOpen, onClose }) => {
                 {...register('email', {
                   required: 'Fields cannot be empty',
                   pattern: {
-                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, // Email format regex
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                     message: 'Invalid email format',
                   },
                 })}
@@ -104,9 +109,9 @@ const Login = ({ isOpen, onClose }) => {
                 placeholder='Email'
               />
             </div>
-            <div className='mb-6'>
+            <div className='mb-6 relative'>
               <input
-                type='password'
+                type={showPassword ? 'text' : 'password'}
                 id='password'
                 {...register('password', {
                   required: 'Fields cannot be empty',
@@ -116,6 +121,14 @@ const Login = ({ isOpen, onClose }) => {
                 }`}
                 placeholder='Password'
               />
+              {/* Show/Hide Button */}
+              <button
+                type='button'
+                onClick={togglePasswordVisibility}
+                className='absolute top-1/2 right-3 -translate-y-1/2 text-gray-500'
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
             </div>
             <Link href='#' className='text-[#313C66] text-sm text-right block'>
               Forgot Password?
@@ -140,7 +153,7 @@ const Login = ({ isOpen, onClose }) => {
           </div>
         </div>
         <div className='h-full w-[445px] bg-primary rounded-2xl hidden lg:block'>
-          <Image src={illustation} alt='Physio therapy' />
+          <Image src={illustration} alt='Physio therapy' />
         </div>
       </motion.div>
     </>
