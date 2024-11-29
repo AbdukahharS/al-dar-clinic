@@ -1,10 +1,11 @@
+import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { FaCircleXmark, FaEye, FaEyeSlash } from 'react-icons/fa6' // Icons for show/hide
+import { FaCircleXmark, FaEye, FaEyeSlash } from 'react-icons/fa6'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { Poppins } from 'next/font/google'
 import { useForm } from 'react-hook-form'
-import { useState } from 'react'
 
 import useAuth from '@/hooks/useAuth'
 import Button from './Button'
@@ -25,15 +26,16 @@ const poppins = Poppins({
 })
 
 const Login = ({ isOpen, onClose }) => {
-  const { login } = useAuth()
+  const { login, loading } = useAuth()
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm()
 
-  const onSubmit = (data) => {
-    login(data)
+  const onSubmit = async (data) => {
+    await login(data)
+    onClose()
   }
 
   // State to toggle password visibility
@@ -121,7 +123,6 @@ const Login = ({ isOpen, onClose }) => {
                 }`}
                 placeholder='Password'
               />
-              {/* Show/Hide Button */}
               <button
                 type='button'
                 onClick={togglePasswordVisibility}
@@ -133,8 +134,14 @@ const Login = ({ isOpen, onClose }) => {
             <Link href='#' className='text-[#313C66] text-sm text-right block'>
               Forgot Password?
             </Link>
-            <Button type='submit' className='w-full mt-7 rounded-lg text-xl'>
-              Login
+            <Button
+              type='submit'
+              className='w-full mt-7 rounded-lg text-xl flex flex-row justify-center items-center gap-4'
+            >
+              {loading ? 'Logging in...' : 'Login'}
+              {loading && (
+                <AiOutlineLoading3Quarters className='animate-spin h-5 w-5' />
+              )}
             </Button>
           </form>
           <p className='text-sm text-center mt-5'>

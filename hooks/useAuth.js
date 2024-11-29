@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
+import toast from 'react-hot-toast'
 import {
   loginStart,
   loginSuccess,
@@ -14,9 +15,10 @@ const useAuth = () => {
     dispatch(loginStart())
     try {
       // Handle login logic here (API call, etc.)
-      dispatch(loginSuccess(credentials))
+      // dispatch(loginSuccess(credentials))
+      toast.success('Congrats! You have successfully logged In')
     } catch (error) {
-      console.error('Login failed:', error)
+      toast.error('Something went wrong with login. Please, try again!')
       dispatch(loginFailure())
     }
   }

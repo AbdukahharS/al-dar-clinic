@@ -1,4 +1,5 @@
 import { Provider } from 'react-redux'
+import { Toaster } from 'react-hot-toast'
 
 import store from '../redux/store'
 import Navbar from '@/components/layout/Navbar'
@@ -13,6 +14,7 @@ export default function App({ Component, pageProps }) {
       <Navbar />
       <Component {...pageProps} />
       <Footer />
+      <Toaster />
     </Provider>
   )
 }
