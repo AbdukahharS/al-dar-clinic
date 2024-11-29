@@ -29,17 +29,8 @@ const AnimatedLink = ({ href, children, ...props }) => {
   )
 }
 
-const content = (
-  <div>
-    <h2 className='text-2xl font-bold mb-4'>This is a Global Popup</h2>
-    <p className='text-lg'>
-      You can trigger this popup from any component in your app.
-    </p>
-  </div>
-)
-
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
 
   const path = usePathname()
   const { isAuthenticated, user, loading } = useAuth()

@@ -5,7 +5,6 @@ import {
   loginFailure,
   logout,
 } from '../redux/slices/authSlice'
-import axios from 'axios'
 
 const useAuth = () => {
   const dispatch = useDispatch()
@@ -14,8 +13,8 @@ const useAuth = () => {
   const login = async (credentials) => {
     dispatch(loginStart())
     try {
-      const response = await axios.post('/api/login', credentials) // Replace with your API endpoint
-      dispatch(loginSuccess(response.data.user))
+      // Handle login logic here (API call, etc.)
+      dispatch(loginSuccess(credentials))
     } catch (error) {
       console.error('Login failed:', error)
       dispatch(loginFailure())

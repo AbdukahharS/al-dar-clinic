@@ -1,10 +1,11 @@
-import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { FaCircleXmark } from 'react-icons/fa6'
 import { Poppins } from 'next/font/google'
+import { useForm } from 'react-hook-form'
 
+import useAuth from '@/hooks/useAuth'
 import Button from './Button'
 import illustation from '@/public/images/login.svg'
 import google from '@/public/icons/google.svg'
@@ -17,12 +18,27 @@ const variants = {
 
 // Importing Poppins font using next/font
 const poppins = Poppins({
-  weight: ['400', '600'], // You can specify weights you need
+  weight: ['400', '500', '600'], // Specify weights
   subsets: ['latin'],
-  display: 'swap', // Optional: helps with font loading
+  display: 'swap',
 })
 
 const Login = ({ isOpen, onClose }) => {
+  const { login } = useAuth()
+  const {
+    register, // Register function for form fields
+    handleSubmit, // Function to handle form submission
+    formState: { errors }, // Object to access form errors
+  } = useForm()
+
+  const onSubmit = (data) => {
+    login(data)
+    onClose()
+  }
+
+  // Combine error messages
+  const errorMessage = errors.email?.message || errors.password?.message || null
+
   return (
     <>
       {/* Background overlay */}
@@ -59,15 +75,32 @@ const Login = ({ isOpen, onClose }) => {
           <p className='text-center text-sm opacity-80 tracking-wide'>
             Login to continue to our website
           </p>
-          <div className='bg-black rounded-full text-xs w-fit mx-auto mt-2 text-white py-[10px] px-6 mb-9'>
-            Fields cannot be empty
-          </div>
-          <form>
+
+          {/* Animated Error Message */}
+          <motion.div
+            className='bg-black rounded-full text-xs w-fit mx-auto mt-2 text-white py-[10px] px-6 mb-9'
+            initial={{ opacity: 0 }}
+            animate={errorMessage ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {errorMessage}
+          </motion.div>
+
+          <form onSubmit={handleSubmit(onSubmit)} noValidate>
             <div className='mb-4'>
               <input
                 type='email'
                 id='email'
-                className='w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500'
+                {...register('email', {
+                  required: 'Fields cannot be empty',
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, // Email format regex
+                    message: 'Invalid email format',
+                  },
+                })}
+                className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
+                  errors.email ? 'border-red-500' : 'border-gray-300'
+                }`}
                 placeholder='Email'
               />
             </div>
@@ -75,7 +108,12 @@ const Login = ({ isOpen, onClose }) => {
               <input
                 type='password'
                 id='password'
-                className='w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500'
+                {...register('password', {
+                  required: 'Fields cannot be empty',
+                })}
+                className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
+                  errors.password ? 'border-red-500' : 'border-gray-300'
+                }`}
                 placeholder='Password'
               />
             </div>
@@ -85,21 +123,21 @@ const Login = ({ isOpen, onClose }) => {
             <Button type='submit' className='w-full mt-7 rounded-lg text-xl'>
               Login
             </Button>
-            <p className='text-sm text-center mt-5'>
-              Don&apos;t have an account?{' '}
-              <Link href='/signup' className='text-primary'>
-                Sign up
-              </Link>
-            </p>
-            <div className='flex flex-row justify-center gap-4 mt-5'>
-              <Button variant='ghost' size='iconSM'>
-                <Image src={phone} alt='Phone' loading='lazy' />
-              </Button>
-              <Button variant='ghost' size='iconSM'>
-                <Image src={google} alt='Google' loading='lazy' />
-              </Button>
-            </div>
           </form>
+          <p className='text-sm text-center mt-5'>
+            Don&apos;t have an account?{' '}
+            <Link href='/signup' className='text-primary'>
+              Sign up
+            </Link>
+          </p>
+          <div className='flex flex-row justify-center gap-4 mt-5'>
+            <Button variant='ghost' size='iconSM'>
+              <Image src={phone} alt='Phone' loading='lazy' />
+            </Button>
+            <Button variant='ghost' size='iconSM'>
+              <Image src={google} alt='Google' loading='lazy' />
+            </Button>
+          </div>
         </div>
         <div className='h-full w-[445px] bg-primary rounded-2xl hidden lg:block'>
           <Image src={illustation} alt='Physio therapy' />
