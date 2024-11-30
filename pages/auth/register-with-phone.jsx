@@ -5,7 +5,9 @@ import { motion } from 'framer-motion'
 import { FaEye, FaEyeSlash } from 'react-icons/fa6'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { Inter } from 'next/font/google'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
+import PhoneInput from 'react-phone-number-input'
+import 'react-phone-number-input/style.css'
 
 import useAuth from '@/hooks/useAuth'
 import Button from '@/components/Button'
@@ -17,20 +19,19 @@ const inter = Inter({
   display: 'swap',
 })
 
-const Register = () => {
-  const { login, loading } = useAuth()
+const RegisterWithPhone = () => {
+  const { registerUser, loading } = useAuth()
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm()
 
   const onSubmit = async (data) => {
-    await login(data)
-    onClose()
+    await registerUser(data)
   }
 
-  // State to toggle password visibility
   const [showPassword, setShowPassword] = useState(false)
 
   const togglePasswordVisibility = () => {
@@ -55,14 +56,15 @@ const Register = () => {
             <h2 className='text-2xl font-semibold mb-2 text-center text-primary'>
               Sign Up
             </h2>
+            <p className='text-center text-primary mb-6'>
+              Create a new account
+            </p>
 
             <form onSubmit={handleSubmit(onSubmit)} noValidate>
               <div className='mb-4'>
-                <div className='flex flex-row justify-between'>
-                  <label htmlFor='name' className='text-primary'>
-                    Name*
-                  </label>
-                </div>
+                <label htmlFor='name' className='text-primary'>
+                  Name*
+                </label>
                 <input
                   type='text'
                   id='name'
@@ -75,50 +77,57 @@ const Register = () => {
                 />
                 <motion.p
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: errors.email ? 1 : 0 }}
+                  animate={{ opacity: errors.name ? 1 : 0 }}
                   transition={{ duration: 0.3 }}
                   className='text-red-500 text-sm mt-1'
-                  style={{ opacity: errors.email ? 1 : 0 }}
                 >
                   {errors.name?.message}
                 </motion.p>
               </div>
+
               <div className='mb-4'>
                 <div className='flex flex-row justify-between'>
-                  <label htmlFor='email' className='text-primary'>
-                    Email*
+                  <label htmlFor='phone' className='text-primary'>
+                    Phone*
                   </label>
                   <Link
-                    href='/auth/register-with-phone'
+                    href='/auth/register'
                     className='underline font-semibold text-[#2D3748]'
                   >
-                    Use Phone Instead
+                    Use email Instead
                   </Link>
                 </div>
-                <input
-                  type='email'
-                  id='email'
-                  {...register('email', {
-                    required: 'Email is required',
-                    pattern: {
-                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: 'Please enter correct email id',
-                    },
-                  })}
-                  className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
-                    errors.email ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                <Controller
+                  name='phone'
+                  control={control}
+                  defaultValue=''
+                  rules={{
+                    required: 'Phone number is required',
+                    validate: (value) =>
+                      value?.length >= 10 ||
+                      'Please enter a valid phone number',
+                  }}
+                  render={({ field }) => (
+                    <PhoneInput
+                      {...field}
+                      id='phone'
+                      defaultCountry='AE'
+                      className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
+                        errors.phone ? 'border-red-500' : 'border-gray-300'
+                      }`}
+                    />
+                  )}
                 />
                 <motion.p
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: errors.email ? 1 : 0 }}
+                  animate={{ opacity: errors.phone ? 1 : 0 }}
                   transition={{ duration: 0.3 }}
                   className='text-red-500 text-sm mt-1'
-                  style={{ opacity: errors.email ? 1 : 0 }}
                 >
-                  {errors.email?.message}
+                  {errors.phone?.message}
                 </motion.p>
               </div>
+
               <label htmlFor='password' className='text-primary'>
                 Password*
               </label>
@@ -128,6 +137,10 @@ const Register = () => {
                   id='password'
                   {...register('password', {
                     required: 'Password is required',
+                    minLength: {
+                      value: 6,
+                      message: 'Password must be at least 6 characters long',
+                    },
                   })}
                   className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
                     errors.password ? 'border-red-500' : 'border-gray-300'
@@ -146,26 +159,28 @@ const Register = () => {
                 animate={{ opacity: errors.password ? 1 : 0 }}
                 transition={{ duration: 0.3 }}
                 className='text-red-500 text-sm mt-1'
-                style={{ opacity: errors.password ? 1 : 0 }}
               >
                 {errors.password?.message}
               </motion.p>
+
               <div className='mt-6 flex flex-row justify-between items-center'>
                 <label className='inline-flex items-center'>
                   <input type='checkbox' className='form-checkbox h-5 w-5' />
                   <span className='ml-2 text-sm'>Remember Me</span>
                 </label>
               </div>
+
               <Button
                 type='submit'
                 className='w-full mt-7 text-lg flex flex-row justify-center items-center gap-4'
               >
-                {loading ? 'Logging up...' : 'Sign Up'}
+                {loading ? 'Signing up...' : 'Sign Up'}
                 {loading && (
                   <AiOutlineLoading3Quarters className='animate-spin h-5 w-5' />
                 )}
               </Button>
             </form>
+
             <p className='text-sm font-semibold text-center mt-4 text-black'>
               Already have an account?{' '}
               <Link href='/auth/login' className='font-bold text-base ml-4'>
@@ -179,4 +194,4 @@ const Register = () => {
   )
 }
 
-export default Register
+export default RegisterWithPhone
