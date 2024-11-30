@@ -84,7 +84,7 @@ const Navbar = () => {
                   className=' bg-gray-100 text-primary text-2xl'
                 >
                   {user?.profileImage ? (
-                    <Image src={user.profileImage} />
+                    <Image src={user.profileImage} alt='User Profile' />
                   ) : (
                     <FaUserLarge />
                   )}

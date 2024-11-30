@@ -6,6 +6,7 @@ import { FaBars, FaUserLarge, FaX } from 'react-icons/fa6'
 
 import useAuth from '@/hooks/useAuth'
 import Button from './Button'
+import Image from 'next/image'
 
 const variants = {
   open: {
@@ -54,7 +55,7 @@ export default function Drawer() {
                 className='bg-white !text-primary text-6xl !w-28 !h-28 mx-auto z-50 relative'
               >
                 {user?.profileImage ? (
-                  <Image src={user.profileImage} />
+                  <Image src={user.profileImage} alt='User profile' fill />
                 ) : (
                   <FaUserLarge />
                 )}

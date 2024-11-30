@@ -50,13 +50,13 @@ const About = () => {
           At ADR clinic treatment typically involves a range of professional
           activities aimed at helping patients recover from injuries, manage
           chronic conditions, and improve their overall physical well-being.
-          Here's a brief description of our physiotherapy clinic work:
+          Here&apos;s a brief description of our physiotherapy clinic work:
         </p>
         <ul className='list-disc p-5'>
           <li>
             <strong>Patient Assessment:</strong> ADR Physiotherapists evaluate
-            patients' conditions, develop treatment plans, and perform hands-on
-            therapy.
+            patients&apos; conditions, develop treatment plans, and perform
+            hands-on therapy.
           </li>
           <li>
             <strong>Treatment of Various Conditions:</strong> Addressing a wide
@@ -87,7 +87,7 @@ const About = () => {
         </ul>
         <p>
           Physiotherapy sessions typically last between 30 to 45 minutes,
-          depending on the patient's needs and the clinic&apos;s schedule.
+          depending on the patient&apos;s needs and the clinic&apos;s schedule.
         </p>
       </div>
       <div className='mt-24 flex flex-col md:flex-row items-stretch gap-20 w-full max-w-7xl mx-auto md:px-7'>
