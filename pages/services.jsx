@@ -236,8 +236,8 @@ const Services = () => {
         <p>
           Our osteopathy services focus on the health of the musculoskeletal
           system. Through manual manipulation, stretching, and massage, our
-          osteopaths help improve the body's overall health, reduce pain, and
-          enhance mobility. This holistic approach is effective in treating
+          osteopaths help improve the body&apos;s overall health, reduce pain,
+          and enhance mobility. This holistic approach is effective in treating
           various conditions, from back pain to migraines, promoting overall
           well-being.
         </p>

@@ -188,8 +188,8 @@ export default function Home() {
             <div className='bg-primary h-[1px] w-full my-4 md:my-6'></div>
             <p className='text-lg opacity-90 indent-8'>
               At <b>Al-Dar</b>, we understand that the right equipment can make
-              a significant difference in your recovery process. Whether you're
-              receiving treatment at our facility or continuing your
+              a significant difference in your recovery process. Whether
+              you&apos;re receiving treatment at our facility or continuing your
               rehabilitation at home, access to proper equipment is crucial for
               achieving optimal results.
             </p>
