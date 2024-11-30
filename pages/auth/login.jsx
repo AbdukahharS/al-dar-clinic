@@ -22,8 +22,7 @@ const inter = Inter({
   display: 'swap',
 })
 
-const Login = ({ isOpen = true, onClose }) => {
-  const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false)
+const Login = () => {
   const { login, loading } = useAuth()
   const {
     register,
@@ -41,11 +40,6 @@ const Login = ({ isOpen = true, onClose }) => {
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev)
-  }
-
-  const onForgotPassword = (e) => {
-    e.preventDefault()
-    setIsForgotPasswordOpen(true)
   }
 
   return (
@@ -162,7 +156,7 @@ const Login = ({ isOpen = true, onClose }) => {
             </form>
             <p className='text-sm font-semibold text-center mt-4 text-black'>
               Don&apos;t have an account?{' '}
-              <Link href='/signup' className='font-bold text-base ml-4'>
+              <Link href='/register' className='font-bold text-base ml-4'>
                 Sign up
               </Link>
             </p>
