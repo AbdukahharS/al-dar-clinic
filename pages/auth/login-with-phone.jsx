@@ -5,7 +5,9 @@ import { motion } from 'framer-motion'
 import { FaEye, FaEyeSlash } from 'react-icons/fa6'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { Inter } from 'next/font/google'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
+import PhoneInput from 'react-phone-number-input'
+import 'react-phone-number-input/style.css'
 
 import useAuth from '@/hooks/useAuth'
 import Button from '@/components/Button'
@@ -17,13 +19,14 @@ const inter = Inter({
   display: 'swap',
 })
 
-const Login = () => {
+const LoginWithPhone = () => {
   const { login, loading } = useAuth()
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
-  } = useForm()
+  } = useForm() // Ensuring register is defined here
 
   const onSubmit = async (data) => {
     await login(data)
@@ -53,72 +56,57 @@ const Login = () => {
             className={`w-full lg:w-auto lg:flex-1 px-2 py-10 max-w-96 mx-auto ${inter.className}`}
           >
             <h2 className='text-2xl font-semibold mb-2 text-center text-primary'>
-              Sign Up
+              Sign in
             </h2>
+            <p className='text-center text-primary mb-6'>Sign In to continue</p>
 
             <form onSubmit={handleSubmit(onSubmit)} noValidate>
               <div className='mb-4'>
                 <div className='flex flex-row justify-between'>
-                  <label htmlFor='name' className='text-primary'>
-                    Name*
-                  </label>
-                </div>
-                <input
-                  type='text'
-                  id='name'
-                  {...register('name', {
-                    required: 'Name is required',
-                  })}
-                  className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
-                    errors.name ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                />
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: errors.email ? 1 : 0 }}
-                  transition={{ duration: 0.3 }}
-                  className='text-red-500 text-sm mt-1'
-                  style={{ opacity: errors.email ? 1 : 0 }}
-                >
-                  {errors.name?.message}
-                </motion.p>
-              </div>
-              <div className='mb-4'>
-                <div className='flex flex-row justify-between'>
-                  <label htmlFor='email' className='text-primary'>
-                    Email*
+                  <label htmlFor='phone' className='text-primary'>
+                    Phone*
                   </label>
                   <Link
-                    href='/auth/register-with-phone'
+                    href='/auth/login'
                     className='underline font-semibold text-[#2D3748]'
                   >
-                    Use Phone Instead
+                    Use email Instead
                   </Link>
                 </div>
-                <input
-                  type='email'
-                  id='email'
-                  {...register('email', {
-                    required: 'Email is required',
-                    pattern: {
-                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: 'Please enter correct email id',
-                    },
-                  })}
-                  className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
-                    errors.email ? 'border-red-500' : 'border-gray-300'
-                  }`}
+
+                {/* PhoneInput with react-hook-form Controller */}
+                <Controller
+                  name='phone'
+                  control={control}
+                  defaultValue=''
+                  rules={{
+                    required: 'Phone number is required',
+                    validate: (value) =>
+                      value?.length >= 10 ||
+                      'Please enter a valid phone number',
+                  }}
+                  render={({ field }) => (
+                    <PhoneInput
+                      {...field}
+                      id='phone'
+                      defaultCountry='AE'
+                      className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-0 ${
+                        errors.phone ? 'border-red-500' : 'border-gray-300'
+                      }`}
+                    />
+                  )}
                 />
+
                 <motion.p
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: errors.email ? 1 : 0 }}
+                  animate={{ opacity: errors.phone ? 1 : 0 }}
                   transition={{ duration: 0.3 }}
                   className='text-red-500 text-sm mt-1'
-                  style={{ opacity: errors.email ? 1 : 0 }}
                 >
-                  {errors.email?.message}
+                  {errors.phone?.message}
                 </motion.p>
               </div>
+
               <label htmlFor='password' className='text-primary'>
                 Password*
               </label>
@@ -146,30 +134,39 @@ const Login = () => {
                 animate={{ opacity: errors.password ? 1 : 0 }}
                 transition={{ duration: 0.3 }}
                 className='text-red-500 text-sm mt-1'
-                style={{ opacity: errors.password ? 1 : 0 }}
               >
                 {errors.password?.message}
               </motion.p>
+
               <div className='mt-6 flex flex-row justify-between items-center'>
                 <label className='inline-flex items-center'>
                   <input type='checkbox' className='form-checkbox h-5 w-5' />
                   <span className='ml-2 text-sm'>Remember Me</span>
                 </label>
+
+                <Link
+                  href='/auth/forgot-password'
+                  className='text-primary text-sm font-semibold'
+                >
+                  Forgot Password
+                </Link>
               </div>
+
               <Button
                 type='submit'
                 className='w-full mt-7 text-lg flex flex-row justify-center items-center gap-4'
               >
-                {loading ? 'Logging up...' : 'Sign Up'}
+                {loading ? 'Logging in...' : 'Sign In'}
                 {loading && (
                   <AiOutlineLoading3Quarters className='animate-spin h-5 w-5' />
                 )}
               </Button>
             </form>
+
             <p className='text-sm font-semibold text-center mt-4 text-black'>
-              Already have an account?{' '}
-              <Link href='/auth/login' className='font-bold text-base ml-4'>
-                Sign In
+              Don&apos;t have an account?{' '}
+              <Link href='/auth/register' className='font-bold text-base ml-4'>
+                Sign up
               </Link>
             </p>
           </div>
@@ -179,4 +176,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default LoginWithPhone

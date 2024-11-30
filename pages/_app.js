@@ -7,7 +7,6 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import '@/styles/globals.css'
 import '@/styles/fonts.css'
-import '@/styles/custom-carousel.css'
 
 export default function App({ Component, pageProps }) {
   const path = usePathname()
