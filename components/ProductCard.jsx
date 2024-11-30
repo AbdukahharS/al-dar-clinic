@@ -16,10 +16,22 @@ const ProductCard = ({ product }) => {
         />
       </div>
       <div className='flex flex-row justify-between items-center mt-5'>
-        <h4 className='text-xl'>{product.name}</h4>
-        <Link href={product.link || `/products/${product.id}`}>
-          <Button size='sm'>Explore</Button>
-        </Link>
+        <div>
+          {product.price && <b>Dhs {product.price}</b>}
+          <h4 className='text-xl'>{product.name}</h4>
+        </div>
+        <div className='flex flex-col items-center gap-[6px]'>
+          <Link href={product.link || `/products/${product.id}`}>
+            <Button size='sm' className='whitespace-nowrap'>
+              {product.id ? 'Buy now' : 'Explore'}
+            </Button>
+          </Link>
+          {product.id && (
+            <Button variant='ghost' className='underline text-xs !p-0'>
+              + Add to cart
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   )

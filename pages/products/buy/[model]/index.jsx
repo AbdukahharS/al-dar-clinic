@@ -8,7 +8,7 @@ import equipments from '@/public/images/equipments.webp'
 import devices from '@/public/images/devices.webp'
 import accessories from '@/public/images/accessories.webp'
 
-const b2c = () => {
+const Model = () => {
   const params = useParams()
 
   const categories = [
@@ -50,4 +50,4 @@ const b2c = () => {
   )
 }
 
-export default b2c
+export default Model
