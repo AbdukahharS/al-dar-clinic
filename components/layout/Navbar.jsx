@@ -47,6 +47,7 @@ const Navbar = () => {
             alt='AL Dar Rehabilitation Clinic'
             width='auto'
             className='h-16 md:h-24 w-fit'
+            loading='lazy'
           />
         </Link>
         <div className='gap-4 xl:gap-10 items-center hidden lg:flex'>
@@ -98,17 +99,7 @@ const Navbar = () => {
               Login
             </Button>
           )}
-          {/* {isAuthenticated && !loading && (
-            <Link href='/cart' className=''>
-              <Button
-                variant='outline'
-                size='iconSM'
-                className='!text-primary !border-black'
-              >
-                <FaCartShopping />
-              </Button>
-            </Link>
-          )} */}
+
           <Drawer />
         </div>
       </div>

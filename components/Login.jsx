@@ -12,6 +12,7 @@ import Button from './Button'
 import illustration from '@/public/images/login.svg'
 import google from '@/public/icons/google.svg'
 import phone from '@/public/icons/phone.svg'
+import ForgotPassword from './ForgotPassword'
 
 const variants = {
   open: { opacity: 1, zIndex: 100 },
@@ -26,6 +27,7 @@ const poppins = Poppins({
 })
 
 const Login = ({ isOpen, onClose }) => {
+  const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false)
   const { login, loading } = useAuth()
   const {
     register,
@@ -43,6 +45,11 @@ const Login = ({ isOpen, onClose }) => {
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev)
+  }
+
+  const onForgotPassword = (e) => {
+    e.preventDefault()
+    setIsForgotPasswordOpen(true)
   }
 
   const errorMessage = errors.email?.message || errors.password?.message || null
@@ -131,9 +138,12 @@ const Login = ({ isOpen, onClose }) => {
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
-            <Link href='#' className='text-[#313C66] text-sm text-right block'>
+            <button
+              onClick={onForgotPassword}
+              className='text-[#313C66] text-sm ml-auto block'
+            >
               Forgot Password?
-            </Link>
+            </button>
             <Button
               type='submit'
               className='w-full mt-7 rounded-lg text-xl flex flex-row justify-center items-center gap-4'
@@ -163,6 +173,10 @@ const Login = ({ isOpen, onClose }) => {
           <Image src={illustration} alt='Physio therapy' />
         </div>
       </motion.div>
+      <ForgotPassword
+        isOpen={isForgotPasswordOpen}
+        onClose={() => setIsForgotPasswordOpen(false)}
+      />
     </>
   )
 }
