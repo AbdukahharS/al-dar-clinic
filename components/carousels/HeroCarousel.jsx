@@ -94,7 +94,7 @@ const Carousel = () => {
           </SwiperSlide>
         ))}
         <div className='controls absolute !bottom-6 z-10 right-0 pr-6 md:pr-24'>
-          <div className='hero-navigation flex flex-row gap-3 md:mb-7'>
+          <div className='hero-navigation flex flex-row gap-3 md:mb-7 text-white'>
             <Button
               size='iconSM'
               className='swiper-hero-prev'

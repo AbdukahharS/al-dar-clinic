@@ -39,9 +39,9 @@ const Button = ({
   const baseClasses = 'rounded-full font-medium focus:outline-none'
   const variantClasses = {
     primary: 'bg-primary text-white',
-    secondary: 'bg-secondary text-white hover:bg-gray-600 focus:ring-gray-400',
+    secondary: 'bg-primary/30 text-primary',
     danger: 'bg-red-500 text-white',
-    outline: 'border border-white text-white',
+    outline: 'border',
     ghost: '',
   }
   const sizeClasses = {

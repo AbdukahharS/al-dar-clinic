@@ -7,11 +7,11 @@ import { motion } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 import { FaCartShopping, FaUserLarge } from 'react-icons/fa6'
 
-import Login from '../Login'
 import useAuth from '@/hooks/useAuth'
 import Button from '../Button'
 import Logo from '@/public/images/logo-full.webp'
 import Drawer from '../Drawer'
+import LoginButton from '../LoginButton'
 
 const AnimatedLink = ({ href, children, ...props }) => {
   return (
@@ -63,11 +63,13 @@ const Navbar = () => {
           <AnimatedLink href='/products' path={path}>
             Products
           </AnimatedLink>
+          <Link href={isAuthenticated ? '/book-now' : '/auth'}>
+            <Button variant='outline' className='!text-primary !border-primary'>
+              Book now
+            </Button>
+          </Link>
           {isAuthenticated && !loading && (
             <>
-              <Link href='/book-now'>
-                <Button>Book now</Button>
-              </Link>
               <Link href='/cart' className=''>
                 <Button
                   variant='outline'
@@ -81,7 +83,7 @@ const Navbar = () => {
                 <Button
                   variant='outline'
                   size='icon'
-                  className=' bg-gray-100 text-primary text-2xl'
+                  className=' bg-primary text-2xl'
                 >
                   {user?.profileImage ? (
                     <Image src={user.profileImage} alt='User Profile' />
@@ -92,18 +94,10 @@ const Navbar = () => {
               </Link>
             </>
           )}
+          {!isAuthenticated && <LoginButton />}
         </div>
-        <div className='flex flex-row items-center gap-4'>
-          {!isAuthenticated && (
-            <Button className='hidden md:block' onClick={openLogin}>
-              Login
-            </Button>
-          )}
-
-          <Drawer />
-        </div>
+        <Drawer />
       </div>
-      <Login isOpen={isOpen} onClose={closeLogin} />
     </nav>
   )
 }

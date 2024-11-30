@@ -12,8 +12,9 @@ import Mohammed from '@/public/images/dr-mohamad.webp'
 import Alex from '@/public/images/dr-alex.webp'
 import Nauf from '@/public/images/dr-nauf.webp'
 import Abdul from '@/public/images/dr-abdul.webp'
-import Othman from '@/public/images/dr-othman.webp'
+import Othman from '@/public/images/dr-dillibabu.webp'
 import Connector from '@/public/icons/connector.svg'
+import Recovery from '@/public/images/patient-recovery.webp'
 import Button from '@/components/Button'
 import GalleryCarousel from '@/components/carousels/GalleryCarousel'
 import { useState } from 'react'
@@ -67,7 +68,7 @@ export default function Home() {
     { name: 'Dr. Alex Elizabeth', desc: 'Al - Dar', img: Alex },
     { name: 'Dr. Nauf AlBendar', desc: 'Al - Dar', img: Nauf },
     { name: 'Dr. Abdul', desc: 'Al - Dar', img: Abdul },
-    { name: 'Dr. Othman', desc: 'Al - Dar', img: Othman },
+    { name: 'Dr. Varalakshmi Dillibabu', desc: 'Al - Dar', img: Othman },
   ]
 
   return (
@@ -171,6 +172,29 @@ export default function Home() {
             </div>
           </div>
         </div>
+        <div className='h-[1px] bg-primary w-full my-24'></div>
+        <div className='flex flex-col md:flex-row gap-9 mx-7 md:mx-0 md:gap-24 items-center mb-16 md:mb-40'>
+          <Image
+            src={Recovery}
+            alt='The Vital Role of Rehabilitation Equipment in Patient Recovery'
+            width={426}
+            height={326}
+            className='rounded-2xl shadow-[0_4px_10px_0_rgba(0,0,0,0.15)]'
+          />
+          <div>
+            <h3 className='font-medium md:text-[26px] uppercase'>
+              Continuous Medical Education and Training
+            </h3>
+            <div className='bg-primary h-[1px] w-full my-4 md:my-6'></div>
+            <p className='text-lg opacity-90 indent-8'>
+              At <b>Al-Dar</b>, we understand that the right equipment can make
+              a significant difference in your recovery process. Whether you're
+              receiving treatment at our facility or continuing your
+              rehabilitation at home, access to proper equipment is crucial for
+              achieving optimal results.
+            </p>
+          </div>
+        </div>
         <div className='mt-28'>
           <div className='flex flex-col-reverse md:flex-row items-center gap-12'>
             <h2 className='font-medium text-4xl md:text-5xl'>OUR SERVICES</h2>
@@ -215,7 +239,7 @@ export default function Home() {
         <div className='bg-primary h-[1px] w-full md:hidden mb-8'></div>
         <div className=''>
           <div className='flex flex-row items-center gap-16 mb-16 md:mb-24'>
-            <h3 className='text-3xl md:text-5xl font-medium tracking-wide'>
+            <h3 className='text-3xl md:text-5xl font-medium tracking-wide pl-7'>
               MEET OUR TEAM
             </h3>
             <div className='bg-primary hidden md:block h-[1px] flex-1'></div>
@@ -229,7 +253,7 @@ export default function Home() {
             initial='closed'
             animate={isOpen ? 'open' : 'closed'}
             variants={variants}
-            className='flex flex-col md:!h-auto md:flex-row gap-20 md:gap-12 lg:gap-20 justify-between mt-10 py-10 md:mt-32 items-center overflow-hidden px-7 md:px-0'
+            className='flex flex-col md:!h-auto md:flex-row gap-20 md:gap-12 lg:gap-20 justify-between mt-10 py-10 md:mt-32 items-center overflow-hidden px-7 md:px-2'
           >
             {team.slice(2).map((item, ind) => (
               <TeamCard key={ind} item={item} />

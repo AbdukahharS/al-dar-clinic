@@ -172,14 +172,131 @@ const Services = () => {
         <h2 className='font-medium text-4xl md:text-5xl'>SERVICES</h2>
         <div className='bg-primary h-[1px] md:flex-1'></div>
       </div>
-      <p className='max-w-7xl w-full mx-auto px-7 md:text-2xl opacity-80 mt-9 md:mt-16'>
-        <b>Al Dar Rehabilitation Clinic</b> opened its doors in 2006 and is
-        prevalent as a dedicated post-acute inpatient rehabilitation facility,
-        offering a wide range of rehabilitation and homecare services in the
-        region for more than 16 years of quality care. With a primary focus on
-        providing excellent patient and family-centered care, we provide the
-        entire continuum of post-acute rehabilitation and nursing services.
-      </p>
+      <ul className='max-w-7xl w-full mx-auto px-7 md:text-2xl opacity-80 mt-9 md:mt-16 list-disc flex flex-col gap-6'>
+        <p>
+          At our state-of-the-art rehabilitation clinic, we offer a wide range
+          of specialized services designed to enhance your physical well-being
+          and improve your quality of life. Our team of expert professionals is
+          dedicated to providing personalized care tailored to your unique
+          needs.
+        </p>
+
+        <p>
+          <strong>Our Services</strong>
+        </p>
+
+        <li className='ml-6 pl-2'>
+          <strong>Physiotherapy</strong>
+        </li>
+        <p>
+          Our physiotherapy services help patients recover from injuries, manage
+          chronic conditions, and improve physical performance through
+          personalized treatment plans.
+        </p>
+
+        <li className='ml-6 pl-2'>
+          <strong>Occupational Therapy</strong>
+        </li>
+        <p>
+          Our occupational therapy programs are designed to help you regain
+          independence in your daily activities. We work with patients to
+          develop, recover, and maintain the skills needed for daily living and
+          working. This therapy is particularly beneficial for those recovering
+          from injuries or living with disabilities, helping them lead more
+          fulfilling and productive lives.
+        </p>
+
+        <li className='ml-6 pl-2'>
+          <strong>Speech Therapy</strong>
+        </li>
+        <p>
+          Our speech therapy services address communication and swallowing
+          disorders. Our skilled therapists work with patients to improve
+          speech, language, cognitive-communication, and fluency. This therapy
+          is crucial for patients recovering from stroke, brain injuries, or
+          those with developmental disorders, significantly enhancing their
+          ability to communicate and interact socially.
+        </p>
+
+        <li className='ml-6 pl-2'>
+          <strong>Hydrotherapy</strong>
+        </li>
+        <p>
+          Utilizing the therapeutic properties of water, our hydrotherapy
+          sessions offer a low-impact environment for rehabilitation. This
+          therapy is particularly beneficial for patients with joint pain,
+          arthritis, or those recovering from surgeries. The buoyancy of water
+          reduces stress on joints while providing resistance for strength
+          training, leading to improved mobility and reduced pain.
+        </p>
+
+        <li className='ml-6 pl-2'>
+          <strong>Osteopathy</strong>
+        </li>
+        <p>
+          Our osteopathy services focus on the health of the musculoskeletal
+          system. Through manual manipulation, stretching, and massage, our
+          osteopaths help improve the body's overall health, reduce pain, and
+          enhance mobility. This holistic approach is effective in treating
+          various conditions, from back pain to migraines, promoting overall
+          well-being.
+        </p>
+
+        <li className='ml-6 pl-2'>
+          <strong>Acupuncture</strong>
+        </li>
+        <p>
+          Our acupuncture services offer an ancient healing practice with modern
+          applications. By stimulating specific points on the body, acupuncture
+          can help manage pain, reduce stress, and improve overall wellness.
+          Many patients find relief from chronic pain conditions and experience
+          improved energy and mood through regular acupuncture sessions.
+        </p>
+
+        <li className='ml-6 pl-2'>
+          <strong>Chiropractic Care</strong>
+        </li>
+        <p>
+          Our chiropractors specialize in diagnosing and treating neuromuscular
+          disorders, with an emphasis on manual adjustment of the spine.
+          Chiropractic care can provide significant relief from back pain, neck
+          pain, and headaches, while also improving overall physical function
+          and well-being.
+        </p>
+
+        <li className='ml-6 pl-2'>
+          <strong>Positive Impact on Patient Lives</strong>
+        </li>
+        <p>
+          Our comprehensive approach to rehabilitation has transformed the lives
+          of countless patients. Through our diverse range of therapies, we have
+          helped individuals:
+        </p>
+
+        <ul className='list-disc mx-6 leading-8'>
+          <li>
+            Regain independence and return to daily activities with renewed
+            confidence
+          </li>
+          <li>Significantly reduce chronic pain and discomfort</li>
+          <li>
+            Improve mobility and physical function, enhancing overall quality of
+            life
+          </li>
+          <li>Recover faster from injuries and surgeries</li>
+          <li>Manage and improve symptoms of long-term conditions</li>
+          <li>Enhance communication skills and social interactions</li>
+          <li>Achieve personal goals in physical performance and wellness</li>
+        </ul>
+
+        <p>
+          At our clinic, we are committed to providing compassionate,
+          evidence-based care that empowers our patients to lead healthier, more
+          active lives. Our multidisciplinary approach ensures that each patient
+          receives a tailored treatment plan designed to achieve optimal results
+          and lasting improvements in their health and well-being.
+        </p>
+      </ul>
       <div className='mt-24 flex flex-col md:flex-row items-stretch gap-20 w-full max-w-7xl mx-auto md:px-7'>
         <div className='flex items-center justify-center px-7 md:px-0'>
           <Image src={ADR} alt='ADR' loading='lazy' width={470} />

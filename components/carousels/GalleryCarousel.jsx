@@ -11,9 +11,9 @@ import 'swiper/css'
 import 'swiper/css/effect-coverflow'
 
 import Button from '../Button'
-import slide_image_1 from '@/public/images/doctors.webp'
-import slide_image_2 from '@/public/images/gallery-1.webp'
-import slide_image_3 from '@/public/images/training.webp'
+import slide_image_1 from '@/public/images/gallery-1.webp'
+import slide_image_2 from '@/public/images/gallery-2.webp'
+import slide_image_3 from '@/public/images/gallery-3.webp'
 
 function GalleryCarousel() {
   const [active, setActive] = useState(0)

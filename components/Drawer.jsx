@@ -3,10 +3,11 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { FaBars, FaUserLarge, FaX } from 'react-icons/fa6'
+import Image from 'next/image'
 
 import useAuth from '@/hooks/useAuth'
 import Button from './Button'
-import Image from 'next/image'
+import ADR from '@/public/images/ADR.webp'
 
 const variants = {
   open: {
@@ -35,8 +36,13 @@ export default function Drawer() {
 
   return (
     <>
-      <Button variant='ghost' size='iconSM' onClick={() => setIsOpen(true)}>
-        <FaBars className='text-gray-600 text-2xl lg:hidden' />
+      <Button
+        variant='ghost'
+        size='iconSM'
+        onClick={() => setIsOpen(true)}
+        className=' lg:hidden'
+      >
+        <FaBars className='text-gray-600 text-2xl' />
       </Button>
 
       {/* Drawer */}
@@ -44,7 +50,7 @@ export default function Drawer() {
         initial='closed'
         animate={isOpen ? 'open' : 'closed'}
         variants={variants}
-        className='fixed top-0 left-0 w-full h-full bg-[#F3F3F3] shadow-lg z-30 p-12'
+        className='fixed top-0 left-0 w-full h-full bg-[#F3F3F3] z-30 p-12 flex flex-col'
       >
         <div className='relative h-28'>
           {!loading && isAuthenticated && (
@@ -52,7 +58,7 @@ export default function Drawer() {
               <Button
                 variant='outline'
                 size='icon'
-                className='bg-white !text-primary text-6xl !w-28 !h-28 mx-auto z-50 relative'
+                className='bg-primary text-6xl !w-28 !h-28 mx-auto z-50 relative'
               >
                 {user?.profileImage ? (
                   <Image src={user.profileImage} alt='User profile' fill />
@@ -71,7 +77,7 @@ export default function Drawer() {
           <span className='w-full absolute bg-[#e2e2e2] h-[1px] top-[calc(50%+14px)]'></span>
         </div>
 
-        <div className='flex flex-col gap-11 mt-20 items-center'>
+        <div className='flex flex-col gap-11 mt-14 items-center'>
           {links.map((link, i) => (
             <Link
               href={link.href}
@@ -81,13 +87,15 @@ export default function Drawer() {
               {link.name}
             </Link>
           ))}
-          {isAuthenticated && !loading ? (
-            <Link href='/book'>
-              <Button>Book now</Button>
-            </Link>
-          ) : (
-            <Button>Login</Button>
-          )}
+          <Link href='/book'>
+            <Button variant='outline' className='!text-primary !border-primary'>
+              Book now
+            </Button>
+          </Link>
+          {!isAuthenticated && !loading && <Button>Login</Button>}
+        </div>
+        <div className='flex-1 flex items-end justify-center'>
+          <Image src={ADR} alt='ADR' />
         </div>
       </motion.div>
     </>
