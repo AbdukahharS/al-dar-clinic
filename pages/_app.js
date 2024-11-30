@@ -11,9 +11,11 @@ import '@/styles/custom-carousel.css'
 export default function App({ Component, pageProps }) {
   return (
     <Provider store={store}>
-      <Navbar />
-      <Component {...pageProps} />
-      <Footer />
+      <div className='min-h-screen flex flex-col'>
+        <Navbar />
+        <Component {...pageProps} />
+        <Footer />
+      </div>
       <Toaster />
     </Provider>
   )
