@@ -47,17 +47,6 @@ function GalleryCarousel() {
           key={ind}
           className='!w-2/3 h-[470px] overflow-hidden rounded-3xl shadow-[0px_6px_20px_0px_rgba(0,0,0,0.15)]'
         >
-          {/* <div className='relative w-full h-[310px] md:h-[450px]'>
-            <Image
-              src={el.img}
-              alt={el.title}
-              fill
-              loading={ind === 0 ? 'eager' : 'lazy'}
-              priority={ind === 0 ? true : false}
-              style={{ objectFit: 'cover', objectPosition: 'center top' }}
-              className={ind === 0 ? 'lg:max-w-5xl' : ''}
-            />
-          </div> */}
           <motion.div
             className={`relative h-[300px] md:h-[470px]`}
             animate={{
