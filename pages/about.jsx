@@ -45,49 +45,60 @@ const About = () => {
         <h2 className='font-medium text-4xl md:text-5xl'>ABOUT US</h2>
         <div className='bg-primary h-[1px] md:flex-1'></div>
       </div>
-      <div className=' w-full max-w-7xl mx-auto px-7 mt-7 text-lg md:text-2xl opacity-80'>
+      <div className=' w-full max-w-7xl mx-auto px-7 mt-7 text-lg md:text-2xl opacity-80 flex flex-col gap-6'>
+        <p>Welcome to Our Rehabilitation Physiotherapy Clinic</p>
         <p>
-          At ADR clinic treatment typically involves a range of professional
-          activities aimed at helping patients recover from injuries, manage
-          chronic conditions, and improve their overall physical well-being.
-          Here&apos;s a brief description of our physiotherapy clinic work:
+          At our state-of-the-art rehabilitation physiotherapy clinic, we are
+          dedicated to providing comprehensive care and personalized treatment
+          plans to help you regain optimal physical function and improve your
+          quality of life. Our team of experienced physiotherapists utilizes
+          evidence-based practices and cutting-edge technology to address a wide
+          range of conditions and injuries.
         </p>
-        <ul className='list-disc p-5'>
-          <li>
-            <strong>Patient Assessment:</strong> ADR Physiotherapists evaluate
-            patients&apos; conditions, develop treatment plans, and perform
-            hands-on therapy.
-          </li>
-          <li>
-            <strong>Treatment of Various Conditions:</strong> Addressing a wide
-            range of issues including musculoskeletal injuries, neurological
-            disorders, cardiopulmonary problems, and post-surgical
-            rehabilitation.
-          </li>
-          <li>
-            <strong>Therapeutic Exercises:</strong> ADR Physiotherapists guide
-            patients through exercises and use specialized equipment to aid in
-            recovery and improve function.
-          </li>
-          <li>
-            <strong>Progress Monitoring:</strong> Regular evaluations are
-            conducted to assess patient progress, which may include a range of
-            motion measurements, strength testing, and functional assessments.
-          </li>
-          <li>
-            <strong>Patient Education:</strong> An important aspect of our work
-            involves educating patients about their conditions, proper body
-            mechanics, and strategies for injury prevention.
-          </li>
-          <li>
-            <strong>Collaboration:</strong> ADR Physiotherapists often work as
-            part of a multidisciplinary team, coordinating with other healthcare
-            professionals to provide comprehensive care.
-          </li>
+        <p>Our Approach</p>
+        <p>
+          We employ a holistic approach to physiotherapy, combining manual
+          therapy techniques, exercise prescription, and patient education. Our
+          treatments may include:
+        </p>
+        <ul className='list-disc px-6'>
+          <li> Manual Therapy and Joint Mobilization</li>
+          <li>Therapeutic Exercises and Stretching Programs</li>
+          <li>Electrotherapy and Ultrasound Treatments</li>
+          <li>Gait Analysis and Correction</li>
+          <li> Postural Assessment and Correction</li>
+          <li>Ergonomic Advice and Workplace Assessments</li>
+        </ul>
+        <p>State-of-the-Art Equipment</p>
+        <p>
+          Our clinic is equipped with advanced rehabilitation technology to
+          enhance your treatment experience:
+        </p>
+        <ul className='list-disc px-6'>
+          <li>Resistance Training Equipment</li>
+          <li>Cardiovascular Machines</li>
+          <li>Balance and Proprioception Tools</li>
+          <li>Electrotherapy Devices</li>
+          <li>Ultrasound Machines</li>
+          <li>Specialized Rehabilitation Equipment</li>
+        </ul>
+        <p>Products Available</p>
+        <p>
+          To support your rehabilitation journey, we offer a range of
+          high-quality products:
+        </p>
+        <ul className='list-disc px-6'>
+          <li>Therapeutic Exercise Bands and Balls</li>
+          <li>Orthopedic Supports and Braces</li>
+          <li>Hot and Cold Therapy Packs</li>
+          <li>Posture Correction Devices</li>
+          <li>Ergonomic Aids for Home and Work</li>
         </ul>
         <p>
-          Physiotherapy sessions typically last between 30 to 45 minutes,
-          depending on the patient&apos;s needs and the clinic&apos;s schedule.
+          Experience the difference of personalized, expert care at our
+          rehabilitation physiotherapy clinic. Contact us today to schedule your
+          assessment and take the first step towards improved health and
+          mobility.
         </p>
       </div>
       <div className='mt-24 flex flex-col md:flex-row items-stretch gap-20 w-full max-w-7xl mx-auto md:px-7'>
