@@ -16,7 +16,7 @@ export default function App({ Component, pageProps }) {
       <div className='min-h-screen flex flex-col'>
         <Navbar />
         <Component {...pageProps} />
-        {path.split('/')[1] !== 'auth' && <Footer />}
+        {path?.split('/')[1] !== 'auth' && <Footer />}
       </div>
       <Toaster />
     </Provider>

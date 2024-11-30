@@ -27,7 +27,6 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     await login(data)
-    onClose()
   }
 
   // State to toggle password visibility

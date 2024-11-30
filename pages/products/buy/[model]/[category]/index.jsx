@@ -76,7 +76,7 @@ const Category = () => {
         </h2>
         <div className='bg-primary hidden md:block h-[1px] md:flex-1'></div>
       </div>
-      <div className='flex flex-col md:flex-row md:flex-wrap gap-20 justify-center w-full max-w-7xl mx-auto px-7 mt-16 mb-28'>
+      <div className='flex flex-col md:flex-row md:flex-wrap gap-20 justify-center items-center w-full max-w-7xl mx-auto px-7 mt-16 mb-28'>
         {products.map((el, i) => (
           <ProductCard key={i} product={el} />
         ))}

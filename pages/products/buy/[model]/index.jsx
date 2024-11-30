@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation'
 
-import ProductCard from '@/components/ProductCard'
+import Card from '@/components/Card'
 import tools from '@/public/images/tools.webp'
 import equipments from '@/public/images/equipments.webp'
 import devices from '@/public/images/devices.webp'
@@ -43,7 +43,7 @@ const Model = () => {
       </div>
       <div className='flex flex-col md:flex-row md:flex-wrap gap-20 w-full max-w-7xl mx-auto px-7 mt-16 mb-28'>
         {categories.map((el, i) => (
-          <ProductCard key={i} product={el} />
+          <Card key={i} data={el} />
         ))}
       </div>
     </div>

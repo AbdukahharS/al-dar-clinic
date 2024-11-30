@@ -74,11 +74,7 @@ const Navbar = () => {
                 </Button>
               </Link>
               <Link href='/#'>
-                <Button
-                  variant='outline'
-                  size='icon'
-                  className=' bg-primary text-2xl'
-                >
+                <Button size='icon' className=' bg-primary text-2xl text-white'>
                   {user?.profileImage ? (
                     <Image src={user.profileImage} alt='User Profile' />
                   ) : (
