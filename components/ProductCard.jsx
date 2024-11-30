@@ -6,7 +6,7 @@ import Button from './Button'
 
 const ProductCard = ({ product }) => {
   return (
-    <div className='w-80'>
+    <div className='w-80 max-w-full'>
       <div className='relative w-full h-[280px]'>
         <Image
           src={product.img}
