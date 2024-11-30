@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
+
 import Button from './Button'
 
 const ProductCard = ({ product }) => {
@@ -11,7 +12,7 @@ const ProductCard = ({ product }) => {
           src={product.img}
           alt={product.name}
           fill
-          className='object-cover rounded-2xl'
+          className='object-cover rounded-2xl shadow-[0px_5px_20px_0px_rgba(0,0,0,0.08)]'
         />
       </div>
       <div className='flex flex-row justify-between items-center mt-5'>

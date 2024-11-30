@@ -12,9 +12,11 @@ const ProductsHome = () => {
         <div className='bg-primary h-[1px] md:flex-1'></div>
       </div>
       <div className='flex flex-col md:flex-row gap-20 w-full max-w-7xl mx-auto px-7 mt-16 mb-28'>
-        <ProductCard product={{ name: 'B2B', img: b2b, link: '#' }} />
         <ProductCard
-          product={{ name: 'B2C', img: b2c, link: '/products/buy' }}
+          product={{ name: 'B2B', img: b2b, link: '/products/buy/b2b' }}
+        />
+        <ProductCard
+          product={{ name: 'B2C', img: b2c, link: '/products/buy/b2c' }}
         />
       </div>
       <div className='flex flex-row items-center gap-12 w-full max-w-7xl mx-auto px-7 mt-16 md:mt-20'>
@@ -22,9 +24,11 @@ const ProductsHome = () => {
         <div className='bg-primary h-[1px] md:flex-1'></div>
       </div>
       <div className='flex flex-col md:flex-row gap-20 w-full max-w-7xl mx-auto px-7 mt-16 mb-28'>
-        <ProductCard product={{ name: 'B2B', img: b2b, link: '#' }} />
         <ProductCard
-          product={{ name: 'B2C', img: b2c, link: '/products/rent' }}
+          product={{ name: 'B2B', img: b2b, link: '/products/rent/b2b' }}
+        />
+        <ProductCard
+          product={{ name: 'B2C', img: b2c, link: '/products/rent/b2c' }}
         />
       </div>
     </div>
