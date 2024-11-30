@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
@@ -30,17 +29,12 @@ const AnimatedLink = ({ href, children, ...props }) => {
 }
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false)
-
   const path = usePathname()
   const { isAuthenticated, user, loading } = useAuth()
 
-  const openLogin = () => setIsOpen(true)
-  const closeLogin = () => setIsOpen(false)
-
   return (
     <nav className='w-full'>
-      <div className='w-full max-w-7xl mx-auto p-7 md:px-12 md:py-8 flex items-center justify-between'>
+      <div className='w-full max-w-7xl mx-auto px-7 py-4 md:px-12 md:py-6 flex items-center justify-between'>
         <Link href='/'>
           <Image
             src={Logo}

@@ -92,7 +92,11 @@ export default function Drawer() {
               Book now
             </Button>
           </Link>
-          {!isAuthenticated && !loading && <Button>Login</Button>}
+          {!isAuthenticated && !loading && (
+            <Link href='/auth'>
+              <Button>Login</Button>
+            </Link>
+          )}
         </div>
         <div className='flex-1 flex items-end justify-center'>
           <Image src={ADR} alt='ADR' />

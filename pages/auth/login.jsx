@@ -11,11 +11,6 @@ import useAuth from '@/hooks/useAuth'
 import Button from '@/components/Button'
 import illustration from '@/public/images/login.svg'
 
-const variants = {
-  open: { opacity: 1, zIndex: 100 },
-  closed: { opacity: 0, zIndex: -30 },
-}
-
 const inter = Inter({
   weight: ['400', '500', '600'],
   subsets: ['latin'],
@@ -46,9 +41,8 @@ const Login = () => {
     <>
       <motion.div
         className='flex-1 bg-gradient-to-b from-[#f9f9f9] from-0% to-white to-20% w-full flex items-center justify-center'
-        initial='closed'
-        animate={isOpen ? 'open' : 'closed'}
-        variants={variants}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
       >
         <div className='max-w-5xl mx-4 bg-white flex flex-row shadow-[0px_4px_8px_0px_rgba(0,0,0,0.04)] rounded-2xl flex-1 items-center'>
@@ -137,12 +131,12 @@ const Login = () => {
                   <span className='ml-2 text-sm'>Remember Me</span>
                 </label>
 
-                <button
-                  onClick={onForgotPassword}
+                <Link
+                  href='/auth/forgot-password'
                   className='text-primary text-sm font-semibold'
                 >
                   Forgot Password
-                </button>
+                </Link>
               </div>
               <Button
                 type='submit'
@@ -156,7 +150,7 @@ const Login = () => {
             </form>
             <p className='text-sm font-semibold text-center mt-4 text-black'>
               Don&apos;t have an account?{' '}
-              <Link href='/register' className='font-bold text-base ml-4'>
+              <Link href='/auth/register' className='font-bold text-base ml-4'>
                 Sign up
               </Link>
             </p>
