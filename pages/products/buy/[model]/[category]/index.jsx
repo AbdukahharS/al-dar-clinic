@@ -11,6 +11,7 @@ import handle from '@/public/images/products/handle-ball.webp'
 import weight from '@/public/images/products/weight-ball.webp'
 import kettle from '@/public/images/products/kettle.webp'
 import Button from '@/components/Button'
+import Animated from '@/components/Animated'
 
 const Category = () => {
   const params = useParams()
@@ -62,7 +63,10 @@ const Category = () => {
   ]
   return (
     <div className='flex-1 bg-gradient-to-b from-[#f8f8f8] from-0% to-white to-100%'>
-      <div className='flex flex-row items-center gap-4 md:gap-12 w-full max-w-7xl mx-auto px-7 mt-16 md:mt-20'>
+      <Animated
+        animationType='fadeInLeft'
+        className='flex flex-row items-center gap-4 md:gap-12 w-full max-w-7xl mx-auto px-7 mt-12 md:mt-16'
+      >
         <Button
           onClick={() => router.back()}
           variant='outline'
@@ -71,11 +75,11 @@ const Category = () => {
         >
           <FaArrowLeft className=' text-black' />
         </Button>
-        <h2 className='font-medium text-2xl md:text-5xl'>
+        <h2 className='font-medium text-xl md:text-3xl'>
           PHYSIOTHERAPY {params?.category.toUpperCase() || 'TOOLS'}
         </h2>
         <div className='bg-primary hidden md:block h-[1px] md:flex-1'></div>
-      </div>
+      </Animated>
       <div className='flex flex-col md:flex-row md:flex-wrap gap-20 justify-center items-center w-full max-w-7xl mx-auto px-7 mt-16 mb-28'>
         {products.map((el, i) => (
           <ProductCard key={i} product={el} />

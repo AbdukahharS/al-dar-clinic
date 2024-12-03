@@ -14,10 +14,10 @@ import LoginButton from '../LoginButton'
 
 const AnimatedLink = ({ href, children, ...props }) => {
   return (
-    <Link href={href}>
+    <Link href={'/' + href}>
       <motion.span
         className={`px-3 py-1 text-gray-600 ${
-          props.path === href && 'border-b border-primary'
+          props.path?.split('/')[1] === href && 'border-b border-primary'
         }`}
         whileHover={{ color: 'var(--primary)' }}
         transition={{ type: 'tween', stiffness: 300 }}
@@ -33,7 +33,12 @@ const Navbar = () => {
   const { isAuthenticated, user, loading } = useAuth()
 
   return (
-    <nav className='w-full'>
+    <motion.nav
+      initial={{ y: '-100%' }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.6, ease: 'easeInOut' }}
+      className='w-full bg-white shadow-md sticky top-0 z-50'
+    >
       <div className='w-full max-w-7xl mx-auto px-7 py-4 md:px-12 md:py-6 flex items-center justify-between'>
         <Link href='/'>
           <Image
@@ -45,19 +50,19 @@ const Navbar = () => {
           />
         </Link>
         <div className='gap-4 xl:gap-10 items-center hidden lg:flex'>
-          <AnimatedLink href='/' path={path}>
+          <AnimatedLink href='' path={path}>
             Home
           </AnimatedLink>
-          <AnimatedLink href='/about' path={path}>
+          <AnimatedLink href='about' path={path}>
             About
           </AnimatedLink>
-          <AnimatedLink href='/services' path={path}>
+          <AnimatedLink href='services' path={path}>
             Services
           </AnimatedLink>
-          <AnimatedLink href='/products' path={path}>
+          <AnimatedLink href='products' path={path}>
             Products
           </AnimatedLink>
-          <Link href={isAuthenticated ? '/book-now' : '/auth'}>
+          <Link href={isAuthenticated ? 'book-now' : 'auth'}>
             <Button variant='outline' className='!text-primary !border-primary'>
               Book now
             </Button>
@@ -88,7 +93,7 @@ const Navbar = () => {
         </div>
         <Drawer />
       </div>
-    </nav>
+    </motion.nav>
   )
 }
 

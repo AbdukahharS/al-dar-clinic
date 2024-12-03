@@ -20,6 +20,7 @@ import iraq2 from '@/public/images/iraq-2.webp'
 import iraq3 from '@/public/images/iraq-3.webp'
 import iraq4 from '@/public/images/iraq-4.webp'
 import Button from '@/components/Button'
+import Animated from '@/components/Animated'
 
 const variants = {
   open: {
@@ -40,73 +41,85 @@ const About = () => {
   const tags = ['Counseling', 'Spine', 'Geriatric', 'Pain', 'Neutro', 'Physio']
 
   return (
-    <div className='flex-1 bg-gradient-to-b from-[#f8f8f8] from-0% to-white to-100% py-24'>
-      <div className='flex flex-row items-center gap-12 w-full max-w-7xl mx-auto px-7'>
-        <h2 className='font-medium text-4xl md:text-5xl'>ABOUT US</h2>
+    <div className='flex-1 bg-gradient-to-b from-[#f8f8f8] from-0% to-white to-100% py-10'>
+      <Animated
+        animationType='fadeInLeft'
+        className='flex flex-row items-center gap-12 w-full max-w-7xl mx-auto px-7'
+      >
+        <h2 className='font-medium text-2xl md:text-4xl'>ABOUT US</h2>
         <div className='bg-primary h-[1px] md:flex-1'></div>
-      </div>
+      </Animated>
       <div className=' w-full max-w-7xl mx-auto px-7 mt-7 text-lg md:text-2xl opacity-80 flex flex-col gap-6'>
-        <p>Welcome to Our Rehabilitation Physiotherapy Clinic</p>
-        <p>
+        <Animated>Welcome to Our Rehabilitation Physiotherapy Clinic</Animated>
+        <Animated>
           At our state-of-the-art rehabilitation physiotherapy clinic, we are
           dedicated to providing comprehensive care and personalized treatment
           plans to help you regain optimal physical function and improve your
           quality of life. Our team of experienced physiotherapists utilizes
           evidence-based practices and cutting-edge technology to address a wide
           range of conditions and injuries.
-        </p>
-        <p>Our Approach</p>
-        <p>
+        </Animated>
+        <Animated>Our Approach</Animated>
+        <Animated>
           We employ a holistic approach to physiotherapy, combining manual
           therapy techniques, exercise prescription, and patient education. Our
           treatments may include:
-        </p>
-        <ul className='list-disc px-6'>
-          <li> Manual Therapy and Joint Mobilization</li>
-          <li>Therapeutic Exercises and Stretching Programs</li>
-          <li>Electrotherapy and Ultrasound Treatments</li>
-          <li>Gait Analysis and Correction</li>
-          <li> Postural Assessment and Correction</li>
-          <li>Ergonomic Advice and Workplace Assessments</li>
-        </ul>
-        <p>State-of-the-Art Equipment</p>
-        <p>
+        </Animated>
+        <Animated animationType='fadeInRight'>
+          <ul className='list-disc px-6'>
+            <li> Manual Therapy and Joint Mobilization</li>
+            <li>Therapeutic Exercises and Stretching Programs</li>
+            <li>Electrotherapy and Ultrasound Treatments</li>
+            <li>Gait Analysis and Correction</li>
+            <li> Postural Assessment and Correction</li>
+            <li>Ergonomic Advice and Workplace Assessments</li>
+          </ul>
+        </Animated>
+        <Animated>State-of-the-Art Equipment</Animated>
+        <Animated>
           Our clinic is equipped with advanced rehabilitation technology to
           enhance your treatment experience:
-        </p>
-        <ul className='list-disc px-6'>
-          <li>Resistance Training Equipment</li>
-          <li>Cardiovascular Machines</li>
-          <li>Balance and Proprioception Tools</li>
-          <li>Electrotherapy Devices</li>
-          <li>Ultrasound Machines</li>
-          <li>Specialized Rehabilitation Equipment</li>
-        </ul>
-        <p>Products Available</p>
-        <p>
+        </Animated>
+        <Animated animationType='fadeInLeft'>
+          <ul className='list-disc px-6'>
+            <li>Resistance Training Equipment</li>
+            <li>Cardiovascular Machines</li>
+            <li>Balance and Proprioception Tools</li>
+            <li>Electrotherapy Devices</li>
+            <li>Ultrasound Machines</li>
+            <li>Specialized Rehabilitation Equipment</li>
+          </ul>
+        </Animated>
+        <Animated>Products Available</Animated>
+        <Animated>
           To support your rehabilitation journey, we offer a range of
           high-quality products:
-        </p>
-        <ul className='list-disc px-6'>
-          <li>Therapeutic Exercise Bands and Balls</li>
-          <li>Orthopedic Supports and Braces</li>
-          <li>Hot and Cold Therapy Packs</li>
-          <li>Posture Correction Devices</li>
-          <li>Ergonomic Aids for Home and Work</li>
-        </ul>
-        <p>
+        </Animated>
+        <Animated animationType='fadeInRight'>
+          <ul className='list-disc px-6'>
+            <li>Therapeutic Exercise Bands and Balls</li>
+            <li>Orthopedic Supports and Braces</li>
+            <li>Hot and Cold Therapy Packs</li>
+            <li>Posture Correction Devices</li>
+            <li>Ergonomic Aids for Home and Work</li>
+          </ul>
+        </Animated>
+        <Animated>
           Experience the difference of personalized, expert care at our
           rehabilitation physiotherapy clinic. Contact us today to schedule your
           assessment and take the first step towards improved health and
           mobility.
-        </p>
+        </Animated>
       </div>
-      <div className='mt-24 flex flex-col md:flex-row items-stretch gap-20 w-full max-w-7xl mx-auto md:px-7'>
-        <div className='flex items-center justify-center px-7 md:px-0'>
+      <div className='mt-20 flex flex-col md:flex-row items-stretch gap-20 w-full max-w-7xl mx-auto md:px-7'>
+        <Animated className='flex items-center justify-center px-7 md:px-0'>
           <Image src={ADR} alt='ADR' loading='lazy' width={470} />
-        </div>
+        </Animated>
         <div className='w-full md:w-[1px] h-[1px] md:h-auto bg-primary'></div>
-        <div className='flex gap-3 md:gap-4 flex-wrap items-center mx-7 md:mx-0'>
+        <Animated
+          animationType='fadeInRight'
+          className='flex gap-3 md:gap-4 flex-wrap items-center mx-7 md:mx-0'
+        >
           {tags.map((tag, ind) => (
             <span
               key={ind}
@@ -117,15 +130,18 @@ const About = () => {
               {tag}
             </span>
           ))}
-        </div>
+        </Animated>
       </div>
-      <div className='flex flex-row items-center gap-12 w-full max-w-7xl mx-auto px-7 mt-16'>
-        <h2 className='font-medium text-4xl md:text-5xl'>FACILITIES</h2>
+      <Animated
+        animationType='fadeInLeft'
+        className='flex flex-row items-center gap-12 w-full max-w-7xl mx-auto px-7 mt-16'
+      >
+        <h2 className='font-medium text-2xl md:text-4xl'>FACILITIES</h2>
         <div className='bg-primary h-[1px] md:flex-1'></div>
-      </div>
+      </Animated>
       <div className=' w-full max-w-7xl mx-auto px-7 mt-16'>
         <div className='flex flex-col md:flex-row gap-16'>
-          <div className='w-full md:w-[70%] h-[280px] relative'>
+          <Animated className='w-full md:w-[70%] h-[280px] relative'>
             <Image
               src={dubai}
               alt='Dubai branch'
@@ -133,8 +149,8 @@ const About = () => {
               fill
               className='rounded-2xl object-cover'
             />
-          </div>
-          <div className='flex-1'>
+          </Animated>
+          <Animated animationType='fadeInRight' className='flex-1'>
             <h5 className='text-lg font-bold leading-7 mb-1'>Dubai</h5>
             <div className='h-[1px] bg-primary w-full'></div>
             <p className='mt-4 text-sm'>
@@ -143,14 +159,10 @@ const About = () => {
             </p>
             <p className='mt-4 text-sm'>
               <FaRegEnvelope className='mr-2 text-base inline' />
-              info@aldarrehabilitation.ae
+              aldarclinic@outlook.com
             </p>
-          </div>
+          </Animated>
         </div>
-        <p className='text-lg md:text-2xl opacity-80 mt-10 mb-8'>
-          Our inpatient, outpatient, and homecare programs have all received
-          international CARF accreditation, recognizing high quality care.
-        </p>
         <motion.div
           initial='closed'
           animate={isDubaiOpen ? 'open' : 'closed'}
@@ -177,11 +189,11 @@ const About = () => {
         >
           Show {isDubaiOpen ? 'Less' : 'More'}
         </Button>
-        <div className='w-full h-[1px] bg-primary mt-20'></div>
+        <div className='w-full h-[1px] bg-primary mt-10'></div>
       </div>
       <div className=' w-full max-w-7xl mx-auto px-7 mt-16'>
         <div className='flex flex-col md:flex-row gap-16'>
-          <div className='w-full md:w-[70%] h-[280px] relative'>
+          <Animated className='w-full md:w-[70%] h-[280px] relative'>
             <Image
               src={oman}
               alt='Oman branch'
@@ -189,8 +201,8 @@ const About = () => {
               fill
               className='rounded-2xl object-cover'
             />
-          </div>
-          <div className='flex-1'>
+          </Animated>
+          <Animated animationType='fadeInRight' className='flex-1'>
             <h5 className='text-lg font-bold leading-7 mb-1'>Oman</h5>
             <div className='h-[1px] bg-primary w-full'></div>
             <p className='mt-4 text-sm'>
@@ -199,14 +211,10 @@ const About = () => {
             </p>
             <p className='mt-4 text-sm'>
               <FaRegEnvelope className='mr-2 text-base inline' />
-              info@aldarrehabilitation.ae
+              aldarclinic@outlook.com
             </p>
-          </div>
+          </Animated>
         </div>
-        <p className='text-lg md:text-2xl opacity-80 mt-10 mb-8'>
-          Our inpatient, outpatient, and homecare programs have all received
-          international CARF accreditation, recognizing high quality care.
-        </p>
         <motion.div
           initial='closed'
           animate={isOmanOpen ? 'open' : 'closed'}
@@ -233,11 +241,11 @@ const About = () => {
         >
           Show {isOmanOpen ? 'Less' : 'More'}
         </Button>
-        <div className='w-full h-[1px] bg-primary mt-20'></div>
+        <div className='w-full h-[1px] bg-primary mt-10'></div>
       </div>
       <div className=' w-full max-w-7xl mx-auto px-7 mt-16'>
         <div className='flex flex-col md:flex-row gap-16'>
-          <div className='w-full md:w-[70%] h-[280px] relative'>
+          <Animated className='w-full md:w-[70%] h-[280px] relative'>
             <Image
               src={iraq}
               alt='Iraq branch'
@@ -245,8 +253,8 @@ const About = () => {
               fill
               className='rounded-2xl object-cover'
             />
-          </div>
-          <div className='flex-1'>
+          </Animated>
+          <Animated animationType='fadeInRight' className='flex-1'>
             <h5 className='text-lg font-bold leading-7 mb-1'>Iraq</h5>
             <div className='h-[1px] bg-primary w-full'></div>
             <p className='mt-4 text-sm'>
@@ -255,19 +263,15 @@ const About = () => {
             </p>
             <p className='mt-4 text-sm'>
               <FaRegEnvelope className='mr-2 text-base inline' />
-              info@aldarrehabilitation.ae
+              aldarclinic@outlook.com
             </p>
-          </div>
+          </Animated>
         </div>
-        <p className='text-lg md:text-2xl opacity-80 mt-10 mb-8'>
-          Our inpatient, outpatient, and homecare programs have all received
-          international CARF accreditation, recognizing high quality care.
-        </p>
         <motion.div
           initial='closed'
           animate={isIraqOpen ? 'open' : 'closed'}
           variants={variants}
-          className='flex flex-wrap md:flex-nowrap gap-5 justify-center items-center mt-10 py-10 overflow-hidden'
+          className='flex flex-wrap md:flex-nowrap gap-5 justify-center items-center py-10 overflow-hidden'
         >
           {[iraq1, iraq2, iraq3, iraq4].map((img, i) => (
             <div key={i} className='w-full md:w-[23%] h-[277px] relative flex'>

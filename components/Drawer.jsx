@@ -58,7 +58,7 @@ export default function Drawer() {
               <Button
                 variant='outline'
                 size='icon'
-                className='bg-primary text-6xl !w-28 !h-28 mx-auto z-50 relative'
+                className='bg-primary text-white text-6xl !w-28 !h-28 mx-auto z-50 relative'
               >
                 {user?.profileImage ? (
                   <Image src={user.profileImage} alt='User profile' fill />
@@ -77,24 +77,29 @@ export default function Drawer() {
           <span className='w-full absolute bg-[#e2e2e2] h-[1px] top-[calc(50%+14px)]'></span>
         </div>
 
-        <div className='flex flex-col gap-11 mt-14 items-center'>
+        <div className='flex flex-col gap-6 mt-8 items-center'>
           {links.map((link, i) => (
             <Link
               href={link.href}
               key={i}
               className={`text-2xl ${path === link.href && 'text-primary'}`}
+              onClick={() => setIsOpen(false)}
             >
               {link.name}
             </Link>
           ))}
-          <Link href='/book'>
-            <Button variant='outline' className='!text-primary !border-primary'>
+          <Link href={isAuthenticated ? '/book' : '/auth'}>
+            <Button
+              variant='outline'
+              className='!text-primary !border-primary'
+              onClick={() => setIsOpen(false)}
+            >
               Book now
             </Button>
           </Link>
           {!isAuthenticated && !loading && (
-            <Link href='/auth'>
-              <Button>Login</Button>
+            <Link href='/auth/login'>
+              <Button onClick={() => setIsOpen(false)}>Login</Button>
             </Link>
           )}
         </div>

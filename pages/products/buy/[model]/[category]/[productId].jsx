@@ -11,6 +11,7 @@ import handle from '@/public/images/products/handle-ball.webp'
 import weight from '@/public/images/products/weight-ball.webp'
 import kettle from '@/public/images/products/kettle.webp'
 import ProductCarousel from '@/components/carousels/ProductCarousel'
+import Animated from '@/components/Animated'
 
 const products = [
   {
@@ -91,14 +92,14 @@ const ProductPage = () => {
         {!loading && (
           <>
             <div className='flex flex-col md:flex-row gap-14 md:gap-24'>
-              <div className='md:hidden'>
+              <Animated className='md:hidden'>
                 <p>PHYSIOTHERAPY {params.category.toUpperCase()}</p>
                 <h1 className='text-4xl mt-3'>Dumbbell 6Kg</h1>
-              </div>
-              <div>
+              </Animated>
+              <Animated animationType='fadeInLeft'>
                 <ProductCarousel data={Array(7).fill(product.img)} />
-              </div>
-              <div className='flex-1'>
+              </Animated>
+              <Animated className='flex-1'>
                 <div className='hidden md:block'>
                   <p>PHYSIOTHERAPY {params.category.toUpperCase()}</p>
                   <h1 className='text-4xl mt-3 mb-8'>Dumbbell 6Kg</h1>
@@ -161,11 +162,11 @@ const ProductPage = () => {
                   }`}
                   onClick={handleAddToCard}
                 >
-                  Add to Card
+                  Add to Cart
                 </Button>
-              </div>
+              </Animated>
             </div>
-            <div className='border border-[#BDBDBD] rounded-3xl mt-16'>
+            <Animated className='border border-[#BDBDBD] rounded-3xl mt-16'>
               <h3 className='text-3xl m-8'>Product Details</h3>
               <div className='bg-[#BDBDBD] h-[1px] w-full mb-4'></div>
               <p className='text-xl m-8'>
@@ -177,7 +178,7 @@ const ProductPage = () => {
                 family-centered care, we provide the entire continuum of
                 post-acute rehabilitation and nursing services.
               </p>
-            </div>
+            </Animated>
           </>
         )}
       </div>

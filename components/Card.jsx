@@ -2,11 +2,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import Button from './Button'
+import Animated from './Animated'
 
 const Card = ({ data }) => {
   if (!data) return null
   return (
-    <div className='w-80 max-w-full'>
+    <Animated className='w-80 max-w-full'>
       <div className='relative w-full h-[280px]'>
         <Image
           src={data.img}
@@ -27,7 +28,7 @@ const Card = ({ data }) => {
           </Link>
         </div>
       </div>
-    </div>
+    </Animated>
   )
 }
 

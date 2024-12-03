@@ -13,7 +13,7 @@ export default function App({ Component, pageProps }) {
 
   return (
     <Provider store={store}>
-      <div className='min-h-screen flex flex-col'>
+      <div className='min-h-screen overflow-x-hidden flex flex-col'>
         <Navbar />
         <Component {...pageProps} />
         {path?.split('/')[1] !== 'auth' && <Footer />}

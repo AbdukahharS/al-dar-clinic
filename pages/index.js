@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 
 import Carousel from '@/components/carousels/HeroCarousel'
+import Animated from '@/components/Animated'
 import ServicesCarousel from '@/components/carousels/ServicesCarousel'
 import ADR from '@/public/images/ADR.webp'
 import Vision from '@/public/images/our-vision.webp'
@@ -21,7 +22,7 @@ import { useState } from 'react'
 
 const TeamCard = ({ item }) => {
   return (
-    <div className='w-80 h-96 max-w-[calc(100vw-54px)] lg:h-[450px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.15)] rounded-2xl'>
+    <Animated className='w-80 h-96 max-w-[calc(100vw-54px)] lg:h-[450px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.15)] rounded-2xl'>
       <Image
         src={item.img}
         alt={item.name}
@@ -31,7 +32,7 @@ const TeamCard = ({ item }) => {
         {item.name}
       </h4>
       <p className='text-center opacity-70 font-medium'>{item.desc}</p>
-    </div>
+    </Animated>
   )
 }
 
@@ -56,7 +57,8 @@ export default function Home() {
       'العمود الفقري',
       'كبار السن',
       'الجهاز العصبي',
-      'العلاج الطبيعي',
+      'العلاج الطبيعي',
+      'علاج الألم',
     ],
   }
   const team = [
@@ -74,9 +76,11 @@ export default function Home() {
   return (
     <main className='w-full bg-gradient-to-b from-[#f9f9f9] from-0% to-white to-20%'>
       <div className='w-full max-w-7xl px-0 md:px-12 mx-auto'>
-        <Carousel />
-        <div className='mt-24 flex flex-col md:flex-row items-stretch gap-12 md:gap-5'>
-          <div className='hidden md:flex gap-4 flex-wrap items-center'>
+        <Animated>
+          <Carousel />
+        </Animated>
+        <div className='mt-20 flex flex-col md:flex-row items-stretch gap-12 md:gap-5'>
+          <Animated className='hidden md:flex gap-4 flex-wrap items-center'>
             {tags.ar.map((tag, ind) => (
               <span
                 key={ind}
@@ -87,13 +91,13 @@ export default function Home() {
                 {tag}
               </span>
             ))}
-          </div>
+          </Animated>
           <div className='w-full md:w-[1px] h-[1px] md:h-auto bg-primary hidden md:block'></div>
-          <div className='flex items-center justify-center px-7 md:px-0'>
+          <Animated className='flex items-center justify-center px-7 md:px-0'>
             <Image src={ADR} alt='ADR' loading='lazy' width={336} />
-          </div>
+          </Animated>
           <div className='w-full md:w-[1px] h-[1px] md:h-auto bg-primary'></div>
-          <div className='flex gap-3 md:gap-4 flex-wrap items-center mx-7 md:mx-0'>
+          <Animated className='flex gap-3 md:gap-4 flex-wrap items-center mx-7 md:mx-0'>
             {tags.en.map((tag, ind) => (
               <span
                 key={ind}
@@ -104,9 +108,9 @@ export default function Home() {
                 {tag}
               </span>
             ))}
-          </div>
+          </Animated>
           <div className='w-full md:w-[1px] h-[1px] md:h-auto bg-primary block md:hidden'></div>
-          <div className='flex md:hidden gap-3 flex-wrap items-center  mx-7'>
+          <Animated className='flex md:hidden gap-3 flex-wrap items-center  mx-7'>
             {tags.ar.map((tag, ind) => (
               <span
                 key={ind}
@@ -117,12 +121,15 @@ export default function Home() {
                 {tag}
               </span>
             ))}
-          </div>
+          </Animated>
         </div>
-        <div className='mt-28 px-7 md:px-0'>
+        <div className='mt-14 md:mt-20 px-7 md:px-0'>
           <h2 className='text-3xl font-medium mb-10 md:hidden'>AL-DAR</h2>
-          <div className='flex flex-col-reverse md:flex-row md:items-stretch lg:items-center gap-6 md:gap-0'>
-            <div className='inline-block w-full md:w-[45%] md:pr-20'>
+          <Animated className='flex flex-col-reverse md:flex-row md:items-stretch lg:items-center gap-6 md:gap-0'>
+            <Animated
+              animationType='fadeInLeft'
+              className='inline-block w-full md:w-[45%] md:pr-20'
+            >
               <h3 className='font-medium text-3xl'>Our Vision</h3>
               <div className='h-[1px] w-full bg-primary my-4'></div>
               <p className='text-lg'>
@@ -131,7 +138,7 @@ export default function Home() {
                 highest standards for excellence in rehabilitation services,
                 Medical Services, and Home care.
               </p>
-            </div>
+            </Animated>
             <div className='w-full md:w-[55%] aspect-[1.1/1] md:aspect-video relative'>
               <Image
                 src={Vision}
@@ -142,14 +149,14 @@ export default function Home() {
                 loading='lazy'
               />
             </div>
-          </div>
+          </Animated>
           <Image
             src={Connector}
             alt='Connector'
             className='mx-[50%] -mt-[5px] z-0 relative hidden md:block'
             loading='lazy'
           />
-          <div className='flex flex-col md:flex-row items-stretch lg:items-center mt-20 md:-mt-[5px] gap-6 md:gap-0'>
+          <Animated className='flex flex-col md:flex-row items-stretch lg:items-center mt-20 md:-mt-[5px] gap-6 md:gap-0'>
             <div className='w-full md:w-[55%] aspect-[1.1/1] md:aspect-video relative'>
               <Image
                 src={Mission}
@@ -160,7 +167,10 @@ export default function Home() {
                 loading='lazy'
               />
             </div>
-            <div className='inline-block w-full md:w-[45%] md:pl-20'>
+            <Animated
+              animationType='fadeInRight'
+              className='inline-block w-full md:w-[45%] md:pl-20'
+            >
               <h3 className='font-medium text-3xl'>Our Mission</h3>
               <div className='h-[1px] w-full bg-primary my-4'></div>
               <p className='text-lg'>
@@ -169,11 +179,11 @@ export default function Home() {
                 ages. We are committed to delivering personalized and effective
                 care that promotes overall well-being
               </p>
-            </div>
-          </div>
+            </Animated>
+          </Animated>
         </div>
-        <div className='h-[1px] bg-primary w-full my-24'></div>
-        <div className='flex flex-col md:flex-row gap-9 mx-7 md:mx-0 md:gap-24 items-center mb-16 md:mb-40'>
+        <div className='h-[1px] bg-primary w-full my-16 md:my-20'></div>
+        <Animated className='flex flex-col md:flex-row gap-9 mx-7 md:mx-0 md:gap-24 items-center mb-16 md:mb-40'>
           <Image
             src={Recovery}
             alt='The Vital Role of Rehabilitation Equipment in Patient Recovery'
@@ -181,34 +191,42 @@ export default function Home() {
             height={326}
             className='rounded-2xl shadow-[0_4px_10px_0_rgba(0,0,0,0.15)]'
           />
-          <div>
+          <Animated animationType='fadeInRight'>
             <h3 className='font-medium md:text-[26px] uppercase'>
               Continuous Medical Education and Training
             </h3>
             <div className='bg-primary h-[1px] w-full my-4 md:my-6'></div>
-            <p className='text-lg opacity-90 indent-8'>
+            <p className='text-lg opacity-90 indent-8 mb-4'>
               At <b>Al-Dar</b>, we understand that the right equipment can make
               a significant difference in your recovery process. Whether
               you&apos;re receiving treatment at our facility or continuing your
               rehabilitation at home, access to proper equipment is crucial for
               achieving optimal results.
             </p>
-          </div>
-        </div>
-        <div className='mt-28'>
-          <div className='flex flex-col-reverse md:flex-row items-center gap-12'>
-            <h2 className='font-medium text-4xl md:text-5xl'>OUR SERVICES</h2>
+            <Link href='/section'>
+              <Button className='ml-auto block'>Read More</Button>
+            </Link>
+          </Animated>
+        </Animated>
+        <div>
+          <Animated
+            animationType='fadeInLeft'
+            className='flex flex-col-reverse md:flex-row items-center gap-12'
+          >
+            <h2 className='font-medium text-2xl md:text-4xl'>OUR SERVICES</h2>
             <div className='bg-primary h-[1px] w-full md:flex-1'></div>
-          </div>
-          <ServicesCarousel />
-          <Link href='#' className='mx-auto block w-fit mb-10 md:mb-24'>
+          </Animated>
+          <Animated>
+            <ServicesCarousel />
+          </Animated>
+          <Link href='/services' className='mx-auto block w-fit mb-10 md:mb-24'>
             <Button size='lg'>Show More</Button>
           </Link>
         </div>
-        <div className='flex flex-col-reverse md:flex-row gap-9 mx-7 md:mx-0 md:gap-24 items-center mb-16 md:mb-40'>
-          <div>
+        <Animated className='flex flex-col-reverse md:flex-row gap-9 mx-7 md:mx-0 md:gap-24 items-center mb-16 md:mb-24'>
+          <Animated animationType='fadeInLeft'>
             <h3 className='font-medium md:text-[26px] uppercase'>
-              Continuous Medical Education and Training
+              The Vital Role of Rehabilitation Equipment in Patient Recovery
             </h3>
             <div className='bg-primary h-[1px] w-full my-4 md:my-6'></div>
             <p className='text-lg opacity-90 indent-8'>
@@ -227,7 +245,7 @@ export default function Home() {
                 care to our valued patients.
               </span>
             </p>
-          </div>
+          </Animated>
           <Image
             src={Training}
             alt='Continuous Medical Education and Training'
@@ -235,15 +253,18 @@ export default function Home() {
             height={326}
             className='rounded-2xl shadow-[0_4px_10px_0_rgba(0,0,0,0.15)]'
           />
-        </div>
+        </Animated>
         <div className='bg-primary h-[1px] w-full md:hidden mb-8'></div>
-        <div className=''>
-          <div className='flex flex-row items-center gap-16 mb-16 md:mb-24'>
-            <h3 className='text-3xl md:text-5xl font-medium tracking-wide pl-7'>
+        <div>
+          <Animated
+            animationType='fadeInLeft'
+            className='flex flex-row items-center gap-16 mb-12 md:mb-20'
+          >
+            <h3 className='text-2xl md:text-4xl font-medium tracking-wide pl-7'>
               MEET OUR TEAM
             </h3>
             <div className='bg-primary hidden md:block h-[1px] flex-1'></div>
-          </div>
+          </Animated>
           <div className='flex flex-col items-center md:flex-row gap-20 md:gap-32 justify-center'>
             {team.slice(0, 2).map((item, ind) => (
               <TeamCard key={ind} item={item} />
@@ -253,7 +274,7 @@ export default function Home() {
             initial='closed'
             animate={isOpen ? 'open' : 'closed'}
             variants={variants}
-            className='flex flex-col md:!h-auto md:flex-row gap-20 md:gap-12 lg:gap-20 justify-between mt-10 py-10 md:mt-32 items-center overflow-hidden px-7 md:px-2'
+            className='flex flex-col md:!h-auto md:flex-row gap-20 md:gap-12 lg:gap-20 justify-between py-8 md:mt-14 items-center overflow-hidden px-7 md:px-2'
           >
             {team.slice(2).map((item, ind) => (
               <TeamCard key={ind} item={item} />
@@ -269,14 +290,19 @@ export default function Home() {
             </Button>
           </div>
         </div>
-        <div className='w-full mt-16 md:mt-56'>
-          <div className='flex flex-col-reverse md:flex-row md:items-center gap-16 mb-24'>
-            <h3 className='text-3xl md:text-5xl font-medium tracking-wide px-7'>
+        <div className='w-full mt-16 md:mt-20'>
+          <Animated
+            animationType='fadeInLeft'
+            className='flex flex-col-reverse md:flex-row md:items-center gap-16 mb-14 md:mb-20'
+          >
+            <h3 className='text-2xl md:text-4xl font-medium tracking-wide px-7'>
               GALLERY
             </h3>
             <div className='bg-primary !h-[1px] md:flex-1 w-full'></div>
-          </div>
-          <GalleryCarousel />
+          </Animated>
+          <Animated>
+            <GalleryCarousel />
+          </Animated>
         </div>
       </div>
     </main>

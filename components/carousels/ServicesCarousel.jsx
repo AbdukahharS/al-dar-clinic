@@ -47,7 +47,7 @@ const slides = [
 
 const Carousel = () => {
   return (
-    <div className='w-full mt-16 mb-14 relative md:px-7'>
+    <div className='w-full my-8 md:my-12 relative md:px-7'>
       <Swiper
         className='w-full max-w-7xl !p-4 mx-auto overflow-visible services'
         slidesPerView={3}
