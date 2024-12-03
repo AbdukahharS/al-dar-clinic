@@ -33,13 +33,13 @@ const Navbar = () => {
   const { isAuthenticated, user, loading } = useAuth()
 
   return (
-    <motion.nav
-      initial={{ y: '-100%' }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.6, ease: 'easeInOut' }}
-      className='w-full bg-white shadow-md sticky top-0 z-50'
-    >
-      <div className='w-full max-w-7xl mx-auto px-7 py-4 md:px-12 md:py-6 flex items-center justify-between'>
+    <nav className='w-full bg-white shadow-md sticky top-0 z-50'>
+      <motion.div
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className='w-full max-w-7xl mx-auto px-7 py-4 md:px-12 md:py-6 flex items-center justify-between'
+      >
         <Link href='/'>
           <Image
             src={Logo}
@@ -92,8 +92,8 @@ const Navbar = () => {
           {!isAuthenticated && <LoginButton />}
         </div>
         <Drawer />
-      </div>
-    </motion.nav>
+      </motion.div>
+    </nav>
   )
 }
 

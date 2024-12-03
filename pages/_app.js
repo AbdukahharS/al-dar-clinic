@@ -13,9 +13,11 @@ export default function App({ Component, pageProps }) {
 
   return (
     <Provider store={store}>
-      <div className='min-h-screen overflow-x-hidden flex flex-col'>
+      <div className='min-h-screen flex flex-col'>
         <Navbar />
-        <Component {...pageProps} />
+        <div className='overflow-hidden'>
+          <Component {...pageProps} />
+        </div>
         {path?.split('/')[1] !== 'auth' && <Footer />}
       </div>
       <Toaster />

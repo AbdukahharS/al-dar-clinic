@@ -193,7 +193,7 @@ export default function Home() {
           />
           <Animated animationType='fadeInRight'>
             <h3 className='font-medium md:text-[26px] uppercase'>
-              Continuous Medical Education and Training
+              The Vital Role of Rehabilitation Equipment in Patient Recovery
             </h3>
             <div className='bg-primary h-[1px] w-full my-4 md:my-6'></div>
             <p className='text-lg opacity-90 indent-8 mb-4'>
@@ -226,7 +226,7 @@ export default function Home() {
         <Animated className='flex flex-col-reverse md:flex-row gap-9 mx-7 md:mx-0 md:gap-24 items-center mb-16 md:mb-24'>
           <Animated animationType='fadeInLeft'>
             <h3 className='font-medium md:text-[26px] uppercase'>
-              The Vital Role of Rehabilitation Equipment in Patient Recovery
+              Continuous Medical Education and Training
             </h3>
             <div className='bg-primary h-[1px] w-full my-4 md:my-6'></div>
             <p className='text-lg opacity-90 indent-8'>
