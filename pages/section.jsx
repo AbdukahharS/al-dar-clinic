@@ -39,9 +39,9 @@ const Section = () => {
             <p>
               At our rehabilitation clinic, we understand that the right
               equipment can make a significant difference in your recovery
-              process. Whether you're receiving treatment at our facility or
-              continuing your rehabilitation at home, access to proper equipment
-              is crucial for achieving optimal results.
+              process. Whether you&apos;re receiving treatment at our facility
+              or continuing your rehabilitation at home, access to proper
+              equipment is crucial for achieving optimal results.
             </p>
           </Animated>
 
@@ -103,8 +103,9 @@ const Section = () => {
           </li>
           <Animated animationType='fadeInUp'>
             <p>
-              We understand that every patient's journey is unique. That's why
-              we offer flexible options to access the equipment you need:
+              We understand that every patient&apos;s journey is unique.
+              That&apos;s why we offer flexible options to access the equipment
+              you need:
             </p>
           </Animated>
           <Animated animationType='fadeInUp'>
@@ -118,9 +119,9 @@ const Section = () => {
                 rates for short-term use or to try before you buy.
               </li>
               <li>
-                <strong>Special Pricing:</strong> As a valued patient, you'll
-                have access to exclusive discounts on both purchases and
-                rentals.
+                <strong>Special Pricing:</strong> As a valued patient,
+                you&apos;ll have access to exclusive discounts on both purchases
+                and rentals.
               </li>
             </ul>
           </Animated>
@@ -149,10 +150,10 @@ const Section = () => {
           <Animated animationType='fadeInUp'>
             <p>
               At our clinic, we believe that providing access to the right
-              rehabilitation equipment is an essential part of our care. It's
-              not just about the tools; it's about empowering you to take an
-              active role in your recovery and achieve the best possible
-              outcomes.
+              rehabilitation equipment is an essential part of our care.
+              It&apos;s not just about the tools; it&apos;s about empowering you
+              to take an active role in your recovery and achieve the best
+              possible outcomes.
             </p>
           </Animated>
 
