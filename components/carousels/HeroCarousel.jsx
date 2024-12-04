@@ -8,31 +8,12 @@ import Button from '../Button'
 import Carousel1 from '@/public/images/carousel 1.webp'
 import Carousel2 from '@/public/images/carousel 2.webp'
 import Carousel3 from '@/public/images/carousel 3.webp'
+import useAuth from '@/hooks/useAuth'
 import 'swiper/css'
 import 'swiper/css/pagination'
 
-const slides = [
-  {
-    img: Carousel1,
-    title: 'Home Healthcare',
-    desc: 'Our team of skilled nurses offers a variety of medical services including wound care, medication management, and more.',
-    link: '/book',
-  },
-  {
-    img: Carousel2,
-    title: 'Physical Therapy',
-    desc: 'Our experienced physical therapists are here to help you regain mobility, strength, and functionality.',
-    link: '/book',
-  },
-  {
-    img: Carousel3,
-    title: 'Counseling',
-    desc: 'Our services are designed to bring high-quality counseling to the comfort and convenience of our patients.',
-    link: '/book',
-  },
-]
-
 const Carousel = () => {
+  const { isAuthenticated } = useAuth()
   const pagination = {
     el: '#bullets',
     bulletClass:
@@ -40,6 +21,27 @@ const Carousel = () => {
     bulletActiveClass: '!bg-white',
     clickable: true,
   }
+
+  const slides = [
+    {
+      img: Carousel1,
+      title: 'Home Healthcare',
+      desc: 'Our team of skilled nurses offers a variety of medical services including wound care, medication management, and more.',
+      link: isAuthenticated ? '/book' : '/auth',
+    },
+    {
+      img: Carousel2,
+      title: 'Physical Therapy',
+      desc: 'Our experienced physical therapists are here to help you regain mobility, strength, and functionality.',
+      link: isAuthenticated ? '/book' : '/auth',
+    },
+    {
+      img: Carousel3,
+      title: 'Counseling',
+      desc: 'Our services are designed to bring high-quality counseling to the comfort and convenience of our patients.',
+      link: isAuthenticated ? '/book' : '/auth',
+    },
+  ]
 
   return (
     <>
