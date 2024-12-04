@@ -6,7 +6,7 @@ import Recovery from '@/public/images/patient-recovery.webp'
 
 const Section = () => {
   return (
-    <div className='flex-1 bg-gradient-to-b from-[#f8f8f8] from-0% to-white to-100% py-10'>
+    <div className='py-10'>
       <div className='max-w-7xl mx-auto px-7'>
         <Animated animationType='fadeInUp'>
           <h1 className='font-medium text-xl md:text-3xl'>

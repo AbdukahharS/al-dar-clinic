@@ -74,7 +74,7 @@ export default function Home() {
   ]
 
   return (
-    <main className='w-full bg-gradient-to-b from-[#f9f9f9] from-0% to-white to-20%'>
+    <main className='w-full'>
       <div className='w-full max-w-7xl px-0 md:px-12 mx-auto'>
         <Animated>
           <Carousel />

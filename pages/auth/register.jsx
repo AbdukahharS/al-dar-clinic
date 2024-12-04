@@ -40,7 +40,7 @@ const Register = () => {
   return (
     <>
       <motion.div
-        className='flex-1 bg-gradient-to-b from-[#f9f9f9] from-0% to-white to-20% w-full flex items-center justify-center'
+        className='w-full mt-8 flex items-center justify-center'
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}

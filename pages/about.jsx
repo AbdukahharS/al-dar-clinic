@@ -41,7 +41,7 @@ const About = () => {
   const tags = ['Counseling', 'Spine', 'Geriatric', 'Pain', 'Neutro', 'Physio']
 
   return (
-    <div className='flex-1 bg-gradient-to-b from-[#f8f8f8] from-0% to-white to-100% py-10'>
+    <div className='py-10'>
       <Animated
         animationType='fadeInLeft'
         className='flex flex-row items-center gap-12 w-full max-w-7xl mx-auto px-7'

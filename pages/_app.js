@@ -15,7 +15,7 @@ export default function App({ Component, pageProps }) {
     <Provider store={store}>
       <div className='min-h-screen flex flex-col'>
         <Navbar />
-        <div className='overflow-hidden flex-1'>
+        <div className='overflow-hidden flex-1 bg-gradient-to-b from-[#f9f9f9] from-0% to-white to-20%'>
           <Component {...pageProps} />
         </div>
         {path?.split('/')[1] !== 'auth' && <Footer />}

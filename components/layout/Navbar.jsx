@@ -62,7 +62,7 @@ const Navbar = () => {
           <AnimatedLink href='products' path={path}>
             Products
           </AnimatedLink>
-          <Link href={isAuthenticated ? 'book' : 'auth'}>
+          <Link href={isAuthenticated ? '/book' : '/auth'}>
             <Button variant='outline' className='!text-primary !border-primary'>
               Book now
             </Button>
