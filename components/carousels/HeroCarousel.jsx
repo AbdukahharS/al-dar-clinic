@@ -16,19 +16,19 @@ const slides = [
     img: Carousel1,
     title: 'Home Healthcare',
     desc: 'Our team of skilled nurses offers a variety of medical services including wound care, medication management, and more.',
-    link: '#',
+    link: '/book',
   },
   {
     img: Carousel2,
     title: 'Physical Therapy',
     desc: 'Our experienced physical therapists are here to help you regain mobility, strength, and functionality.',
-    link: '#',
+    link: '/book',
   },
   {
     img: Carousel3,
     title: 'Counseling',
     desc: 'Our services are designed to bring high-quality counseling to the comfort and convenience of our patients.',
-    link: '#',
+    link: '/book',
   },
 ]
 
