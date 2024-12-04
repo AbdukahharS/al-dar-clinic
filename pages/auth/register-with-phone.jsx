@@ -12,6 +12,7 @@ import 'react-phone-number-input/style.css'
 import useAuth from '@/hooks/useAuth'
 import Button from '@/components/Button'
 import illustration from '@/public/images/login.svg'
+import { useRouter } from 'next/navigation'
 
 const inter = Inter({
   weight: ['400', '500', '600'],
@@ -20,7 +21,8 @@ const inter = Inter({
 })
 
 const RegisterWithPhone = () => {
-  const { registerUser, loading } = useAuth()
+  const router = useRouter()
+  const { register: registerUser, loading } = useAuth()
   const {
     register,
     handleSubmit,
@@ -30,6 +32,7 @@ const RegisterWithPhone = () => {
 
   const onSubmit = async (data) => {
     await registerUser(data)
+    router.push('/auth/verify-phone')
   }
 
   const [showPassword, setShowPassword] = useState(false)

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
@@ -7,7 +8,6 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { Inter } from 'next/font/google'
 import { useForm } from 'react-hook-form'
 
-import useAuth from '@/hooks/useAuth'
 import Button from '@/components/Button'
 import illustration from '@/public/images/login.svg'
 
@@ -18,7 +18,8 @@ const inter = Inter({
 })
 
 const Register = () => {
-  const { login, loading } = useAuth()
+  const [loading, setLoadint] = useState(false)
+  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -26,8 +27,7 @@ const Register = () => {
   } = useForm()
 
   const onSubmit = async (data) => {
-    await login(data)
-    onClose()
+    router.push('/auth/verify-email')
   }
 
   // State to toggle password visibility
