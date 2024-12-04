@@ -49,7 +49,7 @@ const VerifyPhone = () => {
             className={`w-full lg:w-auto lg:flex-1 py-10 max-w-96 mx-auto ${inter.className}`}
           >
             <h2 className='text-2xl font-semibold text-center text-primary mb-5'>
-              Verify Phone
+              Verify Phone Number
             </h2>
             <form onSubmit={onSubmit} noValidate>
               <p className='text-[#403D4E] mb-5'>
