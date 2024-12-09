@@ -241,7 +241,7 @@ const Book = () => {
               className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 border-gray-300 focus:ring-primary`}
               {...register('serviceType')}
             >
-              <option value='consultation'>Doctor's Consultation</option>
+              <option value='consultation'>Doctor&apos;s Consultation</option>
               <option value='counseling'>Counseling</option>
               <option value='physio'>Physio</option>
             </select>
