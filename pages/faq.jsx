@@ -32,9 +32,9 @@ const FAQ = () => {
         <h1 className='font-medium text-2xl md:text-4xl'>FAQ</h1>
         <div className='bg-primary h-[1px] md:flex-1'></div>
       </Animated>
-      <Animated className={'mt-11 md:mt-16'}>
+      <div className={'mt-11 md:mt-16'}>
         {data.map((item, i) => (
-          <div key={i}>
+          <Animated animationType='fadeIn' key={i}>
             <div
               onClick={() => handleClick(i)}
               className={`flex flex-row items-center cursor-pointer justify-between border px-3 py-4 md:px-14 md:py-5 text-lg md:text-2xl text-gray-700 font-semibold ${
@@ -65,9 +65,9 @@ const FAQ = () => {
                 ))}
               </div>
             </motion.div>
-          </div>
+          </Animated>
         ))}
-      </Animated>
+      </div>
     </div>
   )
 }
