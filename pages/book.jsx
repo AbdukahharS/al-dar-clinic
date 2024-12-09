@@ -2,11 +2,14 @@ import { useState } from 'react'
 import { Inter } from 'next/font/google'
 import { Controller, useForm } from 'react-hook-form'
 import { motion } from 'framer-motion'
+import toast from 'react-hot-toast'
 import PhoneInput from 'react-phone-number-input'
+import { FaCircleXmark, FaCircleCheck } from 'react-icons/fa6'
 import 'react-phone-number-input/style.css'
 
 import Animated from '@/components/Animated'
 import Button from '@/components/Button'
+import Link from 'next/link'
 
 const inter = Inter({
   weight: ['400', '500', '600'],
@@ -24,7 +27,63 @@ const Book = () => {
   } = useForm()
 
   const onSubmit = (data) => {
-    console.log(data)
+    toast.custom(
+      (t) => (
+        <motion.div
+          initial={{ z: -20, opacity: 0 }}
+          animate={t.visible ? { z: 100, opacity: 1 } : { z: -20, opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className='absolute -top-4 -left-4 w-screen !h-screen bg-black/60 flex items-center justify-center p-5'
+        >
+          <motion.div
+            initial={{ y: 15 }}
+            animate={t.visible ? { y: 0 } : { y: 15 }}
+            className='w-[100%] max-w-5xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
+          >
+            <Button
+              size='icon'
+              variant='ghost'
+              onClick={() => toast.dismiss(t.id)}
+              className='ml-auto'
+            >
+              <FaCircleXmark className='text-primary text-4xl' />
+            </Button>
+            <div>
+              <FaCircleCheck className='text-primary text-[156px] md:text-[238px] mx-auto' />
+            </div>
+            <p className='text-xl font-medium md:text-4xl text-center py-12 md:mt-18 tracking-wide'>
+              Your Appointment is Confirmed
+            </p>
+            <div className='flex flex-row items-center justify-center gap-4 md:hidden'>
+              <Link href='/profile/appointments/1'>
+                <Button
+                  variant='outline'
+                  className='text-primary border-primary'
+                  size='sm'
+                >
+                  Appointment details
+                </Button>
+              </Link>
+              <Button size='sm' onClick={() => toast.dismiss(t.id)}>
+                Continue
+              </Button>
+            </div>
+            <div className='hidden flex-row items-center justify-center gap-8 md:flex'>
+              <Link href='/profile/appointments/1'>
+                <Button
+                  variant='outline'
+                  className='text-primary border-primary'
+                >
+                  Appointment details
+                </Button>
+              </Link>
+              <Button onClick={() => toast.dismiss(t.id)}>Continue</Button>
+            </div>
+          </motion.div>
+        </motion.div>
+      ),
+      { duration: Infinity }
+    )
   }
 
   return (

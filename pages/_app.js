@@ -13,6 +13,7 @@ export default function App({ Component, pageProps }) {
 
   return (
     <Provider store={store}>
+      <Toaster />
       <div className='min-h-screen flex flex-col'>
         <Navbar />
         <div className='overflow-hidden flex-1 bg-gradient-to-b from-[#f9f9f9] from-0% to-white to-20%'>
@@ -20,7 +21,6 @@ export default function App({ Component, pageProps }) {
         </div>
         {path?.split('/')[1] !== 'auth' && <Footer />}
       </div>
-      <Toaster />
     </Provider>
   )
 }
