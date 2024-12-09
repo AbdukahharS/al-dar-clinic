@@ -4,13 +4,14 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { usePathname } from 'next/navigation'
-import { FaCartShopping, FaUserLarge } from 'react-icons/fa6'
+import { FaUserLarge } from 'react-icons/fa6'
 
 import useAuth from '@/hooks/useAuth'
 import Button from '../Button'
 import Logo from '@/public/images/logo-full.webp'
 import Drawer from '../Drawer'
 import LoginButton from '../LoginButton'
+import Cart from '../Cart'
 
 const AnimatedLink = ({ href, children, ...props }) => {
   return (
@@ -69,15 +70,7 @@ const Navbar = () => {
           </Link>
           {isAuthenticated && !loading && (
             <>
-              <Link href='/cart' className=''>
-                <Button
-                  variant='outline'
-                  size='icon'
-                  className='!text-primary !text-2xl !border-black'
-                >
-                  <FaCartShopping />
-                </Button>
-              </Link>
+              <Cart />
               <Link href='/#'>
                 <Button size='icon' className=' bg-primary text-2xl text-white'>
                   {user?.profileImage ? (
@@ -91,6 +84,11 @@ const Navbar = () => {
           )}
           {!isAuthenticated && <LoginButton />}
         </div>
+        {isAuthenticated && (
+          <div className='md:hidden'>
+            <Cart />
+          </div>
+        )}
         <Drawer />
       </motion.div>
     </nav>

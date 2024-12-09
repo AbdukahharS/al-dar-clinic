@@ -30,10 +30,14 @@ const Book = () => {
     toast.custom(
       (t) => (
         <motion.div
-          initial={{ z: -20, opacity: 0 }}
-          animate={t.visible ? { z: 100, opacity: 1 } : { z: -20, opacity: 0 }}
+          initial={{ zIndex: -20, opacity: 0 }}
+          animate={
+            t.visible
+              ? { zIndex: 100, opacity: 1 }
+              : { zIndex: -20, opacity: 0 }
+          }
           transition={{ duration: 0.3 }}
-          className='absolute -top-4 -left-4 w-screen !h-screen bg-black/60 flex items-center justify-center p-5'
+          className='absolute -top-4 -left-4 w-full !h-screen bg-black/60 flex items-center justify-center p-5'
         >
           <motion.div
             initial={{ y: 15 }}
