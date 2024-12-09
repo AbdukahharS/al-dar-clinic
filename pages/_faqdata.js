@@ -1,4 +1,4 @@
-export default [
+const faq = [
   {
     question: 'What is rehabilitation?',
     answer:
@@ -17,7 +17,7 @@ export default [
   {
     question: 'How long does rehabilitation typically take?',
     answer:
-      'The duration of rehabilitation varies greatly depending on the individual&apos;s condition, severity, and personal factors. It can range from a few weeks to several months or even years for complex cases.',
+      "The duration of rehabilitation varies greatly depending on the individual's condition, severity, and personal factors. It can range from a few weeks to several months or even years for complex cases.",
   },
   {
     question: 'What can I expect during a rehabilitation session?',
@@ -46,8 +46,10 @@ export default [
   },
   {
     question:
-      'What should I do if I&apos;m not seeing progress in my rehabilitation?',
+      "What should I do if I'm not seeing progress in my rehabilitation?",
     answer:
-      'If you&apos;re not seeing expected progress, it&apos;s important to:\n- Communicate your concerns with your rehabilitation team\n- Ensure you&apos;re following the prescribed program correctly\n- Be patient, as some conditions require more time for improvement\n- Discuss potential adjustments to your treatment plan with your healthcare provider',
+      "If you're not seeing expected progress, it's important to:\n- Communicate your concerns with your rehabilitation team\n- Ensure you're following the prescribed program correctly\n- Be patient, as some conditions require more time for improvement\n- Discuss potential adjustments to your treatment plan with your healthcare provider",
   },
 ]
+
+export default faq
