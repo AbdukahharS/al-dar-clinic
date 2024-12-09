@@ -15,5 +15,19 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        '.no-spinner': {
+          '&::-webkit-inner-spin-button, &::-webkit-outer-spin-button': {
+            '-webkit-appearance': 'none',
+            margin: '0',
+          },
+          '&': {
+            '-moz-appearance': 'textfield',
+          },
+        },
+      })
+    },
+  ],
 }
