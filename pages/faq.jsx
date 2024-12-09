@@ -4,7 +4,7 @@ import { FaPlus, FaMinus } from 'react-icons/fa6'
 import { Poppins } from 'next/font/google'
 
 import Animated from '@/components/Animated'
-import data from './_faqdata'
+import data from '../data/faqData'
 
 const poppins = Poppins({
   weight: ['400', '500', '600'],
