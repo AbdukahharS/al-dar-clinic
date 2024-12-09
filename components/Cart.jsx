@@ -32,18 +32,24 @@ const Cart = () => {
       <Button
         variant='outline'
         size='icon'
-        className='!text-primary !text-2xl !border-black hidden md:flex'
+        className='!text-primary !text-2xl !border-black hidden md:flex relative'
         onClick={() => setOpen(true)}
       >
         <FaCartShopping />
+        <div className='absolute bg-red-500 top-0 right-0 text-white text-xs flex w-4 h-4 items-center justify-center rounded-full'>
+          2
+        </div>
       </Button>
       <Button
         variant='outline'
         size='iconSM'
-        className='!text-primary !text-2xl !border-black md:hidden'
+        className='!text-primary !text-2xl !border-black md:hidden relative'
         onClick={() => setOpen(true)}
       >
         <FaCartShopping className='text-sm' />
+        <div className='absolute bg-red-500 top-0 right-0 text-white text-xs flex w-4 h-4 items-center justify-center rounded-full translate-x-1/4 -translate-y-1/4'>
+          2
+        </div>
       </Button>
       <motion.div
         initial={{ opacity: 0, zIndex: -100 }}
