@@ -8,6 +8,7 @@ import Button from '@/components/Button'
 import dumbbell from '@/public/images/products/dumbbell.webp'
 import sponge from '@/public/images/products/sponge.webp'
 import Animated from '@/components/Animated'
+import Address from '@/components/Address'
 
 const cartItems = [
   {
@@ -31,6 +32,7 @@ const cartItems = [
 const Checkout = () => {
   const [chosenAddress, setChosenAddress] = useState()
   const [chosenBilling, setChosenBilling] = useState()
+  const [open, setOpen] = useState(false)
   const [sameBilling, setSameBilling] = useState(true)
   const router = useRouter()
 
@@ -100,10 +102,16 @@ const Checkout = () => {
             <div className='flex flex-row items-center justify-between px-3 md:px-6 pt-7 pb-3 border-b'>
               <h3 className='font-medium'>Shipping Address</h3>
               <div className='flex flex-row items-center gap-2 md:gap-6'>
-                <button className='bg-green-200/30 text-green-500 text-xs md:text-base flex flex-row items-center gap-1 md:gap-2 rounded-lg py-1 px-[6px] transition-all duration-200 hover:scale-110'>
+                <button
+                  onClick={() => setOpen(true)}
+                  className='bg-green-200/30 text-green-500 text-xs md:text-base flex flex-row items-center gap-1 md:gap-2 rounded-lg py-1 px-[6px] transition-all duration-200 hover:scale-110'
+                >
                   <FaPencil /> Edit
                 </button>
-                <button className='bg-blue-200/30 text-blue-500 text-xs md:text-base flex flex-row items-center gap-1 md:gap-2 rounded-lg py-1 px-[6px] transition-all duration-200 hover:scale-110'>
+                <button
+                  onClick={() => setOpen(true)}
+                  className='bg-blue-200/30 text-blue-500 text-xs md:text-base flex flex-row items-center gap-1 md:gap-2 rounded-lg py-1 px-[6px] transition-all duration-200 hover:scale-110'
+                >
                   <FaCirclePlus /> Add New
                 </button>
               </div>
@@ -155,10 +163,16 @@ const Checkout = () => {
             <div className='flex flex-row items-center justify-between px-3 md:px-6 pt-7 pb-3 border-b'>
               <h3 className='font-medium'>Billing Address</h3>
               <div className='flex flex-row items-center gap-2 md:gap-6'>
-                <button className='bg-green-200/30 text-green-500 text-xs md:text-base flex flex-row items-center gap-1 md:gap-2 rounded-lg py-1 px-[6px] transition-all duration-200 hover:scale-110'>
+                <button
+                  onClick={() => setOpen(true)}
+                  className='bg-green-200/30 text-green-500 text-xs md:text-base flex flex-row items-center gap-1 md:gap-2 rounded-lg py-1 px-[6px] transition-all duration-200 hover:scale-110'
+                >
                   <FaPencil /> Edit
                 </button>
-                <button className='bg-blue-200/30 text-blue-500 text-xs md:text-base flex flex-row items-center gap-1 md:gap-2 rounded-lg py-1 px-[6px] transition-all duration-200 hover:scale-110'>
+                <button
+                  onClick={() => setOpen(true)}
+                  className='bg-blue-200/30 text-blue-500 text-xs md:text-base flex flex-row items-center gap-1 md:gap-2 rounded-lg py-1 px-[6px] transition-all duration-200 hover:scale-110'
+                >
                   <FaCirclePlus /> Add New
                 </button>
               </div>
@@ -188,7 +202,7 @@ const Checkout = () => {
         </div>
         <div className='w-full md:w-[calc(30%-14px)] border rounded-lg h-fit'>
           <div className='px-3 md:px-6 pt-7 pb-3 border-b'>
-            <h3 className='text-center font-medium'>Billing Address</h3>
+            <h3 className='text-center font-medium'>Order Summary</h3>
           </div>
           <div className='px-[11.5px] py-7 md:px-6'>
             {cartItems.map((el, i) => (
@@ -239,6 +253,7 @@ const Checkout = () => {
         </Button>
         <Button>Save and Pay</Button>
       </Animated>
+      <Address open={open} setOpen={setOpen} />
     </div>
   )
 }
