@@ -12,6 +12,7 @@ import {
   FaCircleXmark,
 } from 'react-icons/fa6'
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 
 import useSidebarState from '@/hooks/useSidebar'
 import Button from './Button'
@@ -69,7 +70,7 @@ const SideBar = () => {
         <Link
           href='/profile/settings'
           className={`w-full flex flex-row items-center gap-2 border-b p-[10px] font-medium transform transition-all duration-300 ease-in-out hover:scale-105 hover:text-primary ${
-            path.startsWith('/profile/settings') && 'text-primary'
+            path?.startsWith('/profile/settings') && 'text-primary'
           }`}
         >
           <FaUser />
@@ -78,7 +79,7 @@ const SideBar = () => {
         <Link
           href='/profile/appointments'
           className={`w-full flex flex-row items-center gap-2 border-b p-[10px] font-medium transform transition-all duration-300 ease-in-out hover:scale-105 hover:text-primary ${
-            path.startsWith('/profile/appointments') && 'text-primary'
+            path?.startsWith('/profile/appointments') && 'text-primary'
           }`}
         >
           <FaCalendarDays />
@@ -87,7 +88,7 @@ const SideBar = () => {
         <Link
           href='/profile/orders'
           className={`w-full flex flex-row items-center gap-2 border-b p-[10px] font-medium transform transition-all duration-300 ease-in-out hover:scale-105 hover:text-primary ${
-            path.startsWith('/profile/orders') && 'text-primary'
+            path?.startsWith('/profile/orders') && 'text-primary'
           }`}
         >
           <FaBasketShopping />
@@ -96,7 +97,7 @@ const SideBar = () => {
         <Link
           href='/profile/rental'
           className={`w-full flex flex-row items-center gap-2 border-b p-[10px] font-medium transform transition-all duration-300 ease-in-out hover:scale-105 hover:text-primary ${
-            path.startsWith('/profile/rental') && 'text-primary'
+            path?.startsWith('/profile/rental') && 'text-primary'
           }`}
         >
           <FaToolbox />
@@ -105,7 +106,7 @@ const SideBar = () => {
         <Link
           href='/profile/addresses'
           className={`w-full flex flex-row items-center gap-2 border-b p-[10px] font-medium transform transition-all duration-300 ease-in-out hover:scale-105 hover:text-primary ${
-            path.startsWith('/profile/addresses') && 'text-primary'
+            path?.startsWith('/profile/addresses') && 'text-primary'
           }`}
         >
           <FaLocationDot />

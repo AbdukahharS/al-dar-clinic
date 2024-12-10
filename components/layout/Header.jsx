@@ -1,4 +1,4 @@
-import { FaBars } from 'react-icons/fa6'
+import { FaArrowLeft, FaBars } from 'react-icons/fa6'
 import { usePathname } from 'next/navigation'
 import useSidebarState from '@/hooks/useSidebar'
 
