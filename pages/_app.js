@@ -7,6 +7,7 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import '@/styles/globals.css'
 import '@/styles/fonts.css'
+import SideBar from '@/components/SideBar'
 
 export default function App({ Component, pageProps }) {
   const path = usePathname()
@@ -17,9 +18,18 @@ export default function App({ Component, pageProps }) {
       <div className='min-h-screen flex flex-col'>
         <Navbar />
         <div className='overflow-hidden flex-1 bg-gradient-to-b from-[#f9f9f9] from-0% to-white to-20%'>
-          <Component {...pageProps} />
+          {path.startsWith('/profile') ? (
+            <div className='w-full max-w-7xl mx-auto py-10 px-7 md:pt-16 flex flex-col md:flex-row gap-8 md:gap-16'>
+              <SideBar />
+              <div className='flex-1'>
+                <Component {...pageProps} />
+              </div>
+            </div>
+          ) : (
+            <Component {...pageProps} />
+          )}
         </div>
-        {path?.split('/')[1] !== 'auth' && <Footer />}
+        {!path.startsWith('/auth') && <Footer />}
       </div>
     </Provider>
   )

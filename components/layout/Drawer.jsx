@@ -6,7 +6,7 @@ import { FaBars, FaUserLarge, FaX } from 'react-icons/fa6'
 import Image from 'next/image'
 
 import useAuth from '@/hooks/useAuth'
-import Button from './Button'
+import Button from '../Button'
 import ADR from '@/public/images/ADR.webp'
 
 const variants = {
@@ -54,7 +54,7 @@ export default function Drawer() {
       >
         <div className='relative h-28'>
           {!loading && isAuthenticated && (
-            <Link href='/#'>
+            <Link href='/profile/settings'>
               <Button
                 variant='outline'
                 size='icon'

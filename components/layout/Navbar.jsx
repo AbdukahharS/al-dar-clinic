@@ -9,7 +9,7 @@ import { FaUserLarge } from 'react-icons/fa6'
 import useAuth from '@/hooks/useAuth'
 import Button from '../Button'
 import Logo from '@/public/images/logo-full.webp'
-import Drawer from '../Drawer'
+import Drawer from './Drawer'
 import LoginButton from '../LoginButton'
 import Cart from '../Cart'
 
@@ -71,7 +71,7 @@ const Navbar = () => {
           {isAuthenticated && !loading && (
             <>
               <Cart />
-              <Link href='/#'>
+              <Link href='/profile/settings'>
                 <Button size='icon' className=' bg-primary text-2xl text-white'>
                   {user?.profileImage ? (
                     <Image src={user.profileImage} alt='User Profile' />
