@@ -9,6 +9,7 @@ import dumbbell from '@/public/images/products/dumbbell.webp'
 import sponge from '@/public/images/products/sponge.webp'
 import Animated from '@/components/Animated'
 import Address from '@/components/Address'
+import Link from 'next/link'
 
 const cartItems = [
   {
@@ -251,7 +252,9 @@ const Checkout = () => {
         <Button variant='outline' className='border-primary text-primary'>
           Back to Cart
         </Button>
-        <Button>Save and Pay</Button>
+        <Link href='/order/payment'>
+          <Button>Save and Pay</Button>
+        </Link>
       </Animated>
       <Address open={open} setOpen={setOpen} />
     </div>
