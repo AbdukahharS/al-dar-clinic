@@ -9,7 +9,7 @@ const Header = ({ pageTitle }) => {
   const { open } = useSidebarState()
 
   return (
-    <div className='w-full flex flex-row items-center gap-4'>
+    <div className='w-full flex flex-row items-center gap-4 mb-10 md:mb-8'>
       <Button
         variant='ghost'
         size='iconSM'
