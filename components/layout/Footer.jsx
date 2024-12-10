@@ -33,6 +33,7 @@ const links = [
   { name: 'Home Page', href: '/' },
   { name: 'About Us', href: '/about' },
   { name: 'Our Services', href: '/services' },
+  { name: 'FAQ', href: '/faq' },
 ]
 
 const Footer = () => {
