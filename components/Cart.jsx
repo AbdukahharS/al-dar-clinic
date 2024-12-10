@@ -7,6 +7,7 @@ import Button from './Button'
 import dumbbell from '@/public/images/products/dumbbell.webp'
 import sponge from '@/public/images/products/sponge.webp'
 import empty from '@/public/images/empty-box.webp'
+import Link from 'next/link'
 
 const Cart = () => {
   const [open, setOpen] = useState(false)
@@ -135,7 +136,11 @@ const Cart = () => {
                   <p>Total</p>
                   <p>Dhs 350</p>
                 </div>
-                <Button className='w-full'>Proceed to Checkout</Button>
+                <Link href='/order/checkout'>
+                  <Button className='w-full' onClick={() => setOpen(false)}>
+                    Proceed to Checkout
+                  </Button>
+                </Link>
               </div>
             </>
           ) : (
