@@ -356,9 +356,9 @@ const Rental = () => {
                 <span className='text-gray-500'>{fileName}</span>
                 <label
                   htmlFor='fileID'
-                  className='flex items-center justify-center px-4 py-1 bg-primary text-white rounded-xl cursor-pointer'
+                  className='flex items-center justify-center px-8 md:px-10 py-1 bg-primary text-white rounded-xl cursor-pointer'
                 >
-                  Upload File
+                  Upload file
                 </label>
                 <input
                   {...register('fileID', {
