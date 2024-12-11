@@ -54,7 +54,7 @@ const orders = [
   },
 ]
 
-const StatusBar = ({ status }) => {
+export const StatusBar = ({ status }) => {
   let style
   switch (status) {
     case 'pending':
@@ -80,7 +80,7 @@ const StatusBar = ({ status }) => {
       break
   }
   return (
-    <div className={`px-4 py-1 border rounded-lg w-fit mx-auto ${style}`}>
+    <div className={`px-4 py-1 border rounded-lg w-fit ${style}`}>
       {status.replace(/-/g, ' ').charAt(0).toUpperCase() +
         status.replace(/-/g, ' ').slice(1)}
     </div>
