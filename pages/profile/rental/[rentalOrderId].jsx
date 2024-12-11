@@ -6,7 +6,6 @@ import { FaCircleXmark, FaExclamation } from 'react-icons/fa6'
 import Header from '@/components/layout/Header'
 import Animated from '@/components/Animated'
 import dumbbell from '@/public/images/products/dumbbell.webp'
-import sponge from '@/public/images/products/sponge.webp'
 import { StatusBar } from '../orders'
 import Button from '@/components/Button'
 
@@ -78,7 +77,7 @@ const OrderDetails = () => {
     )
   }
   return (
-    <div className='text-gray-700'>
+    <div className='text-gray-700 md:rounded-2xl md:bg-white md:shadow-[0px_4px_20px_0px_rgba(0,0,0,0.08)] md:px-6 md:pb-10'>
       <Header pageTitle='Rental Order Details' />
       <div className='text-center'>
         <p className='text-xl font-medium mb-3'>Thank you</p>

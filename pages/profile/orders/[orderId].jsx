@@ -86,7 +86,7 @@ const OrderDetails = () => {
     )
   }
   return (
-    <div className='text-gray-700'>
+    <div className='text-gray-700 md:rounded-2xl md:bg-white md:shadow-[0px_4px_20px_0px_rgba(0,0,0,0.08)] md:px-6 md:pb-10'>
       <Header pageTitle='Order Details' />
       <div className='text-center'>
         <p className='text-xl font-medium mb-3'>Thank you</p>
