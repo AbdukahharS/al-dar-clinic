@@ -2,11 +2,13 @@ import { FaCircleInfo } from 'react-icons/fa6'
 import Link from 'next/link'
 
 import Header from '@/components/layout/Header'
+import { StatusBar } from '../orders'
 
-const orders = [
+const rentalOrders = [
   {
     orderId: '1010246',
-    products: '2 Product',
+    productName: 'Dumbbell',
+    quantity: 2,
     status: 'pending',
     payment: 'Unpaid',
     amount: '$212.50',
@@ -14,7 +16,8 @@ const orders = [
   },
   {
     orderId: '1010246',
-    products: '2 Product',
+    productName: 'Dumbbell',
+    quantity: 2,
     status: 'rejected',
     payment: 'Unpaid',
     amount: '$212.50',
@@ -22,7 +25,8 @@ const orders = [
   },
   {
     orderId: '1010246',
-    products: '2 Product',
+    productName: 'Gym Ball',
+    quantity: 3,
     status: 'confirmed',
     payment: 'Unpaid',
     amount: '$212.50',
@@ -30,7 +34,8 @@ const orders = [
   },
   {
     orderId: '1010246',
-    products: '2 Product',
+    productName: 'Soft Dumbbell',
+    quantity: 4,
     status: 'on-the-way',
     payment: 'Unpaid',
     amount: '$212.50',
@@ -38,7 +43,8 @@ const orders = [
   },
   {
     orderId: '1010246',
-    products: '2 Product',
+    productName: 'Weight Ball',
+    quantity: 6,
     status: 'delivered',
     payment: 'Paid',
     amount: '$212.50',
@@ -46,7 +52,8 @@ const orders = [
   },
   {
     orderId: '1010246',
-    products: '2 Product',
+    productName: 'Weight Ball',
+    quantity: 6,
     status: 'cancelled',
     payment: 'Unpaid',
     amount: '$212.50',
@@ -54,43 +61,10 @@ const orders = [
   },
 ]
 
-export const StatusBar = ({ status }) => {
-  let style
-  switch (status) {
-    case 'pending':
-      style = 'border-[#FFCE09] text-[#FFCE09]'
-      break
-    case 'rejected':
-      style = 'border-[#AE4229] text-[#AE4229]'
-      break
-    case 'confirmed':
-      style = 'border-[#FFAE00] text-[#FFAE00]'
-      break
-    case 'on-the-way':
-      style = 'border-[#AC43FC] text-[#AC43FC]'
-      break
-    case 'delivered':
-      style = 'border-[#58C57D] text-[#58C57D]'
-      break
-    case 'cancelled':
-      style = 'border-[#AE4229] text-[#AE4229]'
-      break
-
-    default:
-      break
-  }
+const Rental = () => {
   return (
-    <div className={`px-4 py-1 border rounded-lg w-fit ${style}`}>
-      {status.replace(/-/g, ' ').charAt(0).toUpperCase() +
-        status.replace(/-/g, ' ').slice(1)}
-    </div>
-  )
-}
-
-const Orders = () => {
-  return (
-    <div>
-      <Header pageTitle='Order History' />
+    <div className=' md:w-[calc(100%+(100vw-1280px)/2)]'>
+      <Header pageTitle='Rental History' />
       <div className='overflow-x-auto'>
         <table className='min-w-full table-auto text-gray-700'>
           <thead>
@@ -99,7 +73,10 @@ const Orders = () => {
                 Order ID
               </th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
-                Products
+                Product Name
+              </th>
+              <th className='px-4 py-5 font-medium whitespace-nowrap'>
+                Quantity
               </th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
                 Status
@@ -116,14 +93,17 @@ const Orders = () => {
             </tr>
           </thead>
           <tbody>
-            {orders.map((order, index) => (
+            {rentalOrders.map((order, index) => (
               <tr key={index} className='border'>
                 <td className='px-3 py-4 whitespace-nowrap'>
                   {order.orderId}
                   <p className='text-xs'>{order.timestamp}</p>
                 </td>
+                <td className='px-3 py-4 whitespace-nowrap'>
+                  {order.productName}
+                </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  {order.products}
+                  {order.quantity}
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
                   <StatusBar status={order.status} />
@@ -143,7 +123,7 @@ const Orders = () => {
                   {order.amount}
                 </td>
                 <td className='px-3 py-4 text-primary whitespace-nowrap'>
-                  <Link href={`/profile/orders/${order.orderId}`}>
+                  <Link href={`/profile/rental/${order.orderId}`}>
                     <FaCircleInfo className='mx-auto text-xl' />
                   </Link>
                 </td>
@@ -171,4 +151,4 @@ const Orders = () => {
   )
 }
 
-export default Orders
+export default Rental
