@@ -73,7 +73,7 @@ const Payment = () => {
               Your Order is Confirmed
             </p>
             <div className='flex flex-row items-center justify-center gap-4 md:hidden'>
-              <Link href='/profile/appointments/1'>
+              <Link href='/profile/orders/1'>
                 <Button
                   variant='outline'
                   className='text-primary border-primary'
@@ -87,7 +87,7 @@ const Payment = () => {
               </Button>
             </div>
             <div className='hidden flex-row items-center justify-center gap-8 md:flex'>
-              <Link href='/profile/appointments/1'>
+              <Link href='/profile/orders/1'>
                 <Button
                   variant='outline'
                   className='text-primary border-primary'

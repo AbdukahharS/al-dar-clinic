@@ -1,4 +1,7 @@
 import Image from 'next/image'
+import toast from 'react-hot-toast'
+import { motion } from 'framer-motion'
+import { FaCircleXmark, FaExclamation } from 'react-icons/fa6'
 
 import Header from '@/components/layout/Header'
 import Animated from '@/components/Animated'
@@ -27,6 +30,61 @@ const cartItems = [
 ]
 
 const OrderDetails = () => {
+  const handleCancel = () => {
+    toast.custom(
+      (t) => (
+        <motion.div
+          initial={{ zIndex: -20, opacity: 0 }}
+          animate={
+            t.visible
+              ? { zIndex: 100, opacity: 1 }
+              : { zIndex: -20, opacity: 0 }
+          }
+          transition={{ duration: 0.3 }}
+          className='absolute -top-4 -left-4 w-screen !h-screen bg-black/60 flex items-center justify-center p-5'
+        >
+          <motion.div
+            initial={{ y: 15 }}
+            animate={t.visible ? { y: 0 } : { y: 15 }}
+            className='w-[100%] max-w-5xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
+          >
+            <Button
+              size='icon'
+              variant='ghost'
+              onClick={() => toast.dismiss(t.id)}
+              className='ml-auto'
+            >
+              <FaCircleXmark className='text-primary text-4xl mx-auto' />
+            </Button>
+            <div className='border-8 border-yellow-500 rounded-full w-fit mx-auto'>
+              <FaExclamation className='text-yellow-500 text-[156px] md:text-[238px]' />
+            </div>
+            <p className='text-xl font-medium md:text-4xl text-center mt-12 md:mt-18 tracking-wide'>
+              Are you sure?
+            </p>
+            <p className='text-center my-8'>You want to cancel your order?</p>
+            <div className='flex flex-row items-center justify-center gap-4 md:hidden'>
+              <Button size='sm'>Yes, Cancel it!</Button>
+              <Button
+                size='sm'
+                variant='secondary'
+                onClick={() => toast.dismiss(t.id)}
+              >
+                No, Don't Cancel
+              </Button>
+            </div>
+            <div className='hidden flex-row items-center justify-center gap-8 md:flex'>
+              <Button>Yes, Cancel it!</Button>
+              <Button variant='secondary' onClick={() => toast.dismiss(t.id)}>
+                No, Don't Cancel
+              </Button>
+            </div>
+          </motion.div>
+        </motion.div>
+      ),
+      { duration: Infinity }
+    )
+  }
   return (
     <div className='text-gray-700'>
       <Header pageTitle='Order Details' />
@@ -189,13 +247,18 @@ const OrderDetails = () => {
               size='sm'
               variant='outline'
               className='border-red-500 text-red-500'
+              onClick={handleCancel}
             >
               Cancel Order
             </Button>
           </Animated>
           <Animated className='flex-row items-center justify-end gap-6 hidden md:flex'>
             <Button>Download Receipt</Button>
-            <Button variant='outline' className='border-red-500 text-red-500'>
+            <Button
+              onClick={handleCancel}
+              variant='outline'
+              className='border-red-500 text-red-500'
+            >
               Cancel Order
             </Button>
           </Animated>

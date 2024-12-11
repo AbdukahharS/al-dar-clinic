@@ -37,7 +37,7 @@ const Book = () => {
               : { zIndex: -20, opacity: 0 }
           }
           transition={{ duration: 0.3 }}
-          className='absolute -top-4 -left-4 w-full !h-screen bg-black/60 flex items-center justify-center p-5'
+          className='absolute -top-4 -left-4 w-screen !h-screen bg-black/60 flex items-center justify-center p-5'
         >
           <motion.div
             initial={{ y: 15 }}
