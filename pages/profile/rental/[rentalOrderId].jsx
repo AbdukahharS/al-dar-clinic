@@ -61,13 +61,13 @@ const OrderDetails = () => {
                 variant='secondary'
                 onClick={() => toast.dismiss(t.id)}
               >
-                No, Don't Cancel
+                No, Don&apos;t Cancel
               </Button>
             </div>
             <div className='hidden flex-row items-center justify-center gap-8 md:flex'>
               <Button>Yes, Cancel it!</Button>
               <Button variant='secondary' onClick={() => toast.dismiss(t.id)}>
-                No, Don't Cancel
+                No, Don&apos;t Cancel
               </Button>
             </div>
           </motion.div>
