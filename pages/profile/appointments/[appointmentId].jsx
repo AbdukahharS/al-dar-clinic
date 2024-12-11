@@ -5,7 +5,7 @@ import Header from '@/components/layout/Header'
 const Appointments = () => {
   return (
     <div>
-      <Header pageTitle='Appointments' bg />
+      <Header pageTitle='Appointment Details' bg />
       <div className='flex flex-col md:flex-row gap-5 z-10 relative'>
         <div className='w-full md:w-[calc(50%-10px)]'>
           <div className='border rounded-lg bg-white'>

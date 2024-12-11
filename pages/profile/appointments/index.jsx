@@ -1,6 +1,7 @@
 import { FaCircleInfo } from 'react-icons/fa6'
 
 import Header from '@/components/layout/Header'
+import Link from 'next/link'
 
 const appointments = [
   {
@@ -66,7 +67,9 @@ const Appointments = () => {
                   {appointment.schedule}
                 </td>
                 <td className='px-4 py-6 text-primary whitespace-nowrap'>
-                  <FaCircleInfo className='mx-auto text-xl' />
+                  <Link href={`/profile/appointments/${index}`}>
+                    <FaCircleInfo className='mx-auto text-xl' />
+                  </Link>
                 </td>
               </tr>
             ))}
