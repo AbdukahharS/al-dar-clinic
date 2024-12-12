@@ -7,7 +7,7 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { Inter } from 'next/font/google'
 import { useForm, Controller } from 'react-hook-form'
 import OtpInput from 'react-otp-input'
-import PhoneInput from 'react-phone-number-input'
+import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
 
 import Button from '@/components/Button'
@@ -114,7 +114,7 @@ const ForgotPasswordPhone = () => {
                   rules={{
                     required: 'Phone number is required',
                     validate: (value) =>
-                      value?.length >= 10 ||
+                      isValidPhoneNumber(value) ||
                       'Please enter a valid phone number',
                   }}
                   render={({ field }) => (

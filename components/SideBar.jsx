@@ -51,7 +51,7 @@ const SideBar = () => {
       <Button
         variant='ghost'
         size='iconSM'
-        className='text-primary text-2xl float-right -mt-4 md:hidden'
+        className='text-primary text-2xl absolute right-4 top-8 md:hidden'
         onClick={close}
       >
         <FaCircleXmark />
@@ -69,6 +69,7 @@ const SideBar = () => {
       <div className='text-gray-700 mt-14'>
         <Link
           href='/profile/settings'
+          onClick={close}
           className={`w-full flex flex-row items-center gap-2 border-b p-[10px] font-medium transform transition-all duration-300 ease-in-out hover:scale-105 hover:text-primary ${
             path?.startsWith('/profile/settings') && 'text-primary'
           }`}
@@ -78,6 +79,7 @@ const SideBar = () => {
         </Link>
         <Link
           href='/profile/appointments'
+          onClick={close}
           className={`w-full flex flex-row items-center gap-2 border-b p-[10px] font-medium transform transition-all duration-300 ease-in-out hover:scale-105 hover:text-primary ${
             path?.startsWith('/profile/appointments') && 'text-primary'
           }`}
@@ -87,6 +89,7 @@ const SideBar = () => {
         </Link>
         <Link
           href='/profile/orders'
+          onClick={close}
           className={`w-full flex flex-row items-center gap-2 border-b p-[10px] font-medium transform transition-all duration-300 ease-in-out hover:scale-105 hover:text-primary ${
             path?.startsWith('/profile/orders') && 'text-primary'
           }`}
@@ -96,6 +99,7 @@ const SideBar = () => {
         </Link>
         <Link
           href='/profile/rental'
+          onClick={close}
           className={`w-full flex flex-row items-center gap-2 border-b p-[10px] font-medium transform transition-all duration-300 ease-in-out hover:scale-105 hover:text-primary ${
             path?.startsWith('/profile/rental') && 'text-primary'
           }`}
@@ -105,6 +109,7 @@ const SideBar = () => {
         </Link>
         <Link
           href='/profile/addresses'
+          onClick={close}
           className={`w-full flex flex-row items-center gap-2 border-b p-[10px] font-medium transform transition-all duration-300 ease-in-out hover:scale-105 hover:text-primary ${
             path?.startsWith('/profile/addresses') && 'text-primary'
           }`}
@@ -112,7 +117,10 @@ const SideBar = () => {
           <FaLocationDot />
           <span>Addresses</span>
         </Link>
-        <button className='w-full flex flex-row items-center gap-2 border-b p-[10px] font-medium transform transition-all duration-300 ease-in-out hover:scale-105 hover:text-red-500'>
+        <button
+          onClick={close}
+          className='w-full flex flex-row items-center gap-2 border-b p-[10px] font-medium transform transition-all duration-300 ease-in-out hover:scale-105 hover:text-red-500'
+        >
           <FaArrowRightFromBracket className='rotate-180 text-red-500' />
           <span>Logout</span>
         </button>

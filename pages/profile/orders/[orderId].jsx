@@ -9,6 +9,7 @@ import dumbbell from '@/public/images/products/dumbbell.webp'
 import sponge from '@/public/images/products/sponge.webp'
 import { StatusBar } from '.'
 import Button from '@/components/Button'
+import Link from 'next/link'
 
 const cartItems = [
   {
@@ -46,7 +47,7 @@ const OrderDetails = () => {
           <motion.div
             initial={{ y: 15 }}
             animate={t.visible ? { y: 0 } : { y: 15 }}
-            className='w-[100%] max-w-5xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
+            className='w-full sm:w-[70%] max-w-5xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
           >
             <Button
               size='icon'
@@ -57,9 +58,9 @@ const OrderDetails = () => {
               <FaCircleXmark className='text-primary text-4xl mx-auto' />
             </Button>
             <div className='border-8 border-yellow-500 rounded-full w-fit mx-auto'>
-              <FaExclamation className='text-yellow-500 text-[156px] md:text-[238px]' />
+              <FaExclamation className='text-yellow-500 text-[156px] md:text-[190px] xl:text-[238px]' />
             </div>
-            <p className='text-xl font-medium md:text-4xl text-center mt-12 md:mt-18 tracking-wide'>
+            <p className='text-xl font-medium md:text-2xl xl:text-4xl text-center mt-12 md:mt-18 tracking-wide'>
               Are you sure?
             </p>
             <p className='text-center my-8'>You want to cancel your order?</p>
@@ -175,7 +176,7 @@ const OrderDetails = () => {
                   <td className='px-4 pt-4 pb-2'>Sparsh Jaiswal</td>
                 </tr>
                 <tr>
-                  <td className='font-semibold px-4 py-2'>Phonee:</td>
+                  <td className='font-semibold px-4 py-2'>Phone:</td>
                   <td className='px-4 py-2'>+8801253344</td>
                 </tr>
                 <tr>
@@ -242,7 +243,9 @@ const OrderDetails = () => {
             </div>
           </Animated>
           <Animated className='flex flex-row items-center justify-between md:justify-end md:gap-6 md:hidden'>
-            <Button size='sm'>Download Receipt</Button>
+            <Link href='/profile/orders/receipt'>
+              <Button size='sm'>Download Receipt</Button>
+            </Link>
             <Button
               size='sm'
               variant='outline'
@@ -253,7 +256,9 @@ const OrderDetails = () => {
             </Button>
           </Animated>
           <Animated className='flex-row items-center justify-end gap-6 hidden md:flex'>
-            <Button>Download Receipt</Button>
+            <Link href='/profile/orders/receipt'>
+              <Button>Download Receipt</Button>
+            </Link>
             <Button
               onClick={handleCancel}
               variant='outline'

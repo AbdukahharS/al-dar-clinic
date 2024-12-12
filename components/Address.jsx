@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion'
 import { FaCircleXmark } from 'react-icons/fa6'
 import { useForm, Controller } from 'react-hook-form'
-import PhoneInput from 'react-phone-number-input'
+import { Country, State, City } from 'country-state-city'
+import { useEffect, useState } from 'react'
+import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
 
 import Button from './Button'
@@ -14,6 +16,24 @@ const Address = ({ open, setOpen }) => {
     control,
     formState: { errors },
   } = useForm()
+  const countries = Country.getAllCountries()
+  const [country, setCountry] = useState(countries[0].isoCode)
+  const [states, setStates] = useState(
+    State.getStatesOfCountry(countries[0].isoCode)
+  )
+  const [state, setState] = useState(
+    State.getStatesOfCountry(countries[0].isoCode)[0].isoCode
+  )
+
+  useEffect(() => {
+    if (country) {
+      setStates(State.getStatesOfCountry(country))
+      setState(State.getStatesOfCountry(country)[0]?.isoCode)
+    } else {
+      setStates(State.getStatesOfCountry(countries[0].isoCode))
+      setState(State.getStatesOfCountry(countries[0].isoCode)[0]?.isoCode)
+    }
+  }, [country, countries])
 
   const onSubmit = () => {
     setOpen(false)
@@ -115,7 +135,8 @@ const Address = ({ open, setOpen }) => {
                 rules={{
                   required: 'Phone number is required',
                   validate: (value) =>
-                    value?.length >= 10 || 'Please enter a valid phone number',
+                    isValidPhoneNumber(value) ||
+                    'Please enter a valid phone number',
                 }}
                 render={({ field }) => (
                   <PhoneInput
@@ -151,10 +172,14 @@ const Address = ({ open, setOpen }) => {
                   errors.country ? 'border-red-500' : 'border-gray-300'
                 }`}
                 {...register('country', { required: 'Select a country' })}
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
               >
-                <option value='india'>India</option>
-                <option value='indonesia'>Indonesia</option>
-                <option value='jamaica'>Jamaica</option>
+                {countries.map((el) => (
+                  <option key={el.isoCode} value={el.isoCode}>
+                    {el.name}
+                  </option>
+                ))}
               </select>
               <motion.p
                 initial={{ opacity: 0 }}
@@ -178,10 +203,14 @@ const Address = ({ open, setOpen }) => {
                 id='state'
                 className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 border-gray-300 focus:ring-primary`}
                 {...register('state', { required: 'Select a state' })}
+                value={state}
+                onChange={(e) => setState(e.target.value)}
               >
-                <option value='tamilnadu'>TamilNadu</option>
-                <option value='kerala'>Kerala</option>
-                <option value='karnataka'>Karnataka</option>
+                {states?.map((el) => (
+                  <option key={el.isoCode} value={el.isoCode}>
+                    {el.name}
+                  </option>
+                ))}
               </select>
               <motion.p
                 initial={{ opacity: 0 }}
@@ -197,7 +226,7 @@ const Address = ({ open, setOpen }) => {
                 htmlFor='city'
                 className='text-sm font-semibold text-black'
               >
-                Consultation medium<span className='text-primary'>*</span>
+                City<span className='text-primary'>*</span>
               </label>
               <select
                 name='city'
@@ -205,9 +234,11 @@ const Address = ({ open, setOpen }) => {
                 className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 border-gray-300 focus:ring-primary`}
                 {...register('city', { required: 'Select a city' })}
               >
-                <option value='chennai'>Chennai</option>
-                <option value='kanchipuram'>Kanchipuram</option>
-                <option value='chengalpattu'>Chengalpattu</option>
+                {City.getCitiesOfState(country, state).map((el) => (
+                  <option key={state + el.name} value={el.isoCode}>
+                    {el.name}
+                  </option>
+                ))}
               </select>
               <motion.p
                 initial={{ opacity: 0 }}

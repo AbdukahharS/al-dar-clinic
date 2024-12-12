@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google'
 import { Controller, useForm } from 'react-hook-form'
 import { motion } from 'framer-motion'
 import toast from 'react-hot-toast'
-import PhoneInput from 'react-phone-number-input'
+import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
 import { FaCircleXmark, FaCircleCheck } from 'react-icons/fa6'
 import 'react-phone-number-input/style.css'
 
@@ -24,6 +24,7 @@ const Book = () => {
     handleSubmit,
     control,
     formState: { errors },
+    reset,
   } = useForm()
 
   const onSubmit = (data) => {
@@ -42,7 +43,7 @@ const Book = () => {
           <motion.div
             initial={{ y: 15 }}
             animate={t.visible ? { y: 0 } : { y: 15 }}
-            className='w-[100%] max-w-5xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
+            className='w-full sm:w-[70%] max-w-5xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
           >
             <Button
               size='icon'
@@ -53,9 +54,9 @@ const Book = () => {
               <FaCircleXmark className='text-primary text-4xl' />
             </Button>
             <div>
-              <FaCircleCheck className='text-primary text-[156px] md:text-[238px] mx-auto' />
+              <FaCircleCheck className='text-primary text-[156px] md:text-[190px] xl:text-[238px] mx-auto' />
             </div>
-            <p className='text-xl font-medium md:text-4xl text-center py-12 md:mt-18 tracking-wide'>
+            <p className='text-xl font-medium md:text-2xl xl:text-4xl text-center py-12 md:mt-18 tracking-wide'>
               Your Appointment is Confirmed
             </p>
             <div className='flex flex-row items-center justify-center gap-4 md:hidden'>
@@ -64,6 +65,7 @@ const Book = () => {
                   variant='outline'
                   className='text-primary border-primary'
                   size='sm'
+                  onClick={() => toast.dismiss(t.id)}
                 >
                   Appointment details
                 </Button>
@@ -77,6 +79,7 @@ const Book = () => {
                 <Button
                   variant='outline'
                   className='text-primary border-primary'
+                  onClick={() => toast.dismiss(t.id)}
                 >
                   Appointment details
                 </Button>
@@ -186,7 +189,8 @@ const Book = () => {
               rules={{
                 required: 'Phone number is required',
                 validate: (value) =>
-                  value?.length >= 10 || 'Please enter a valid phone number',
+                  isValidPhoneNumber(value) ||
+                  'Please enter a valid phone number',
               }}
               render={({ field }) => (
                 <PhoneInput
@@ -390,6 +394,7 @@ const Book = () => {
             <Button
               variant='outline'
               className=' text-red-500 border-red-500 font-semibold !py-3'
+              onClick={() => reset()}
             >
               Cancel
             </Button>

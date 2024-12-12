@@ -34,8 +34,6 @@ const Adresses = () => {
   }
 
   const handleDelete = () => {
-    console.log(1)
-
     toast.custom(
       (t) => (
         <motion.div
@@ -51,7 +49,7 @@ const Adresses = () => {
           <motion.div
             initial={{ y: 15 }}
             animate={t.visible ? { y: 0 } : { y: 15 }}
-            className='w-[100%] max-w-5xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
+            className='w-full sm:w-[70%] max-w-5xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
           >
             <Button
               size='icon'
@@ -62,9 +60,9 @@ const Adresses = () => {
               <FaCircleXmark className='text-primary text-4xl mx-auto' />
             </Button>
             <div className='border-8 border-yellow-500 rounded-full w-fit mx-auto'>
-              <FaExclamation className='text-yellow-500 text-[156px] md:text-[238px]' />
+              <FaExclamation className='text-yellow-500 text-[156px] md:text-[190px] xl:text-[238px]' />
             </div>
-            <p className='text-xl font-medium md:text-4xl text-center mt-12 md:mt-18 tracking-wide'>
+            <p className='text-xl font-medium md:text-2xl xl:text-4xl text-center mt-12 md:mt-18 tracking-wide'>
               Are you sure?
             </p>
             <p className='text-center my-8'>
@@ -139,10 +137,13 @@ const Adresses = () => {
             </p>
           </Animated>
         ))}
-        <Animated className='w-full md:w-[calc(50%-12px)] h-36 bg-primary/10 rounded-xl border cursor-pointer border-primary flex items-center justify-center gap-4 text-lg font-bold text-primary'>
+        <div
+          onClick={() => setOpen(true)}
+          className='w-full md:w-[calc(50%-12px)] h-36 bg-primary/10 rounded-xl border cursor-pointer border-primary flex items-center justify-center gap-4 text-lg font-bold text-primary'
+        >
           <FaCirclePlus />
           Add New Address
-        </Animated>
+        </div>
       </div>
       <Address open={open} setOpen={setOpen} />
     </div>

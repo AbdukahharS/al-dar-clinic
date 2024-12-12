@@ -39,14 +39,14 @@ const Navbar = () => {
         initial={{ y: -50, opacity: 0 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className='w-full max-w-7xl mx-auto px-7 py-4 md:px-12 md:py-6 flex items-center justify-between'
+        className='w-full max-w-7xl mx-auto px-7 py-3 md:px-12 md:py-5 flex items-center justify-between'
       >
-        <Link href='/'>
+        <Link href='/' className='flex-1'>
           <Image
             src={Logo}
             alt='AL Dar Rehabilitation Clinic'
             width='auto'
-            className='h-16 md:h-24 w-fit'
+            className='h-14 md:h-16 lg:h-20 w-fit'
             loading='lazy'
           />
         </Link>
@@ -85,7 +85,7 @@ const Navbar = () => {
           {!isAuthenticated && <LoginButton />}
         </div>
         {isAuthenticated && (
-          <div className='md:hidden'>
+          <div className='lg:hidden mr-4'>
             <Cart />
           </div>
         )}

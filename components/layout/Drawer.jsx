@@ -59,6 +59,7 @@ export default function Drawer() {
                 variant='outline'
                 size='icon'
                 className='bg-primary text-white text-6xl !w-28 !h-28 mx-auto z-50 relative'
+                onClick={() => setIsOpen(false)}
               >
                 {user?.profileImage ? (
                   <Image src={user.profileImage} alt='User profile' fill />

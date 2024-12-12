@@ -11,6 +11,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.3.0",
     "axios": "^1.7.8",
+    "country-state-city": "^3.2.1",
     "framer-motion": "^11.11.17",
     "next": "14.2.18",
     "react": "^18",

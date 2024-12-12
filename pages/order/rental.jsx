@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google'
 import { Controller, useForm } from 'react-hook-form'
 import { motion } from 'framer-motion'
 import toast from 'react-hot-toast'
-import PhoneInput from 'react-phone-number-input'
+import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
 import { FaCircleXmark, FaCircleCheck, FaArrowLeft } from 'react-icons/fa6'
 import Link from 'next/link'
 import 'react-phone-number-input/style.css'
@@ -49,7 +49,7 @@ const Rental = () => {
           <motion.div
             initial={{ y: 15 }}
             animate={t.visible ? { y: 0 } : { y: 15 }}
-            className='w-[100%] max-w-5xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
+            className='w-full sm:w-[70%] max-w-5xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
           >
             <Button
               size='icon'
@@ -60,9 +60,9 @@ const Rental = () => {
               <FaCircleXmark className='text-primary text-4xl' />
             </Button>
             <div>
-              <FaCircleCheck className='text-primary text-[156px] md:text-[238px] mx-auto' />
+              <FaCircleCheck className='text-primary text-[156px] md:text-[190px] xl:text-[238px] mx-auto' />
             </div>
-            <p className='text-xl font-medium md:text-4xl text-center py-12 md:mt-18 tracking-wide'>
+            <p className='text-xl font-medium md:text-2xl xl:text-4xl text-center py-12 md:mt-18 tracking-wide'>
               Your order requst has been received
             </p>
             <div className='flex flex-row items-center justify-center gap-4 md:hidden'>
@@ -190,7 +190,8 @@ const Rental = () => {
                 rules={{
                   required: 'Phone number is required',
                   validate: (value) =>
-                    value?.length >= 10 || 'Please enter a valid phone number',
+                    isValidPhoneNumber(value) ||
+                    'Please enter a valid phone number',
                 }}
                 render={({ field }) => (
                   <PhoneInput
