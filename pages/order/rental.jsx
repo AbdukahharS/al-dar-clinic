@@ -49,7 +49,7 @@ const Rental = () => {
           <motion.div
             initial={{ y: 15 }}
             animate={t.visible ? { y: 0 } : { y: 15 }}
-            className='w-full sm:w-[70%] max-w-5xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
+            className='w-fit xl:w-full max-w-5xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
           >
             <Button
               size='icon'
@@ -60,7 +60,7 @@ const Rental = () => {
               <FaCircleXmark className='text-primary text-4xl' />
             </Button>
             <div>
-              <FaCircleCheck className='text-primary text-[156px] md:text-[190px] xl:text-[238px] mx-auto' />
+              <FaCircleCheck className='text-primary text-[100px] md:text-[136px] lg:text-[180px] xl:text-[218px] mx-auto' />
             </div>
             <p className='text-xl font-medium md:text-2xl xl:text-4xl text-center py-12 md:mt-18 tracking-wide'>
               Your order requst has been received

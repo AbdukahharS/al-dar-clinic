@@ -39,14 +39,14 @@ const Navbar = () => {
         initial={{ y: -50, opacity: 0 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className='w-full max-w-7xl mx-auto px-7 py-3 md:px-12 md:py-5 flex items-center justify-between'
+        className='w-full max-w-7xl mx-auto px-7 py-2 md:px-12 xl:py-5 flex items-center justify-between'
       >
         <Link href='/' className='flex-1'>
           <Image
             src={Logo}
             alt='AL Dar Rehabilitation Clinic'
             width='auto'
-            className='h-14 md:h-16 lg:h-20 w-fit'
+            className='h-12 md:h-14 xl:h-20 w-fit'
             loading='lazy'
           />
         </Link>
@@ -72,7 +72,10 @@ const Navbar = () => {
             <>
               <Cart />
               <Link href='/profile/settings'>
-                <Button size='icon' className=' bg-primary text-2xl text-white'>
+                <Button
+                  size='icon'
+                  className=' bg-primary text-xl xl:text-2xl text-white'
+                >
                   {user?.profileImage ? (
                     <Image src={user.profileImage} alt='User Profile' />
                   ) : (

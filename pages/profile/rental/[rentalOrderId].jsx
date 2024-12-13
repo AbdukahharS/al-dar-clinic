@@ -38,7 +38,7 @@ const OrderDetails = () => {
           <motion.div
             initial={{ y: 15 }}
             animate={t.visible ? { y: 0 } : { y: 15 }}
-            className='w-full sm:w-[70%] max-w-5xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
+            className='w-fit xl:w-full max-w-5xl mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
           >
             <Button
               size='icon'
@@ -46,15 +46,17 @@ const OrderDetails = () => {
               onClick={() => toast.dismiss(t.id)}
               className='ml-auto'
             >
-              <FaCircleXmark className='text-primary text-4xl mx-auto' />
+              <FaCircleXmark className='text-primary text-2xl md:text-4xl mx-auto' />
             </Button>
             <div className='border-8 border-yellow-500 rounded-full w-fit mx-auto'>
-              <FaExclamation className='text-yellow-500 text-[156px] md:text-[190px] xl:text-[238px]' />
+              <FaExclamation className='text-yellow-500 text-[100px] md:text-[136px] lg:text-[180px] xl:text-[218px]' />
             </div>
             <p className='text-xl font-medium md:text-2xl xl:text-4xl text-center mt-12 md:mt-18 tracking-wide'>
               Are you sure?
             </p>
-            <p className='text-center my-8'>You want to cancel your order?</p>
+            <p className='text-center my-4 lg:my-8'>
+              You want to cancel your order?
+            </p>
             <div className='flex flex-row items-center justify-center gap-4 md:hidden'>
               <Button size='sm'>Yes, Cancel it!</Button>
               <Button
@@ -171,7 +173,7 @@ const OrderDetails = () => {
                   <td className='px-4 pt-4 pb-2'>Sparsh Jaiswal</td>
                 </tr>
                 <tr>
-                  <td className='font-semibold px-4 py-2'>Phonee:</td>
+                  <td className='font-semibold px-4 py-2'>Phone:</td>
                   <td className='px-4 py-2'>+8801253344</td>
                 </tr>
                 <tr>

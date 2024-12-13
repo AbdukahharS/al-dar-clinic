@@ -49,7 +49,7 @@ const Adresses = () => {
           <motion.div
             initial={{ y: 15 }}
             animate={t.visible ? { y: 0 } : { y: 15 }}
-            className='w-full sm:w-[70%] max-w-5xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
+            className='w-fit xl:w-full max-w-5xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
           >
             <Button
               size='icon'
@@ -60,12 +60,12 @@ const Adresses = () => {
               <FaCircleXmark className='text-primary text-4xl mx-auto' />
             </Button>
             <div className='border-8 border-yellow-500 rounded-full w-fit mx-auto'>
-              <FaExclamation className='text-yellow-500 text-[156px] md:text-[190px] xl:text-[238px]' />
+              <FaExclamation className='text-yellow-500 text-[100px] md:text-[136px] lg:text-[180px] xl:text-[218px]' />
             </div>
             <p className='text-xl font-medium md:text-2xl xl:text-4xl text-center mt-12 md:mt-18 tracking-wide'>
               Are you sure?
             </p>
-            <p className='text-center my-8'>
+            <p className='text-center my-4 lg:my-8'>
               You will not be able to recover the deleted record!
             </p>
             <div className='flex flex-row items-center justify-center gap-4 md:hidden'>
