@@ -15,6 +15,7 @@ const Address = ({ open, setOpen }) => {
     handleSubmit,
     control,
     formState: { errors },
+    reset,
   } = useForm()
   const countries = Country.getAllCountries()
   const [country, setCountry] = useState(countries[0].isoCode)
@@ -24,6 +25,12 @@ const Address = ({ open, setOpen }) => {
   const [state, setState] = useState(
     State.getStatesOfCountry(countries[0].isoCode)[0].isoCode
   )
+
+  const close = () => {
+    reset()
+    setCountry(countries[0].isoCode)
+    setOpen(false)
+  }
 
   useEffect(() => {
     if (country) {
@@ -36,7 +43,7 @@ const Address = ({ open, setOpen }) => {
   }, [country, countries])
 
   const onSubmit = () => {
-    setOpen(false)
+    close()
   }
 
   return (
@@ -56,7 +63,7 @@ const Address = ({ open, setOpen }) => {
           <Button
             size='iconSM'
             variant='ghost'
-            onClick={() => setOpen(false)}
+            onClick={close}
             className='ml-auto'
           >
             <FaCircleXmark className='text-primary text-2xl' />
@@ -308,7 +315,7 @@ const Address = ({ open, setOpen }) => {
               <Button
                 variant='outline'
                 className=' text-red-500 border-red-500 font-semibold !py-3'
-                onClick={() => setOpen(false)}
+                onClick={close}
               >
                 Cancel
               </Button>
