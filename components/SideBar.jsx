@@ -46,7 +46,7 @@ const SideBar = () => {
     <motion.div
       variants={variants}
       animate={isOpen || !shouldAnimate ? 'open' : 'close'}
-      className='absolute z-50 md:z-0 top-0 right-0 md:static w-full md:w-72 bg-white px-4 py-12 shadow-[0px_4px_20px_0px_rgba(0,0,0,0.08)]'
+      className='absolute z-50 md:z-0 top-0 left-0 md:static w-72 bg-white px-4 py-12 shadow-[0px_4px_20px_0px_rgba(0,0,0,0.08)]'
     >
       <Button
         variant='ghost'

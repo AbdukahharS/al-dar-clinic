@@ -16,22 +16,22 @@ const Model = () => {
     {
       name: 'Physiotherapy Tools',
       img: tools,
-      link: `/products/buy/${params?.model}/tools`,
+      link: `/products/rent/${params?.model}/tools`,
     },
     {
       name: 'Physiotherapy Equipment',
       img: equipments,
-      link: `/products/buy/${params?.model}/equipments`,
+      link: `/products/rent/${params?.model}/equipments`,
     },
     {
       name: 'Physiotherapy Devices',
       img: devices,
-      link: `/products/buy/${params?.model}/devices`,
+      link: `/products/rent/${params?.model}/devices`,
     },
     {
       name: 'Accessories',
       img: accessories,
-      link: `/products/buy/${params?.model}/accessories`,
+      link: `/products/rent/${params?.model}/accessories`,
     },
   ]
   return (
@@ -41,7 +41,7 @@ const Model = () => {
         className='flex flex-row items-center gap-12 w-full max-w-7xl mx-auto px-7 mt-12 md:mt-16'
       >
         <h2 className='font-medium text-2xl md:text-4xl'>
-          BUY {params?.model.toUpperCase() || 'B2C'}
+          Rent {params?.model.toUpperCase() || 'B2C'}
         </h2>
         <div className='bg-primary h-[1px] md:flex-1'></div>
       </Animated>

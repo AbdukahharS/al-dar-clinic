@@ -8,7 +8,7 @@ import { FaUserLarge } from 'react-icons/fa6'
 
 import useAuth from '@/hooks/useAuth'
 import Button from '../Button'
-import Logo from '@/public/images/logo-full.webp'
+import Logo from '@/public/icons/final-logo.svg'
 import Drawer from './Drawer'
 import LoginButton from '../LoginButton'
 import Cart from '../Cart'
@@ -39,7 +39,7 @@ const Navbar = () => {
         initial={{ y: -50, opacity: 0 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className='w-full max-w-7xl mx-auto px-7 py-2 md:px-12 xl:py-5 flex items-center justify-between'
+        className='w-full max-w-7xl mx-auto px-7 py-1 md:px-12 xl:py-3 flex items-center justify-between'
       >
         <Link href='/' className='flex-1'>
           <Image

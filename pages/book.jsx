@@ -6,11 +6,12 @@ import toast from 'react-hot-toast'
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
 import { FaCircleXmark, FaCircleCheck } from 'react-icons/fa6'
 import 'react-phone-number-input/style.css'
+import 'react-datepicker/dist/react-datepicker.css'
 
 import Animated from '@/components/Animated'
 import Button from '@/components/Button'
 import Link from 'next/link'
-
+import DatePicker from 'react-datepicker'
 const inter = Inter({
   weight: ['400', '500', '600'],
   subsets: ['latin'],
@@ -19,6 +20,7 @@ const inter = Inter({
 
 const Book = () => {
   const [message, setMessage] = useState()
+  const [startDate, setStartDate] = useState(new Date())
   const {
     register,
     handleSubmit,
@@ -43,7 +45,7 @@ const Book = () => {
           <motion.div
             initial={{ y: 15 }}
             animate={t.visible ? { y: 0 } : { y: 15 }}
-            className='w-fit xl:w-full max-w-5xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
+            className='w-fit xl:w-full max-w-2xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
           >
             <Button
               size='icon'
@@ -59,6 +61,7 @@ const Book = () => {
             <p className='text-xl font-medium md:text-2xl xl:text-4xl text-center py-12 md:mt-18 tracking-wide'>
               Your Appointment is Confirmed
             </p>
+
             <div className='flex flex-row items-center justify-center gap-4 md:hidden'>
               <Link href='/profile/appointments/1'>
                 <Button
@@ -216,21 +219,32 @@ const Book = () => {
             <label htmlFor='date' className='text-sm font-semibold text-black'>
               Appointment Date<span className='text-primary'>*</span>
             </label>
-            <input
-              type='date'
-              id='date'
-              {...register('date', {
+            <Controller
+              name='date'
+              control={control}
+              defaultValue={null} // Default value for the date field
+              rules={{
                 required: 'Date is required',
                 validate: (value) => {
+                  if (!value) return 'Date is required'
                   const selectedDate = new Date(value)
                   const day = selectedDate.getDay()
-                  return (day !== 0 && day !== 6) || 'Weekends are not allowed'
+                  if (day === 0 || day === 6) return 'Weekends are not allowed'
+                  return true
                 },
-              })}
-              min={new Date().toISOString().split('T')[0]} // Disallow past dates
-              className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
-                errors.date ? 'border-red-500' : 'border-gray-300'
-              }`}
+              }}
+              render={({ field }) => (
+                <DatePicker
+                  wrapperClassName='w-full'
+                  selected={field.value}
+                  onChange={(date) => field.onChange(date)}
+                  minDate={new Date()} // Disable past dates
+                  placeholderText='Select a date'
+                  className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
+                    errors.date ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                />
+              )}
             />
             <motion.p
               initial={{ opacity: 0 }}

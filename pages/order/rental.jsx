@@ -5,8 +5,10 @@ import { motion } from 'framer-motion'
 import toast from 'react-hot-toast'
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
 import { FaCircleXmark, FaCircleCheck, FaArrowLeft } from 'react-icons/fa6'
+import DatePicker from 'react-datepicker'
 import Link from 'next/link'
 import 'react-phone-number-input/style.css'
+import 'react-datepicker/dist/react-datepicker.css'
 
 import Animated from '@/components/Animated'
 import Button from '@/components/Button'
@@ -49,7 +51,7 @@ const Rental = () => {
           <motion.div
             initial={{ y: 15 }}
             animate={t.visible ? { y: 0 } : { y: 15 }}
-            className='w-fit xl:w-full max-w-5xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
+            className='w-fit xl:w-full max-w-2xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
           >
             <Button
               size='icon'
@@ -296,17 +298,34 @@ const Rental = () => {
                 <br />
                 From
               </label>
-              <input
-                type='date'
-                id='from'
-                {...register('from', {
-                  required: 'From is required',
-                })}
-                placeholder='From'
-                min={new Date().toISOString().split('T')[0]} // Disallow past dates
-                className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
-                  errors.from ? 'border-red-500' : 'border-gray-300'
-                }`}
+              <Controller
+                name='from'
+                control={control}
+                defaultValue={null} // Default value for the date field
+                rules={{
+                  required: 'Starting date is required',
+                  validate: (value) => {
+                    if (!value) return 'Date is required'
+                    const selectedDate = new Date(value)
+                    const day = selectedDate.getDay()
+                    if (day === 0 || day === 6)
+                      return 'Weekends are not allowed'
+                    return true
+                  },
+                }}
+                render={({ field }) => (
+                  <DatePicker
+                    id='from'
+                    wrapperClassName='w-full'
+                    selected={field.value}
+                    onChange={(date) => field.onChange(date)}
+                    minDate={new Date()} // Disable past dates
+                    placeholderText='Select a date'
+                    className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
+                      errors.from ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                  />
+                )}
               />
               <motion.p
                 initial={{ opacity: 0 }}
@@ -322,16 +341,34 @@ const Rental = () => {
                 <br className='hidden md:block' />
                 To
               </label>
-              <input
-                type='date'
-                id='to'
-                {...register('to', {
-                  required: 'To is required',
-                })}
-                min={new Date().toISOString().split('T')[0]} // Disallow past dates
-                className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
-                  errors.to ? 'border-red-500' : 'border-gray-300'
-                }`}
+              <Controller
+                name='to'
+                control={control}
+                defaultValue={null} // Default value for the date field
+                rules={{
+                  required: 'Date is required',
+                  validate: (value) => {
+                    if (!value) return 'Date is required'
+                    const selectedDate = new Date(value)
+                    const day = selectedDate.getDay()
+                    if (day === 0 || day === 6)
+                      return 'Weekends are not allowed'
+                    return true
+                  },
+                }}
+                render={({ field }) => (
+                  <DatePicker
+                    id='to'
+                    wrapperClassName='w-full'
+                    selected={field.value}
+                    onChange={(date) => field.onChange(date)}
+                    minDate={new Date()} // Disable past dates
+                    placeholderText='Select a date'
+                    className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
+                      errors.to ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                  />
+                )}
               />
               <motion.p
                 initial={{ opacity: 0 }}

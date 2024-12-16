@@ -31,3 +31,19 @@ body {
 #phone {
   outline: none;
 }
+
+.react-datepicker__day--selected {
+  background: var(--primary) !important;
+}
+
+.react-datepicker__header {
+  background: var(--primary) !important;
+  
+  * {
+    color: white !important;
+  }
+}
+
+.react-datepicker__day--keyboard-selected {
+  background: #2f889366 !important;
+}
