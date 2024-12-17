@@ -58,7 +58,7 @@ const ProductPage = () => {
   const [product, setProduct] = useState(null)
   const [type, setType] = useState(null)
   const [quantity, setQuantity] = useState(0)
-  const { addToCart, items } = useCart()
+  const { addToCart, open } = useCart()
 
   const params = useParams()
   const router = useRouter()
@@ -88,6 +88,7 @@ const ProductPage = () => {
       category: `PHYSIOTHERAPY ${params.category.toUpperCase()}`,
       total: quantity * product.price,
     })
+    open()
   }
 
   return (

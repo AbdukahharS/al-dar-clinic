@@ -4,11 +4,13 @@ import {
   removeItem,
   clearCart,
   decrementQuantity as decrementItemQuantity,
+  openCart,
+  closeCart,
 } from '@/redux/slices/cartSlice'
 
 const useCart = () => {
   const dispatch = useDispatch()
-  const { items, totalQuantity, totalPrice } = useSelector(
+  const { items, totalQuantity, totalPrice, cartState } = useSelector(
     (state) => state.cart
   )
 
@@ -16,6 +18,8 @@ const useCart = () => {
   const removeFromCart = (id) => dispatch(removeItem(id))
   const decrementQuantity = (id) => dispatch(decrementItemQuantity(id)) // Use renamed import here
   const clear = () => dispatch(clearCart())
+  const open = () => dispatch(openCart())
+  const close = () => dispatch(closeCart())
 
   return {
     items,
@@ -25,6 +29,9 @@ const useCart = () => {
     removeFromCart,
     decrementQuantity,
     clear,
+    close,
+    open,
+    cartState,
   }
 }
 

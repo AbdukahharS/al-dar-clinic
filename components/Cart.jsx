@@ -9,7 +9,6 @@ import Link from 'next/link'
 import useCart from '@/hooks/useCart'
 
 const Cart = () => {
-  const [open, setOpen] = useState(false)
   const {
     items,
     totalPrice,
@@ -17,6 +16,9 @@ const Cart = () => {
     removeFromCart,
     addToCart,
     decrementQuantity,
+    cartState,
+    close,
+    open,
   } = useCart()
 
   return (
@@ -25,7 +27,7 @@ const Cart = () => {
         variant='outline'
         size='icon'
         className='!text-primary !text-2xl !border-black hidden md:flex relative'
-        onClick={() => setOpen(true)}
+        onClick={open}
       >
         <FaCartShopping />
         {totalQuantity > 0 && (
@@ -38,7 +40,7 @@ const Cart = () => {
         variant='outline'
         size='iconSM'
         className='!text-primary !text-2xl !border-black md:hidden relative'
-        onClick={() => setOpen(true)}
+        onClick={open}
       >
         <FaCartShopping className='text-sm' />
         {totalQuantity > 0 && (
@@ -50,7 +52,7 @@ const Cart = () => {
       <motion.div
         initial={{ opacity: 0, zIndex: -100 }}
         animate={
-          open
+          cartState
             ? { opacity: 1, pointerEvents: 'auto', zIndex: 100 }
             : { opacity: 0, pointerEvents: 'none', zIndex: -100 }
         }
@@ -59,12 +61,12 @@ const Cart = () => {
       >
         <motion.div
           initial={{ y: 15 }}
-          animate={open ? { y: 0 } : { y: 15 }}
+          animate={cartState ? { y: 0 } : { y: 15 }}
           className='w-[100%] sm:max-w-sm bg-white flex flex-col'
         >
           <div className='p-6 pt-12 flex flex-row items-center justify-between border-b border-black'>
             <h2 className='text-2xl font-medium text-primary'>Shopping Cart</h2>
-            <Button size='icon' variant='ghost' onClick={() => setOpen(false)}>
+            <Button size='icon' variant='ghost' onClick={close}>
               <FaCircleXmark className='text-primary text-4xl' />
             </Button>
           </div>
@@ -140,7 +142,7 @@ const Cart = () => {
                   <p>Dhs {totalPrice}</p>
                 </div>
                 <Link href='/order/checkout'>
-                  <Button className='w-full' onClick={() => setOpen(false)}>
+                  <Button className='w-full' onClick={close}>
                     Proceed to Checkout
                   </Button>
                 </Link>
