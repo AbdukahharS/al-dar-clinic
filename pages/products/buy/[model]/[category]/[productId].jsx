@@ -12,6 +12,7 @@ import weight from '@/public/images/products/weight-ball.webp'
 import kettle from '@/public/images/products/kettle.webp'
 import ProductCarousel from '@/components/carousels/ProductCarousel'
 import Animated from '@/components/Animated'
+import useCart from '@/hooks/useCart'
 
 const products = [
   {
@@ -57,6 +58,7 @@ const ProductPage = () => {
   const [product, setProduct] = useState(null)
   const [type, setType] = useState(null)
   const [quantity, setQuantity] = useState(0)
+  const { addToCart, items } = useCart()
 
   const params = useParams()
   const router = useRouter()
@@ -76,7 +78,17 @@ const ProductPage = () => {
     }
   }, [params])
 
-  const handleAddToCard = () => {}
+  const handleAddToCard = () => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      quantity,
+      price: product.price,
+      img: product.img,
+      category: `PHYSIOTHERAPY ${params.category.toUpperCase()}`,
+      total: quantity * product.price,
+    })
+  }
 
   return (
     <div className='flex-1 bg-gradient-to-b from-[#f8f8f8] from-0% to-white to-100%'>
@@ -102,7 +114,7 @@ const ProductPage = () => {
               <Animated className='flex-1'>
                 <div className='hidden md:block'>
                   <p>PHYSIOTHERAPY {params.category.toUpperCase()}</p>
-                  <h1 className='text-4xl mt-3 mb-8'>Dumbbell 6Kg</h1>
+                  <h1 className='text-4xl mt-3 mb-8'>{product.name}</h1>
                 </div>
                 <div>
                   <p className='text-2xl'>Dhs {product.price}</p>

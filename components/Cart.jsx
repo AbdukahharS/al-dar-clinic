@@ -4,30 +4,20 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 
 import Button from './Button'
-import dumbbell from '@/public/images/products/dumbbell.webp'
-import sponge from '@/public/images/products/sponge.webp'
 import empty from '@/public/images/empty-box.webp'
 import Link from 'next/link'
+import useCart from '@/hooks/useCart'
 
 const Cart = () => {
   const [open, setOpen] = useState(false)
-
-  const cartItems = [
-    {
-      id: 1,
-      name: 'Dumbbell 6Kgs',
-      img: dumbbell,
-      price: 100,
-      category: 'PHYSIOTHERAPY TOOLS',
-    },
-    {
-      category: 'PHYSIOTHERAPY TOOLS',
-      id: 2,
-      name: 'Sponge Dumbbell',
-      img: sponge,
-      price: 250,
-    },
-  ]
+  const {
+    items,
+    totalPrice,
+    totalQuantity,
+    removeFromCart,
+    addToCart,
+    decrementQuantity,
+  } = useCart()
 
   return (
     <>
@@ -38,9 +28,9 @@ const Cart = () => {
         onClick={() => setOpen(true)}
       >
         <FaCartShopping />
-        {cartItems.length && (
+        {totalQuantity > 0 && (
           <div className='absolute bg-red-500 top-0 right-0 text-white text-xs flex w-4 h-4 items-center justify-center rounded-full'>
-            {cartItems.length}
+            {totalQuantity}
           </div>
         )}
       </Button>
@@ -51,9 +41,9 @@ const Cart = () => {
         onClick={() => setOpen(true)}
       >
         <FaCartShopping className='text-sm' />
-        {cartItems.length && (
+        {totalQuantity > 0 && (
           <div className='absolute bg-red-500 top-0 right-0 text-white text-xs flex w-4 h-4 items-center justify-center rounded-full translate-x-1/4 -translate-y-1/4'>
-            {cartItems.length}
+            {totalQuantity}
           </div>
         )}
       </Button>
@@ -78,14 +68,14 @@ const Cart = () => {
               <FaCircleXmark className='text-primary text-4xl' />
             </Button>
           </div>
-          {cartItems.length ? (
+          {items.length ? (
             <>
               <div className='flex-1'>
-                {cartItems.map((el, i) => (
+                {items.map((el, i) => (
                   <div
                     key={i}
                     className={`w-full flex flex-row gap-4 items-stretch p-5 pt-6 ${
-                      i !== cartItems.length - 1 && 'border-b'
+                      i !== items.length - 1 && 'border-b'
                     }`}
                   >
                     <Image
@@ -108,21 +98,34 @@ const Cart = () => {
                           <button
                             className={`text-[10px] inline-block p-[3px] cursor-pointer rounded-full text-white bg-black`}
                             disable={true ? 'true' : 'false'}
-                            onClick={() => {}}
+                            onClick={() => decrementQuantity(el.id)}
                           >
                             <FaMinus />
                           </button>
-                          <span className='text-black text-xs'>1</span>
+                          <span className='text-black text-xs'>
+                            {el.quantity}
+                          </span>
                           <button
                             className={`text-[10px] inline-block p-[3px] cursor-pointer rounded-full bg-black text-white`}
-                            onClick={() => {}}
+                            onClick={() =>
+                              addToCart({
+                                id: el.id,
+                                quantity: 1,
+                                price: el.price,
+                              })
+                            }
                           >
                             <FaPlus />
                           </button>
                         </div>
                       </div>
                       <div className='flex flex-col justify-between'>
-                        <button className='bg-red-300/30 text-red-500 text-[10px] py-[3.5px] px-[9.5px] rounded-full transition-all duration-200 hover:scale-110'>
+                        <button
+                          onClick={() => {
+                            removeFromCart(el.id)
+                          }}
+                          className='bg-red-300/30 text-red-500 text-[10px] py-[3.5px] px-[9.5px] rounded-full transition-all duration-200 hover:scale-110'
+                        >
                           Remove
                         </button>
                         <p className='text-xs font-medium'>Dhs {el.price}</p>
@@ -134,7 +137,7 @@ const Cart = () => {
               <div className='pt-3 px-4 border-t pb-8'>
                 <div className='flex flex-row items-center justify-between text-gray-700 font-semibold mb-3'>
                   <p>Total</p>
-                  <p>Dhs 350</p>
+                  <p>Dhs {totalPrice}</p>
                 </div>
                 <Link href='/order/checkout'>
                   <Button className='w-full' onClick={() => setOpen(false)}>
