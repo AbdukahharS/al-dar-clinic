@@ -55,7 +55,6 @@ const products = [
 const ProductPage = () => {
   const [loading, setLoading] = useState(true)
   const [product, setProduct] = useState(null)
-  const [type, setType] = useState(null)
   const [quantity, setQuantity] = useState(0)
 
   const params = useParams()
@@ -111,29 +110,6 @@ const ProductPage = () => {
                 </div>
                 <div className='h-[1px] w-full bg-gray-300 my-9'></div>
 
-                <div className='flex flex-row gap-2 items-center'>
-                  <span>Weight:</span>
-                  <span
-                    className={`text-xs inline-block py-[6px] px-3 cursor-pointer rounded-full ${
-                      type === '6kg'
-                        ? 'bg-primary text-white'
-                        : 'bg-gray-200 text-black'
-                    }`}
-                    onClick={() => setType('6kg')}
-                  >
-                    6kg
-                  </span>
-                  <span
-                    className={`text-xs inline-block py-[6px] px-3 cursor-pointer rounded-full ${
-                      type === '10kg'
-                        ? 'bg-primary text-white'
-                        : 'bg-gray-200 text-black'
-                    }`}
-                    onClick={() => setType('10kg')}
-                  >
-                    10kg
-                  </span>
-                </div>
                 <div className='flex flex-row gap-2 items-center mt-5'>
                   <span>Quantity:</span>
                   <div className='rounded-full bg-gray-200 p-1 flex gap-2 flex-row'>
@@ -159,10 +135,10 @@ const ProductPage = () => {
                 </div>
                 <Button
                   className={`mt-6 ${
-                    (!type || quantity === 0) &&
+                    quantity === 0 &&
                     '!bg-gray-400 text-gray-200 cursor-not-allowed'
                   }`}
-                  onClick={!type || quantity === 0 ? () => {} : handleAddToCard}
+                  onClick={quantity === 0 ? () => {} : handleAddToCard}
                 >
                   Rent Now
                 </Button>

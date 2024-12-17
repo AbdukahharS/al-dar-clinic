@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Inter } from 'next/font/google'
 import { Controller, useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import toast from 'react-hot-toast'
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
@@ -22,6 +23,7 @@ const inter = Inter({
 const Rental = () => {
   const [message, setMessage] = useState()
   const [fileName, setFileName] = useState('Upload ID')
+  const router = useRouter()
 
   const {
     register,
