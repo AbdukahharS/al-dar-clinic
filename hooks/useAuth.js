@@ -41,6 +41,12 @@ const useAuth = () => {
     }
   }
 
+  const sendPasswordResetEmail = async (email) => {
+    toast.success(
+      'A mail has been sent. Please follow the steps to change password'
+    )
+  }
+
   return {
     isAuthenticated: true,
     user,
@@ -48,6 +54,7 @@ const useAuth = () => {
     login,
     register,
     logoutUser,
+    sendPasswordResetEmail,
   }
 }
 

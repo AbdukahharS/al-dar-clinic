@@ -1,11 +1,10 @@
-import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { FaEye, FaEyeSlash } from 'react-icons/fa6'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { Poppins } from 'next/font/google'
 import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
 
 import useAuth from '@/hooks/useAuth'
 import Button from '@/components/Button'
@@ -18,7 +17,8 @@ const poppins = Poppins({
 })
 
 const Login = () => {
-  const { login, loading } = useAuth()
+  const { sendPasswordResetEmail, loading } = useAuth()
+  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -26,14 +26,8 @@ const Login = () => {
   } = useForm()
 
   const onSubmit = async (data) => {
-    await login(data)
-  }
-
-  // State to toggle password visibility
-  const [showPassword, setShowPassword] = useState(false)
-
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev)
+    await sendPasswordResetEmail(data)
+    router.push('/admin/auth/login')
   }
 
   return (
@@ -56,6 +50,7 @@ const Login = () => {
           noValidate
           className='w-full sm:w-[440px] border-gray-300 border rounded py-5 px-6'
         >
+          <h1 className='text-xl text-gray-600 mb-4'>Forgot Password?</h1>
           <div className='mb-4'>
             <label htmlFor='email' className='text-gray-600'>
               Email
@@ -83,48 +78,18 @@ const Login = () => {
               {errors.email?.message || ' '}
             </motion.p>
           </div>
-          <label htmlFor='password' className='text-gray-600'>
-            Password
-          </label>
-          <div className='relative'>
-            <input
-              type={showPassword ? 'text' : 'password'}
-              id='password'
-              {...register('password', {
-                required: 'Password is required',
-              })}
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
-                errors.password ? 'border-red-500' : 'border-gray-300'
-              }`}
-            />
-            <button
-              type='button'
-              onClick={togglePasswordVisibility}
-              className='absolute text-xl top-1/2 right-3 -translate-y-1/2 text-primary'
-            >
-              {showPassword ? <FaEye /> : <FaEyeSlash />}
-            </button>
-          </div>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: errors.password ? 1 : 0 }}
-            transition={{ duration: 0.3 }}
-            className='text-primary text-sm mt-1'
-          >
-            {errors.password?.message || ' '}
-          </motion.p>
 
-          <Link
-            href='/admin/auth/forgot-password'
-            className='text-primary text-sm text-right block mt-2'
-          >
-            Forgot Password?
-          </Link>
           <Button
             type='submit'
             className='w-full mt-7 text-lg flex flex-row justify-center items-center gap-4 rounded-md'
           >
-            Login
+            Continue
+          </Button>
+          <Button
+            className='w-full mt-6 text-primary font-semibold'
+            variant='ghost'
+          >
+            <Link href='/admin/auth/login'>Back</Link>
           </Button>
         </form>
       </motion.div>
