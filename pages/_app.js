@@ -16,7 +16,7 @@ export default function App({ Component, pageProps }) {
     <Provider store={store}>
       <Toaster />
       <div className='min-h-screen flex flex-col'>
-        <Navbar />
+        {!path?.startsWith('/admin') && <Navbar />}
         <div className='overflow-hidden flex-1 bg-gradient-to-b from-[#f9f9f9] from-0% to-white to-20%'>
           {path?.startsWith('/profile') ? (
             <div className='w-full max-w-7xl mx-auto py-10 px-7 md:pt-16 flex flex-col md:flex-row md:items-start gap-8 md:gap-16'>
@@ -29,7 +29,9 @@ export default function App({ Component, pageProps }) {
             <Component {...pageProps} />
           )}
         </div>
-        {!path?.startsWith('/auth') && <Footer />}
+        {!path?.startsWith('/auth') && !path?.startsWith('/admin') && (
+          <Footer />
+        )}
       </div>
     </Provider>
   )

@@ -13,14 +13,16 @@ const useAuth = () => {
 
   const login = async (credentials) => {
     dispatch(loginStart())
-    try {
-      // Handle login logic here (API call, etc.)
-      dispatch(loginSuccess(credentials))
-      toast.success('Congrats! You have successfully logged In')
-    } catch (error) {
-      toast.error('Something went wrong with login. Please, try again!')
-      dispatch(loginFailure())
-    }
+    setTimeout(() => {
+      try {
+        // Handle login logic here (API call, etc.)
+        dispatch(loginSuccess(credentials))
+        toast.success('Congrats! You have successfully logged In')
+      } catch (error) {
+        toast.error('Something went wrong with login. Please, try again!')
+        dispatch(loginFailure())
+      }
+    }, 2000)
   }
 
   const logoutUser = () => {
