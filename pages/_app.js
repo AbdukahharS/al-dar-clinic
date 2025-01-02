@@ -10,6 +10,7 @@ import '@/styles/globals.css'
 import '@/styles/fonts.css'
 import SideBar from '@/components/SideBar'
 import useAuth from '@/hooks/useAuth'
+import AdminSidebar from '@/components/layout/AdminSidebar'
 
 export default function App({ Component, pageProps }) {
   return (
@@ -28,13 +29,15 @@ const Layout = ({ Component, pageProps }) => {
   useEffect(() => {
     if (
       !isAuthenticated &&
-      path.startsWith('/admin') &&
-      !path.startsWith('/admin/auth')
+      path?.startsWith('/admin') &&
+      !path?.startsWith('/admin/auth')
     ) {
       router.push('/admin/auth/login')
     }
 
     if (path === '/admin/auth') router.push('/admin/auth/login')
+
+    if (path === '/admin') router.push('/admin/dashboard')
   }, [path, isAuthenticated])
 
   return (
@@ -44,6 +47,13 @@ const Layout = ({ Component, pageProps }) => {
         {path?.startsWith('/profile') ? (
           <div className='w-full max-w-7xl mx-auto py-10 px-7 md:pt-16 flex flex-col md:flex-row md:items-start gap-8 md:gap-16'>
             <SideBar />
+            <div className='flex-1'>
+              <Component {...pageProps} />
+            </div>
+          </div>
+        ) : path?.startsWith('/admin') && !path?.startsWith('/admin/auth') ? (
+          <div className='w-full flex flex-row'>
+            <AdminSidebar />
             <div className='flex-1'>
               <Component {...pageProps} />
             </div>

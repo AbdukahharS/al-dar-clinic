@@ -2,15 +2,13 @@ import { FaCircleInfo } from 'react-icons/fa6'
 import Link from 'next/link'
 
 import Header from '@/components/layout/Header'
-import { StatusBar } from '../orders'
 
 const rentalOrders = [
   {
     orderId: '1010246',
     productName: 'Dumbbell',
     quantity: 2,
-    status: 'pending',
-    payment: 'Unpaid',
+    status: 'Requested',
     amount: '$212.50',
     timestamp: '09:09 AM, 10-10-2024',
   },
@@ -18,8 +16,7 @@ const rentalOrders = [
     orderId: '1010246',
     productName: 'Dumbbell',
     quantity: 2,
-    status: 'rejected',
-    payment: 'Unpaid',
+    status: 'Cancelled',
     amount: '$212.50',
     timestamp: '09:09 AM, 10-10-2024',
   },
@@ -27,8 +24,7 @@ const rentalOrders = [
     orderId: '1010246',
     productName: 'Gym Ball',
     quantity: 3,
-    status: 'confirmed',
-    payment: 'Unpaid',
+    status: 'Placed',
     amount: '$212.50',
     timestamp: '09:09 AM, 10-10-2024',
   },
@@ -36,8 +32,7 @@ const rentalOrders = [
     orderId: '1010246',
     productName: 'Soft Dumbbell',
     quantity: 4,
-    status: 'on-the-way',
-    payment: 'Unpaid',
+    status: 'OnDelivery',
     amount: '$212.50',
     timestamp: '09:09 AM, 10-10-2024',
   },
@@ -45,8 +40,7 @@ const rentalOrders = [
     orderId: '1010246',
     productName: 'Weight Ball',
     quantity: 6,
-    status: 'delivered',
-    payment: 'Paid',
+    status: 'Delivered',
     amount: '$212.50',
     timestamp: '09:09 AM, 10-10-2024',
   },
@@ -54,8 +48,7 @@ const rentalOrders = [
     orderId: '1010246',
     productName: 'Weight Ball',
     quantity: 6,
-    status: 'cancelled',
-    payment: 'Unpaid',
+    status: 'Returned',
     amount: '$212.50',
     timestamp: '09:09 AM, 10-10-2024',
   },
@@ -82,9 +75,6 @@ const Rental = () => {
                 Status
               </th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
-                Payment
-              </th>
-              <th className='px-4 py-5 font-medium whitespace-nowrap'>
                 Amount
               </th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
@@ -106,17 +96,8 @@ const Rental = () => {
                   {order.quantity}
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  <StatusBar status={order.status} />
-                </td>
-                <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  <div
-                    className={`px-2 py-1 rounded-full w-fit ${
-                      order.payment !== 'Paid'
-                        ? 'bg-red-300/30 text-red-500'
-                        : 'bg-green-300/30 text-green-500'
-                    }`}
-                  >
-                    {order.payment}
+                  <div className='border rounded-lg w-fit p-2 px-4 text-gray-500'>
+                    {order.status.replace(/([A-Z])/g, ' $1').trim()}
                   </div>
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>

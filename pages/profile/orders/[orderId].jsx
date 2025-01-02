@@ -7,7 +7,6 @@ import Header from '@/components/layout/Header'
 import Animated from '@/components/Animated'
 import dumbbell from '@/public/images/products/dumbbell.webp'
 import sponge from '@/public/images/products/sponge.webp'
-import { StatusBar } from '.'
 import Button from '@/components/Button'
 import Link from 'next/link'
 
@@ -144,25 +143,7 @@ const OrderDetails = () => {
                 </tr>
                 <tr>
                   <td className='font-semibold px-4 py-2'>Order Status:</td>
-                  <td className='px-4 py-2'>
-                    <StatusBar status='pending' />
-                  </td>
-                </tr>
-                <tr>
-                  <td className='font-semibold px-4 pt-2 pb-4'>
-                    Payment Status:
-                  </td>
-                  <td className='px-4 pt-2 pb-4'>
-                    <div
-                      className={`px-2 py-1 rounded-full w-fit ${
-                        'Unpaid' !== 'Paid'
-                          ? 'bg-red-300/30 text-red-500'
-                          : 'bg-green-300/30 text-green-500'
-                      }`}
-                    >
-                      Unpaid
-                    </div>
-                  </td>
+                  <td className='px-4 py-2'>Pending</td>
                 </tr>
               </tbody>
             </table>

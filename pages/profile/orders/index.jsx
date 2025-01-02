@@ -7,85 +7,46 @@ const orders = [
   {
     orderId: '1010246',
     products: '2 Product',
-    status: 'pending',
-    payment: 'Unpaid',
+    status: 'Requested',
     amount: '$212.50',
     timestamp: '09:09 AM, 10-10-2024',
   },
   {
     orderId: '1010246',
     products: '2 Product',
-    status: 'rejected',
-    payment: 'Unpaid',
+    status: 'Cancelled',
     amount: '$212.50',
     timestamp: '09:09 AM, 10-10-2024',
   },
   {
     orderId: '1010246',
     products: '2 Product',
-    status: 'confirmed',
-    payment: 'Unpaid',
+    status: 'Placed',
     amount: '$212.50',
     timestamp: '09:09 AM, 10-10-2024',
   },
   {
     orderId: '1010246',
     products: '2 Product',
-    status: 'on-the-way',
-    payment: 'Unpaid',
+    status: 'OnDelivery',
     amount: '$212.50',
     timestamp: '09:09 AM, 10-10-2024',
   },
   {
     orderId: '1010246',
     products: '2 Product',
-    status: 'delivered',
-    payment: 'Paid',
+    status: 'Delivered',
     amount: '$212.50',
     timestamp: '09:09 AM, 10-10-2024',
   },
   {
     orderId: '1010246',
     products: '2 Product',
-    status: 'cancelled',
-    payment: 'Unpaid',
+    status: 'Returned',
     amount: '$212.50',
     timestamp: '09:09 AM, 10-10-2024',
   },
 ]
-
-export const StatusBar = ({ status }) => {
-  let style
-  switch (status) {
-    case 'pending':
-      style = 'border-[#FFCE09] text-[#FFCE09]'
-      break
-    case 'rejected':
-      style = 'border-[#AE4229] text-[#AE4229]'
-      break
-    case 'confirmed':
-      style = 'border-[#FFAE00] text-[#FFAE00]'
-      break
-    case 'on-the-way':
-      style = 'border-[#AC43FC] text-[#AC43FC]'
-      break
-    case 'delivered':
-      style = 'border-[#58C57D] text-[#58C57D]'
-      break
-    case 'cancelled':
-      style = 'border-[#AE4229] text-[#AE4229]'
-      break
-
-    default:
-      break
-  }
-  return (
-    <div className={`px-4 py-1 border rounded-lg w-fit ${style}`}>
-      {status.replace(/-/g, ' ').charAt(0).toUpperCase() +
-        status.replace(/-/g, ' ').slice(1)}
-    </div>
-  )
-}
 
 const Orders = () => {
   return (
@@ -103,9 +64,6 @@ const Orders = () => {
               </th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
                 Status
-              </th>
-              <th className='px-4 py-5 font-medium whitespace-nowrap'>
-                Payment
               </th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
                 Amount
@@ -126,17 +84,8 @@ const Orders = () => {
                   {order.products}
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  <StatusBar status={order.status} />
-                </td>
-                <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  <div
-                    className={`px-2 py-1 rounded-full w-fit ${
-                      order.payment !== 'Paid'
-                        ? 'bg-red-300/30 text-red-500'
-                        : 'bg-green-300/30 text-green-500'
-                    }`}
-                  >
-                    {order.payment}
+                  <div className='border rounded-lg w-fit p-2 px-4 text-gray-500'>
+                    {order.status.replace(/([A-Z])/g, ' $1').trim()}
                   </div>
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
