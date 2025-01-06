@@ -52,7 +52,7 @@ const Layout = ({ Component, pageProps }) => {
             </div>
           </div>
         ) : path?.startsWith('/admin') && !path?.startsWith('/admin/auth') ? (
-          <div className='w-full flex flex-row'>
+          <div className='w-full flex flex-col md:flex-row'>
             <AdminSidebar />
             <div className='flex-1'>
               <Component {...pageProps} />
