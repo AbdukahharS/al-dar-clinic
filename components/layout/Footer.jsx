@@ -5,7 +5,6 @@ import {
   FaPhoneVolume,
   FaRegCopyright,
   FaRegEnvelope,
-  FaXTwitter,
 } from 'react-icons/fa6'
 import { AiFillInstagram } from 'react-icons/ai'
 import Button from '../Button'
@@ -42,14 +41,11 @@ const Footer = () => {
   return (
     <footer className='bg-gradient-to-bl from-[#33C7DA] from-[8.91%] to-[#2F8893] to-[96.36%] mt-6 text-white'>
       <Animated className='bg-primary w-full flex flex-row py-12 md:py-3 justify-center gap-14 md:gap-24 text-2xl'>
-        <Link href='https://facebook.com/'>
+        <Link href='https://www.facebook.com/profile.php?id=61566057909612'>
           <FaFacebook />
         </Link>
-        <Link href='https://facebook.com/'>
+        <Link href='https://www.instagram.com/aldar_physiotherapy_clinic/?fbclid=IwZXh0bgNhZW0CMTEAAR3c5_FeYzej7Zwuet2gmls-an4V3NK4MBBRk0USORbVdYm4MdbntGVnhMs_aem_p1JwOEm6KcSMHQy7S9kmOQ'>
           <AiFillInstagram />
-        </Link>
-        <Link href='https://facebook.com/'>
-          <FaXTwitter />
         </Link>
       </Animated>
       <div className='pt-28 max-w-7xl mx-auto px-7 md:px-12'>
