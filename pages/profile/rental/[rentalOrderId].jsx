@@ -1,3 +1,5 @@
+import Link from 'next/link'
+import React from 'react'
 import Image from 'next/image'
 import toast from 'react-hot-toast'
 import { motion } from 'framer-motion'
@@ -7,7 +9,6 @@ import Header from '@/components/layout/Header'
 import Animated from '@/components/Animated'
 import dumbbell from '@/public/images/products/dumbbell.webp'
 import Button from '@/components/Button'
-import Link from 'next/link'
 
 const cartItems = [
   {
@@ -20,7 +21,19 @@ const cartItems = [
   },
 ]
 
+const orderStatuses = [
+  'Requested',
+  'Placed',
+  'ForPacking',
+  'Packed',
+  'PickedUp',
+  'OnDelivery',
+  'Delivered',
+  'Complete',
+]
+
 const OrderDetails = () => {
+  const currentStatus = 'Packed'
   const handleCancel = () => {
     toast.custom(
       (t) => (
@@ -89,31 +102,44 @@ const OrderDetails = () => {
         </p>
       </div>
       <Animated className='flex flex-row items-center max-w-3xl gap-1 mx-auto w-full py-12 md:py-16'>
-        <div className='h-1 w-[calc((100%-152px)/8)] bg-green-500 rounded-full'></div>
-        <div className='w-[30px] h-[30px] border-[7px] rounded-full border-green-500 relative'>
-          <span className='absolute -bottom-3 left-1/2 translate-y-full -translate-x-1/2 text-xs md:text-sm text-gray-700 text-center'>
-            Order Pending
-          </span>
-        </div>
-        <div className='h-1 w-[calc((100%-152px)/4)] bg-green-500 rounded-full'></div>
-        <div className='w-[30px] h-[30px] rounded-full bg-gray-300 relative border-[7px] border-gray-300'>
-          <span className='absolute -bottom-3 left-1/2 translate-y-full -translate-x-1/2 text-xs md:text-sm text-gray-700 text-center'>
-            Order Confirmed
-          </span>
-        </div>
-        <div className='h-1 w-[calc((100%-152px)/4)] bg-gray-300 rounded-full'></div>
-        <div className='w-[30px] h-[30px] rounded-full bg-gray-300 relative border-[7px] border-gray-300'>
-          <span className='absolute -bottom-3 left-1/2 translate-y-full -translate-x-1/2 text-xs md:text-sm text-gray-700 text-center w-16'>
-            Order On the Way
-          </span>
-        </div>
-        <div className='h-1 w-[calc((100%-152px)/4)] bg-gray-300 rounded-full'></div>
-        <div className='w-[30px] h-[30px] rounded-full bg-gray-300 relative border-[7px] border-gray-300'>
-          <span className='absolute -bottom-3 left-1/2 translate-y-full -translate-x-1/2 text-xs md:text-sm text-gray-700 text-center w-16'>
-            Order Delivered
-          </span>
-        </div>
-        <div className='h-1 w-[calc((100%-152px)/8)] bg-gray-300 rounded-full'></div>
+        {orderStatuses.map((status, i) => (
+          <React.Fragment key={i}>
+            <div
+              className={`${
+                status === currentStatus
+                  ? 'w-[30px] h-[30px] border-8 border-green-500'
+                  : i < orderStatuses.indexOf(currentStatus)
+                  ? 'w-[20px] h-[20px] bg-green-500'
+                  : 'w-[20px] h-[20px] bg-gray-300'
+              } rounded-full relative group`}
+            >
+              <span
+                className={`${
+                  status !== currentStatus &&
+                  'opacity-0 group-hover:opacity-100'
+                } absolute ${
+                  status === currentStatus
+                    ? '-top-3 -translate-y-full'
+                    : '-bottom-3 translate-y-full'
+                } left-1/2 -translate-x-1/2 text-xs md:text-sm text-gray-700 text-center transition-opacity`}
+              >
+                {status.replace(/([A-Z])/g, ' $1').trim()}
+              </span>
+            </div>
+            {i !== orderStatuses.length - 1 && (
+              <div
+                key={`connector-${i}`} // Use a unique key for this connecting line
+                className={`h-1 w-[calc((100%-152px)/${
+                  orderStatuses.length
+                })] ${
+                  i < orderStatuses.indexOf(currentStatus)
+                    ? 'bg-green-500'
+                    : 'bg-gray-300'
+                } rounded-full`}
+              ></div>
+            )}
+          </React.Fragment>
+        ))}
       </Animated>
       <div className='flex flex-col md:flex-row gap-6'>
         <div className='w-full md:w-[calc(40%-12px)]'>
@@ -138,7 +164,7 @@ const OrderDetails = () => {
                 </tr>
                 <tr>
                   <td className='font-semibold px-4 py-2'>Order Status:</td>
-                  <td className='px-4 py-2'>Pending</td>
+                  <td className='px-4 py-2'>{currentStatus}</td>
                 </tr>
               </tbody>
             </table>
