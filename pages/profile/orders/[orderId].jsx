@@ -139,9 +139,7 @@ const OrderDetails = () => {
             </div>
             {i !== orderStatuses.length - 1 && (
               <div
-                className={`h-1 w-[calc((100%-152px)/${
-                  orderStatuses.length
-                })] ${
+                className={`h-1 flex-1 ${
                   i < orderStatuses.indexOf(currentStatus)
                     ? 'bg-green-500'
                     : 'bg-gray-300'
