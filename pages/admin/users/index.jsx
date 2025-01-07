@@ -113,7 +113,7 @@ const Users = () => {
                   {order.phone}
                 </td>
                 <td className='px-3 py-4 text-primary whitespace-nowrap'>
-                  <Link href={`/admin/orders/${order.id}`}>
+                  <Link href={`/admin/users/${order.id}`}>
                     <FaCircleInfo className='mx-auto text-xl' />
                   </Link>
                 </td>
