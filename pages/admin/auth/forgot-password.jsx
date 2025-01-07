@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 
 import useAuth from '@/hooks/useAuth'
 import Button from '@/components/Button'
-import logo from '@/public/icons/logo-short.svg'
+import logo from '@/public/images/logo-full.webp'
 
 const poppins = Poppins({
   weight: ['400', '500', '600'],

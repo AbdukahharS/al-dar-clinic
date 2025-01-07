@@ -17,7 +17,7 @@ import {
 import { FaBars, FaHandHoldingUsd, FaSignOutAlt } from 'react-icons/fa'
 import { motion } from 'framer-motion'
 
-import logo from '@/public/icons/logo-short.svg'
+import logo from '@/public/images/logo-full.webp'
 
 const links = [
   {
