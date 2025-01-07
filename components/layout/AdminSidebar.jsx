@@ -127,12 +127,14 @@ const AdminSidebar = () => {
             <span>{link.name}</span>
           </Link>
         ))}
-        <button
-          className={`flex items-center py-5 px-7 gap-5 transition-all border-white text-primary hover:border-primary border-y`}
-        >
-          <FaSignOutAlt className='w-6 h-6' />
-          <span>Logout</span>
-        </button>
+        <Link href='/admin/auth'>
+          <button
+            className={`flex items-center w-full py-5 px-7 gap-5 transition-all border-white text-primary hover:border-primary border-y`}
+          >
+            <FaSignOutAlt className='w-6 h-6' />
+            <span>Logout</span>
+          </button>
+        </Link>
       </motion.div>
     </div>
   )
