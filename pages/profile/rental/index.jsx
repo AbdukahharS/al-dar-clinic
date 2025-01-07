@@ -96,7 +96,7 @@ const Rental = () => {
                   {order.quantity}
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  <div className='border rounded-lg w-fit p-2 px-4 text-gray-500'>
+                  <div className='border mx-auto rounded-lg w-fit p-2 px-4 text-gray-500'>
                     {order.status.replace(/([A-Z])/g, ' $1').trim()}
                   </div>
                 </td>

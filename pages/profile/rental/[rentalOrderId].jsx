@@ -101,7 +101,7 @@ const OrderDetails = () => {
           <b>Order ID:</b> <span className='text-primary'># 1010246</span>
         </p>
       </div>
-      <Animated className='flex flex-row items-center max-w-3xl gap-1 mx-auto w-full py-12 md:py-16'>
+      <Animated className='flex flex-row items-center max-w-3xl gap-1 mx-auto !w-full py-12 md:py-16'>
         {orderStatuses.map((status, i) => (
           <React.Fragment key={i}>
             <div
@@ -128,7 +128,6 @@ const OrderDetails = () => {
             </div>
             {i !== orderStatuses.length - 1 && (
               <div
-                key={`connector-${i}`} // Use a unique key for this connecting line
                 className={`h-1 w-[calc((100%-152px)/${
                   orderStatuses.length
                 })] ${
