@@ -13,6 +13,7 @@ import {
   FaHourglassHalf,
   FaCalendarCheck,
   FaX,
+  FaFolder,
 } from 'react-icons/fa6'
 import { FaBars, FaHandHoldingUsd, FaSignOutAlt } from 'react-icons/fa'
 import { motion } from 'framer-motion'
@@ -54,6 +55,11 @@ const links = [
     name: 'Business Type',
     href: '/admin/business-type',
     icon: FaHandHoldingUsd,
+  },
+  {
+    name: 'Category Management',
+    href: '/admin/category',
+    icon: FaFolder,
   },
   {
     name: 'Consulting Services',

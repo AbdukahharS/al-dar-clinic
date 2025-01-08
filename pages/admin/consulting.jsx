@@ -2,56 +2,59 @@ import { useState } from 'react'
 import Button from '@/components/Button'
 import { FaPen, FaTrash } from 'react-icons/fa6'
 
-const BusinessType = () => {
-  const [businessTypes, setBusinessTypes] = useState(['B2C', 'B2B'])
-  const [newType, setNewType] = useState('')
+const ConsultingServicesManagement = () => {
+  const [services, setServices] = useState([
+    'Doctor Consultation',
+    'Physiotherapy',
+  ])
+  const [newService, setNewService] = useState('')
   const [editIndex, setEditIndex] = useState(null)
-  const [editType, setEditType] = useState('')
+  const [editService, setEditService] = useState('')
 
   const handleAdd = () => {
-    if (newType.trim()) {
-      setBusinessTypes([...businessTypes, newType])
-      setNewType('')
+    if (newService.trim()) {
+      setServices([...services, newService])
+      setNewService('')
     }
   }
 
   const handleDelete = (index) => {
-    setBusinessTypes(businessTypes.filter((_, i) => i !== index))
+    setServices(services.filter((_, i) => i !== index))
   }
 
   const handleEdit = (index) => {
     setEditIndex(index)
-    setEditType(businessTypes[index])
+    setEditService(services[index])
   }
 
   const handleUpdate = () => {
-    if (editType.trim()) {
-      const updatedTypes = businessTypes.map((type, index) =>
-        index === editIndex ? editType : type
+    if (editService.trim()) {
+      const updatedServices = services.map((service, index) =>
+        index === editIndex ? editService : service
       )
-      setBusinessTypes(updatedTypes)
+      setServices(updatedServices)
       setEditIndex(null)
-      setEditType('')
+      setEditService('')
     }
   }
 
   return (
     <div>
       <div className='bg-primary text-white px-8 md:px-20 py-8 flex justify-between items-center'>
-        <h1 className='text-2xl font-medium'>Business Type</h1>
+        <h1 className='text-2xl font-medium'>Consulting Services Management</h1>
       </div>
 
       <table className='w-full max-w-lg table-auto mx-auto shadow-md mt-7'>
         <thead>
           <tr className='bg-gray-200'>
-            <th className='px-4 py-2 text-left'>Business Type</th>
+            <th className='px-4 py-2 text-left'>Service</th>
             <th className='px-4 py-2'>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {businessTypes.map((type, index) => (
+          {services.map((service, index) => (
             <tr key={index} className='border-b'>
-              <td className='px-4 py-2'>{type}</td>
+              <td className='px-4 py-2'>{service}</td>
               <td className='px-4 py-2 flex gap-3 items-center justify-center'>
                 <button
                   onClick={() => handleEdit(index)}
@@ -75,8 +78,8 @@ const BusinessType = () => {
         <div className='mt-8 w-fit mx-auto'>
           <input
             type='text'
-            value={editType}
-            onChange={(e) => setEditType(e.target.value)}
+            value={editService}
+            onChange={(e) => setEditService(e.target.value)}
             className='border px-4 py-2 mr-4 rounded'
           />
           <Button onClick={handleUpdate}>Update</Button>
@@ -85,8 +88,8 @@ const BusinessType = () => {
         <div className='mt-8 w-fit mx-auto '>
           <input
             type='text'
-            value={newType}
-            onChange={(e) => setNewType(e.target.value)}
+            value={newService}
+            onChange={(e) => setNewService(e.target.value)}
             className='border px-4 py-2 mr-4 rounded'
           />
           <Button onClick={handleAdd}>Add</Button>
@@ -96,4 +99,4 @@ const BusinessType = () => {
   )
 }
 
-export default BusinessType
+export default ConsultingServicesManagement
