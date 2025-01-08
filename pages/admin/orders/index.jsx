@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FaCircleInfo } from 'react-icons/fa6'
 import Link from 'next/link'
 
@@ -63,24 +63,42 @@ const statusOptions = [
 ]
 
 const Orders = () => {
-  const [filterStatus, setFilterStatus] = useState('')
+  const [data, setData] = useState(orders)
+  const [filter, setFilter] = useState('all')
+  const [sort, setSort] = useState('asc')
 
-  const filteredOrders = filterStatus
-    ? orders.filter((order) => order.status === filterStatus)
-    : orders
+  useEffect(() => {
+    const filteredData = orders.filter((product) => {
+      if (filter === 'all') {
+        return true
+      } else {
+        return product.status === filter
+      }
+    })
+
+    const sortedData = [...filteredData].sort((a, b) => {
+      if (sort === 'asc') {
+        return new Date(a.timestamp) - new Date(b.timestamp)
+      } else {
+        return new Date(b.timestamp) - new Date(a.timestamp)
+      }
+    })
+
+    setData(sortedData)
+  }, [filter, sort])
 
   return (
     <div>
       <div className='bg-primary text-white px-8 md:px-20 py-8 flex justify-between items-center'>
-        <h1 className='text-2xl font-medium'>Product Management</h1>
+        <h1 className='text-2xl font-medium'>Order Management</h1>
         <div className='flex items-center gap-4'>
           <select
             id='statusFilter'
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
             className='mr-4 p-2 rounded-lg text-primary'
           >
-            <option value=''>All</option>
+            <option value='all'>All</option>
             {statusOptions.map((status) => (
               <option key={status} value={status}>
                 {status.replace(/([A-Z])/g, ' $1').trim()}
@@ -119,7 +137,7 @@ const Orders = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredOrders.map((order, index) => (
+            {data.map((order, index) => (
               <tr key={index} className='border'>
                 <td className='px-3 py-4 whitespace-nowrap'>
                   {order.orderId}
@@ -148,7 +166,7 @@ const Orders = () => {
       </div>
       <div className='flex flex-row items-center justify-between mt-7 md:px-4'>
         <p className='text-gray-400'>
-          Showing {filteredOrders.length} of {orders.length} results
+          Showing {data.length} of {orders.length} results
         </p>
       </div>
     </div>
