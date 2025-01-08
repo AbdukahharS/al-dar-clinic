@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { FaArrowLeft } from 'react-icons/fa6'
@@ -31,7 +31,17 @@ const orderStatuses = [
 
 const RentalOrderDetails = () => {
   const router = useRouter()
-  const currentStatus = 'Packed'
+  const [currentStatus, setCurrentStatus] = useState('Packed')
+  const [newStatus, setNewStatus] = useState(currentStatus)
+
+  const handleStatusChange = (e) => {
+    setNewStatus(e.target.value)
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setCurrentStatus(newStatus)
+  }
 
   return (
     <div>
@@ -86,6 +96,7 @@ const RentalOrderDetails = () => {
             </React.Fragment>
           ))}
         </Animated>
+
         <div className='flex flex-col md:flex-row gap-6'>
           <div className='w-full md:w-[calc(40%-12px)]'>
             <Animated className='border rounded-lg'>
@@ -191,6 +202,26 @@ const RentalOrderDetails = () => {
                 </p>
               </div>
             </Animated>
+            <form onSubmit={handleSubmit} className='mb-6'>
+              <label htmlFor='status' className='block mb-2'>
+                Change Order Status:
+              </label>
+              <select
+                id='status'
+                value={newStatus}
+                onChange={handleStatusChange}
+                className='border rounded p-2 mr-4'
+              >
+                {orderStatuses.map((status, i) => (
+                  <option key={i} value={status}>
+                    {status.replace(/([A-Z])/g, ' $1').trim()}
+                  </option>
+                ))}
+              </select>
+              <Button type='submit' variant='primary'>
+                Update Status
+              </Button>
+            </form>
           </div>
         </div>
       </div>
