@@ -89,7 +89,7 @@ const Appointments = () => {
   return (
     <div>
       <div className='bg-primary text-white px-8 md:px-20 py-8 flex justify-between items-center'>
-        <h1 className='text-2xl font-medium'>User Management</h1>
+        <h1 className='text-2xl font-medium'>Appointment Management</h1>
         <div className='flex items-center gap-4'>
           <select
             className='mr-4 p-2 rounded-lg text-primary'
