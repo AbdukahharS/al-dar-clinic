@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { motion } from 'framer-motion'
 
 import Button from '@/components/Button'
+import confirm from '@/components/Confirm'
 
 const BusinessType = () => {
   const [businessTypes, setBusinessTypes] = useState([
@@ -29,8 +30,15 @@ const BusinessType = () => {
     setValue('productType', '')
   }
 
-  const handleDelete = (index) => {
-    setBusinessTypes(businessTypes.filter((_, i) => i !== index))
+  const handleDelete = async (index) => {
+    const removeFromList = () =>
+      setBusinessTypes(businessTypes.filter((_, i) => i !== index))
+    confirm(
+      'Delete Business Type',
+      'Are you sure you want to delete this business type?',
+      'Delete',
+      removeFromList
+    )
   }
 
   const handleEdit = (index) => {
