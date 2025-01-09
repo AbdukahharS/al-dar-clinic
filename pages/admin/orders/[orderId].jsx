@@ -1,5 +1,4 @@
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import React from 'react'
 import Image from 'next/image'
 import { FaArrowLeft } from 'react-icons/fa6'
@@ -41,17 +40,7 @@ const orderStatuses = [
 
 const OrderDetails = () => {
   const router = useRouter()
-  const [currentStatus, setCurrentStatus] = useState('Packed')
-  const [newStatus, setNewStatus] = useState(currentStatus)
-
-  const handleStatusChange = (e) => {
-    setNewStatus(e.target.value)
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    setCurrentStatus(newStatus)
-  }
+  const currentStatus = 'Packed'
 
   return (
     <div>
@@ -207,26 +196,6 @@ const OrderDetails = () => {
                 </p>
               </div>
             </Animated>
-            <form onSubmit={handleSubmit} className='mb-6'>
-              <label htmlFor='status' className='block mb-2'>
-                Change Order Status:
-              </label>
-              <select
-                id='status'
-                value={newStatus}
-                onChange={handleStatusChange}
-                className='border rounded p-2 mr-4'
-              >
-                {orderStatuses.map((status, i) => (
-                  <option key={i} value={status}>
-                    {status.replace(/([A-Z])/g, ' $1').trim()}
-                  </option>
-                ))}
-              </select>
-              <Button type='submit' variant='primary'>
-                Update Status
-              </Button>
-            </form>
           </div>
         </div>
       </div>

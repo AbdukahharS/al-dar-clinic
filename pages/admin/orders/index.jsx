@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { FaCircleInfo } from 'react-icons/fa6'
 import Link from 'next/link'
 
@@ -66,13 +66,28 @@ const Orders = () => {
   const [data, setData] = useState(orders)
   const [filter, setFilter] = useState('all')
   const [sort, setSort] = useState('asc')
+  const isInitialRender = useRef(true) // Ref to track initial render
 
   useEffect(() => {
-    const filteredData = orders.filter((product) => {
+    const storedFilter = sessionStorage.getItem('orderFilter')
+    const storedSort = sessionStorage.getItem('orderSort')
+
+    if (storedFilter) setFilter(storedFilter)
+    if (storedSort) setSort(storedSort)
+  }, [])
+
+  useEffect(() => {
+    if (isInitialRender.current) {
+      // Skip the effect on the initial render
+      isInitialRender.current = false
+      return
+    }
+
+    const filteredData = orders.filter((order) => {
       if (filter === 'all') {
         return true
       } else {
-        return product.status === filter
+        return order.status === filter
       }
     })
 
@@ -85,6 +100,8 @@ const Orders = () => {
     })
 
     setData(sortedData)
+    sessionStorage.setItem('orderFilter', filter)
+    sessionStorage.setItem('orderSort', sort)
   }, [filter, sort])
 
   return (
@@ -108,6 +125,7 @@ const Orders = () => {
           <select
             className='mr-4 p-2 rounded-lg text-primary'
             onChange={(e) => setSort(e.target.value)}
+            value={sort}
           >
             <option value='asc'>Ascending</option>
             <option value='desc'>Descending</option>
@@ -139,7 +157,7 @@ const Orders = () => {
           <tbody>
             {data.map((order, index) => (
               <tr key={index} className='border'>
-                <td className='px-3 py-4 whitespace-nowrap'>
+                <td className='px-3 py-4 whitespace-nowrap text-center'>
                   {order.orderId}
                   <p className='text-xs'>{order.timestamp}</p>
                 </td>
