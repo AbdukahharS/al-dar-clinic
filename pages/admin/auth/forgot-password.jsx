@@ -5,10 +5,11 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { Poppins } from 'next/font/google'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
+import toast from 'react-hot-toast'
 
 import useAuth from '@/hooks/useAuth'
 import Button from '@/components/Button'
-import logo from '@/public/images/logo-full.webp'
+import logo from '@/public/icons/final-logo.svg'
 
 const poppins = Poppins({
   weight: ['400', '500', '600'],
@@ -28,6 +29,7 @@ const Login = () => {
   const onSubmit = async (data) => {
     await sendPasswordResetEmail(data)
     router.push('/admin/auth/login')
+    toast.success('Password recovery email is sent!')
   }
 
   return (
@@ -73,7 +75,7 @@ const Login = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: errors.email ? 1 : 0 }}
               transition={{ duration: 0.3 }}
-              className='text-primary text-sm mt-1'
+              className='text-red-500 text-sm mt-1'
             >
               {errors.email?.message || ' '}
             </motion.p>
