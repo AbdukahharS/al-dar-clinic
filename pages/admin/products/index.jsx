@@ -1,7 +1,10 @@
-import Button from '@/components/Button'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import { FaCircleInfo, FaPen, FaTrashCan } from 'react-icons/fa6'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState, useRef } from 'react'
+import { FaCircleInfo, FaPen, FaRotateRight, FaTrashCan } from 'react-icons/fa6'
+
+import Button from '@/components/Button'
+import confirm from '@/components/Confirm'
 
 const dummyData = [
   {
@@ -11,6 +14,7 @@ const dummyData = [
     price: 25.99,
     category: 'Tool',
     createdAt: '2025-01-08T10:00:00Z',
+    type: 'Buy',
   },
   {
     id: 2,
@@ -19,6 +23,7 @@ const dummyData = [
     price: 12.49,
     category: 'Tool',
     createdAt: '2025-01-08T10:05:00Z',
+    type: 'Buy',
   },
   {
     id: 3,
@@ -27,6 +32,7 @@ const dummyData = [
     price: 18.75,
     category: 'Tool',
     createdAt: '2025-01-08T10:10:00Z',
+    type: 'Rent',
   },
   {
     id: 4,
@@ -35,6 +41,7 @@ const dummyData = [
     price: 22.0,
     category: 'Tool',
     createdAt: '2025-01-08T10:15:00Z',
+    type: 'Buy',
   },
   {
     id: 5,
@@ -43,6 +50,7 @@ const dummyData = [
     price: 9.99,
     category: 'Tool',
     createdAt: '2025-01-08T10:20:00Z',
+    type: 'Rent',
   },
   {
     id: 6,
@@ -51,6 +59,7 @@ const dummyData = [
     price: 45.5,
     category: 'Equipment',
     createdAt: '2025-01-08T10:25:00Z',
+    type: 'Buy',
   },
   {
     id: 7,
@@ -59,6 +68,7 @@ const dummyData = [
     price: 55.0,
     category: 'Equipment',
     createdAt: '2025-01-08T10:30:00Z',
+    type: 'Rent',
   },
   {
     id: 8,
@@ -67,6 +77,7 @@ const dummyData = [
     price: 7.25,
     category: 'Devices',
     createdAt: '2025-01-08T10:35:00Z',
+    type: 'Buy',
   },
   {
     id: 9,
@@ -75,6 +86,7 @@ const dummyData = [
     price: 29.99,
     category: 'Device',
     createdAt: '2025-01-08T10:40:00Z',
+    type: 'Rent',
   },
   {
     id: 10,
@@ -83,20 +95,37 @@ const dummyData = [
     price: 14.95,
     category: 'Tool',
     createdAt: '2025-01-08T10:45:00Z',
+    type: 'Buy',
   },
 ]
 
 const Products = () => {
+  const router = useRouter()
   const [data, setData] = useState(dummyData)
   const [filter, setFilter] = useState('all')
   const [sort, setSort] = useState('asc')
+  const isInitialRender = useRef(true) // Ref to track initial render
 
   useEffect(() => {
-    const filteredData = dummyData.filter((product) => {
+    const storedFilter = sessionStorage.getItem('productFilter')
+    const storedSort = sessionStorage.getItem('productSort')
+
+    if (storedFilter) setFilter(storedFilter)
+    if (storedSort) setSort(storedSort)
+  }, [])
+
+  useEffect(() => {
+    if (isInitialRender.current) {
+      // Skip the effect on the initial render
+      isInitialRender.current = false
+      return
+    }
+
+    const filteredData = dummyData.filter((order) => {
       if (filter === 'all') {
         return true
       } else {
-        return product.category === filter
+        return order.type.toLocaleLowerCase() === filter
       }
     })
 
@@ -109,13 +138,30 @@ const Products = () => {
     })
 
     setData(sortedData)
+    sessionStorage.setItem('productFilter', filter)
+    sessionStorage.setItem('productSort', sort)
   }, [filter, sort])
+
+  const handleDelete = async () => {
+    confirm(
+      'Delete Product',
+      'Are you sure you want to delete the Product',
+      'Delete'
+    )
+  }
 
   return (
     <div>
       <div className='bg-primary text-white px-8 md:px-20 py-8 flex justify-between items-center'>
         <h1 className='text-2xl font-medium'>Product Management</h1>
         <div className='flex items-center gap-4'>
+          <Button
+            className='bg-white !text-primary rounded-lg flex items-center flex-row gap-2'
+            onClick={() => router.refresh()}
+          >
+            <FaRotateRight className='text-xl my-[2px]' />
+            <span className='hidden xl:inline'>Refresh</span>
+          </Button>
           <Link href='/admin/products/create'>
             <Button className='bg-white !text-primary rounded-lg p-2'>
               Add Product
@@ -123,16 +169,17 @@ const Products = () => {
           </Link>
           <select
             className='mr-4 p-2 rounded-lg text-primary'
+            value={filter}
             onChange={(e) => setFilter(e.target.value)}
           >
             <option value='all'>No Filter</option>
-            <option value='Tool'>Tool</option>
-            <option value='Equipment'>Equipment</option>
-            <option value='Device'>Device</option>
+            <option value='buy'>Buy</option>
+            <option value='rent'>Rent</option>
           </select>
           <select
             className='mr-4 p-2 rounded-lg text-primary'
             onChange={(e) => setSort(e.target.value)}
+            value={sort}
           >
             <option value='asc'>Ascending</option>
             <option value='desc'>Descending</option>
@@ -179,7 +226,10 @@ const Products = () => {
                       <FaPen className='mx-auto text-xl' />
                     </Link>
                     <button>
-                      <FaTrashCan className='mx-auto text-xl' />
+                      <FaTrashCan
+                        onClick={handleDelete}
+                        className='mx-auto text-xl'
+                      />
                     </button>
                     <Link href={`/admin/products/${order.id}`}>
                       <FaCircleInfo className='mx-auto text-xl' />

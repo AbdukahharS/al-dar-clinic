@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
-import { FaArrowLeft, FaTrash } from 'react-icons/fa6'
+import { useEffect, useRef } from 'react'
+import { FaArrowLeft, FaPlus, FaTrash } from 'react-icons/fa6'
 import { useForm, Controller } from 'react-hook-form'
 import { motion } from 'framer-motion'
 
@@ -8,6 +8,7 @@ import Button from '@/components/Button'
 import dumbbell from '@/public/images/products/dumbbell.webp'
 
 const EditProduct = () => {
+  const isInitialRender = useRef(true)
   const router = useRouter()
 
   const product = {
@@ -30,7 +31,6 @@ const EditProduct = () => {
     formState: { errors },
   } = useForm()
 
-  // Pre-fill form fields with product details
   useEffect(() => {
     const fetchFile = async () => {
       const response = await fetch('/images/products/dumbbell.webp')
@@ -39,7 +39,7 @@ const EditProduct = () => {
       setValue('productImages', Array(3).fill(file) || [])
     }
 
-    if (product) {
+    if (product && isInitialRender.current) {
       setValue('productName', product.productName)
       setValue('productType', product.productType)
       setValue('productCategory', product.productCategory)
@@ -47,8 +47,9 @@ const EditProduct = () => {
       setValue('price', product.price)
       setValue('productDescription', product.productDescription)
       fetchFile()
+      isInitialRender.current = false // After first render, set to false
     }
-  }, [product, setValue])
+  }, [product])
 
   const onSubmit = (data) => {
     console.log(data)
@@ -66,7 +67,7 @@ const EditProduct = () => {
       <div className='px-8 xl:px-20 py-7 md:py-14'>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className='space-y-6 p-4 max-w-lg mx-auto'
+          className='space-y-6 p-4 max-w-lg'
         >
           {/* Product Name */}
           <div>
@@ -174,22 +175,17 @@ const EditProduct = () => {
             <Controller
               control={control}
               name='productImages'
+              rules={{
+                required: 'Product Images are required',
+                validate: (value) => {
+                  if (value.length < 2) {
+                    return 'Minimum 2 images are required'
+                  }
+                  return true
+                },
+              }}
               render={({ field }) => (
                 <>
-                  <input
-                    type='file'
-                    multiple
-                    accept='image/*'
-                    onChange={(e) => {
-                      const newFiles = Array.from(e.target.files)
-                      field.onChange([...(field.value || []), ...newFiles])
-                    }}
-                    className={`mt-1 block w-full text-gray-700 border p-2 ${
-                      errors.productImages
-                        ? 'border-red-500'
-                        : 'border-gray-300'
-                    } rounded-md shadow-s sm:text-sm`}
-                  />
                   <div className='mt-2 flex flex-wrap gap-2'>
                     {field.value &&
                       Array.from(field.value).map((file, index) => {
@@ -222,6 +218,25 @@ const EditProduct = () => {
                         }
                         return null // Return nothing if it's not a valid file
                       })}
+                    <label
+                      htmlFor='productImages'
+                      className={`w-20 h-20 rounded-md flex justify-center items-center text-white cursor-pointer text-4xl ${
+                        errors.productImages ? 'bg-red-500' : 'bg-primary'
+                      }`}
+                    >
+                      <FaPlus />
+                      <input
+                        type='file'
+                        multiple
+                        id='productImages'
+                        accept='image/*'
+                        onChange={(e) => {
+                          const newFiles = Array.from(e.target.files)
+                          field.onChange([...(field.value || []), ...newFiles])
+                        }}
+                        className={`hidden `}
+                      />
+                    </label>
                   </div>
                 </>
               )}
