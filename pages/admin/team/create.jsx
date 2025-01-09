@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { FaArrowLeft, FaTrash } from 'react-icons/fa6'
+import { FaArrowLeft, FaTrash, FaPlus } from 'react-icons/fa6'
 import { useForm, Controller } from 'react-hook-form'
 import { motion } from 'framer-motion'
 import Button from '@/components/Button'
@@ -30,7 +30,7 @@ const AddTeamMember = () => {
       <div className='px-8 xl:px-20 py-7 md:py-14'>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className='space-y-6 p-4 max-w-2xl mx-auto'
+          className='space-y-6 p-4 max-w-2xl'
         >
           <div>
             <label className='block text-lg font-medium text-gray-700'>
@@ -111,38 +111,50 @@ const AddTeamMember = () => {
             <Controller
               control={control}
               name='picture'
+              rules={{
+                required: 'Picture is required',
+                validate: (value) =>
+                  value.length === 1 ? true : 'Picture should be only 1',
+              }}
               render={({ field }) => (
                 <>
-                  <input
-                    type='file'
-                    accept='image/*'
-                    onChange={(e) => {
-                      const newFile = e.target.files[0]
-                      field.onChange(newFile)
-                    }}
-                    className={`mt-1 block w-full text-gray-700 border p-2 ${
-                      errors.picture ? 'border-red-500' : 'border-gray-300'
-                    } rounded-md shadow-sm sm:text-sm`}
-                  />
-                  {field.value && (
-                    <div className='mt-2 relative w-52 h-52 mx-auto border rounded-md overflow-hidden'>
-                      <Image
-                        src={URL.createObjectURL(field.value)}
-                        alt='Selected'
-                        className='w-full h-full object-cover'
-                        loading='lazy'
-                        width={208}
-                        height={208}
-                      />
-                      <button
-                        type='button'
-                        onClick={() => field.onChange(null)}
-                        className='absolute top-1 right-1 bg-red-500 text-white rounded-full p-1'
+                  <div className='mt-2 flex flex-wrap gap-2'>
+                    {field.value && (
+                      <div className='relative w-40 h-52 border rounded-md overflow-hidden group'>
+                        <Image
+                          src={URL.createObjectURL(field.value)}
+                          alt='Selected'
+                          className='w-full h-full object-cover'
+                          width={80}
+                          height={80}
+                        />
+                        <button
+                          type='button'
+                          onClick={() => field.onChange(null)}
+                          className='absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity'
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+                    )}
+                    {!field.value && (
+                      <label
+                        htmlFor='picture'
+                        className={`w-20 h-20 rounded-md flex justify-center items-center text-white cursor-pointer text-4xl ${
+                          errors.picture ? 'bg-red-500' : 'bg-primary'
+                        }`}
                       >
-                        <FaTrash />
-                      </button>
-                    </div>
-                  )}
+                        <FaPlus />
+                        <input
+                          type='file'
+                          id='picture'
+                          accept='image/*'
+                          onChange={(e) => field.onChange(e.target.files[0])}
+                          className='hidden'
+                        />
+                      </label>
+                    )}
+                  </div>
                 </>
               )}
             />

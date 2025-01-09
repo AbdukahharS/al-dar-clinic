@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { FaPen, FaTrashCan } from 'react-icons/fa6'
 import Image from 'next/image'
+import confirm from '@/components/Confirm'
 
 import Mohammed from '@/public/images/dr-mohamad.webp'
 import Alex from '@/public/images/dr-alex.webp'
@@ -54,6 +55,14 @@ const TeamManagement = () => {
   useEffect(() => {
     setData(dummyData)
   }, [])
+
+  const handleDelete = async () => {
+    confirm(
+      'Delete Team Member',
+      'Are you sure you want to delete this team member?',
+      'Delete'
+    )
+  }
 
   return (
     <div>
@@ -107,7 +116,7 @@ const TeamManagement = () => {
                     <Link href={`/admin/team/${member.id}`}>
                       <FaPen className='mx-auto text-xl' />
                     </Link>
-                    <button>
+                    <button onClick={handleDelete}>
                       <FaTrashCan className='mx-auto text-xl' />
                     </button>
                   </div>
