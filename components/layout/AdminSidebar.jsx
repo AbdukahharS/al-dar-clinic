@@ -1,7 +1,8 @@
+import toast from 'react-hot-toast'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { MdDashboard } from 'react-icons/md'
 import {
   FaUser,
@@ -18,7 +19,8 @@ import {
 import { FaBars, FaHandHoldingUsd, FaSignOutAlt } from 'react-icons/fa'
 import { motion } from 'framer-motion'
 
-import logo from '@/public/images/logo-full.webp'
+import logo from '@/public/icons/final-logo.svg'
+import confirm from '../Confirm'
 
 const links = [
   {
@@ -87,6 +89,7 @@ const AdminSidebar = () => {
   const pathname = usePathname()
   const [open, setOpen] = useState()
   const [shouldAnimate, setShouldAnimate] = useState(true)
+  const router = useRouter()
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 767px)')
@@ -102,6 +105,14 @@ const AdminSidebar = () => {
       mediaQuery.removeEventListener('change', handleChange)
     }
   }, [])
+
+  const handleLogout = () => {
+    const redirect = () => {
+      router.push('/admin/auth/login')
+      toast.success('You are logged out!')
+    }
+    confirm('Logout', 'Are you sure you want to log out?', 'Logout', redirect)
+  }
 
   return (
     <div className='flex flex-col md:min-h-screen md:shadow-[0px_-1px_15px_1.28px_#E5E4E680] w-full md:w-72 relative'>
@@ -124,7 +135,7 @@ const AdminSidebar = () => {
             href={link.href}
             key={index}
             className={`${
-              pathname === link.href
+              pathname.startsWith(link.href)
                 ? 'bg-primary text-white'
                 : 'text-primary hover:border-primary border-y'
             } flex items-center py-5 px-7 gap-5 transition-all border-white`}
@@ -133,14 +144,13 @@ const AdminSidebar = () => {
             <span>{link.name}</span>
           </Link>
         ))}
-        <Link href='/admin/auth'>
-          <button
-            className={`flex items-center w-full py-5 px-7 gap-5 transition-all border-white text-primary hover:border-primary border-y`}
-          >
-            <FaSignOutAlt className='w-6 h-6' />
-            <span>Logout</span>
-          </button>
-        </Link>
+        <button
+          className={`flex items-center w-full py-5 px-7 gap-5 transition-all border-white text-primary hover:border-primary border-y`}
+          onClick={handleLogout}
+        >
+          <FaSignOutAlt className='w-6 h-6' />
+          <span>Logout</span>
+        </button>
       </motion.div>
     </div>
   )

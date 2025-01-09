@@ -4,7 +4,13 @@ import { FaCircleXmark } from 'react-icons/fa6'
 
 import Button from './Button'
 
-const confirmDelete = (item, onConfirm = () => {}, onCancel = () => {}) => {
+const confirm = (
+  title,
+  message,
+  button,
+  onConfirm = () => {},
+  onCancel = () => {}
+) => {
   const handleCancel = (id) => {
     onCancel()
     toast.dismiss(id)
@@ -37,10 +43,10 @@ const confirmDelete = (item, onConfirm = () => {}, onCancel = () => {}) => {
             <FaCircleXmark className='text-primary text-2xl md:text-3xl' />
           </Button>
           <p className='text-xl font-semibold md:text-2xl xl:text-3xl text-center mb-4 tracking-wide text-primary'>
-            Delete {item}
+            {title}
           </p>
           <p className='text-center mt-2 mb-6 text-xl font-semibold'>
-            Are you sure you want to delete the {item}?
+            {message}
           </p>
 
           <div className='flex flex-row items-center justify-center gap-4'>
@@ -49,7 +55,7 @@ const confirmDelete = (item, onConfirm = () => {}, onCancel = () => {}) => {
               size='lg'
               onClick={() => handleConfirm(t.id)}
             >
-              Delete
+              {button}
             </Button>
           </div>
         </motion.div>
@@ -59,4 +65,4 @@ const confirmDelete = (item, onConfirm = () => {}, onCancel = () => {}) => {
   )
 }
 
-export default confirmDelete
+export default confirm
