@@ -1,64 +1,64 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { FaCircleInfo } from 'react-icons/fa6'
 import Link from 'next/link'
 
 const rentalOrders = [
   {
     orderId: '1010246',
-    productName: 'Dumbbell',
-    quantity: 2,
+    products: '2 Product',
     status: 'Requested',
     amount: '$212.50',
     timestamp: '09:09 AM, 10-10-2024',
   },
   {
     orderId: '1010247',
-    productName: 'Dumbbell',
-    quantity: 2,
+    products: '3 Product',
     status: 'Cancelled',
-    amount: '$212.50',
-    timestamp: '09:09 AM, 10-10-2024',
+    amount: '$312.50',
+    timestamp: '10:10 AM, 11-11-2024',
   },
   {
     orderId: '1010248',
-    productName: 'Gym Ball',
-    quantity: 3,
+    products: '1 Product',
     status: 'Placed',
-    amount: '$212.50',
-    timestamp: '09:09 AM, 10-10-2024',
+    amount: '$112.50',
+    timestamp: '11:11 AM, 12-12-2024',
   },
   {
     orderId: '1010249',
-    productName: 'Soft Dumbbell',
-    quantity: 4,
-    status: 'OnDelivery',
-    amount: '$212.50',
-    timestamp: '09:09 AM, 10-10-2024',
+    products: '4 Product',
+    status: 'Delivered',
+    amount: '$412.50',
+    timestamp: '12:12 PM, 01-01-2025',
   },
   {
     orderId: '1010250',
-    productName: 'Weight Ball',
-    quantity: 6,
-    status: 'Delivered',
-    amount: '$212.50',
-    timestamp: '09:09 AM, 10-10-2024',
+    products: '5 Product',
+    status: 'Complete',
+    amount: '$512.50',
+    timestamp: '01:01 PM, 02-02-2025',
   },
   {
     orderId: '1010251',
-    productName: 'Weight Ball',
-    quantity: 6,
-    status: 'Returned',
-    amount: '$212.50',
-    timestamp: '09:09 AM, 10-10-2024',
+    products: '6 Product',
+    status: 'Failed',
+    amount: '$612.50',
+    timestamp: '02:02 PM, 03-03-2025',
   },
 ]
 
 const statusOptions = [
   'Requested',
   'Placed',
+  'PickedUp',
+  'ForPacking',
+  'Packed',
   'OnDelivery',
   'Delivered',
+  'Complete',
+  'ToReturn',
   'Returned',
+  'Failed',
   'Cancelled',
 ]
 
@@ -66,8 +66,23 @@ const RentalOrders = () => {
   const [data, setData] = useState(rentalOrders)
   const [filter, setFilter] = useState('all')
   const [sort, setSort] = useState('asc')
+  const isInitialRender = useRef(true) // Ref to track initial render
 
   useEffect(() => {
+    const storedFilter = sessionStorage.getItem('rentalOrderFilter')
+    const storedSort = sessionStorage.getItem('rentalOrderSort')
+
+    if (storedFilter) setFilter(storedFilter)
+    if (storedSort) setSort(storedSort)
+  }, [])
+
+  useEffect(() => {
+    if (isInitialRender.current) {
+      // Skip the effect on the initial render
+      isInitialRender.current = false
+      return
+    }
+
     const filteredData = rentalOrders.filter((order) => {
       if (filter === 'all') {
         return true
@@ -85,6 +100,8 @@ const RentalOrders = () => {
     })
 
     setData(sortedData)
+    sessionStorage.setItem('rentalOrderFilter', filter)
+    sessionStorage.setItem('rentalOrderSort', sort)
   }, [filter, sort])
 
   return (
@@ -108,6 +125,7 @@ const RentalOrders = () => {
           <select
             className='mr-4 p-2 rounded-lg text-primary'
             onChange={(e) => setSort(e.target.value)}
+            value={sort}
           >
             <option value='asc'>Ascending</option>
             <option value='desc'>Descending</option>
@@ -142,11 +160,11 @@ const RentalOrders = () => {
           <tbody>
             {data.map((order, index) => (
               <tr key={index} className='border'>
-                <td className='px-3 py-4 whitespace-nowrap'>
+                <td className='px-3 py-4 whitespace-nowrap text-center'>
                   {order.orderId}
                   <p className='text-xs'>{order.timestamp}</p>
                 </td>
-                <td className='px-3 py-4 whitespace-nowrap'>
+                <td className='px-3 py-4 whitespace-nowrap text-center'>
                   {order.productName}
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>

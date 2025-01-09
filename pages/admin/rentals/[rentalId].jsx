@@ -21,12 +21,16 @@ const cartItems = [
 const orderStatuses = [
   'Requested',
   'Placed',
+  'PickedUp',
   'ForPacking',
   'Packed',
-  'PickedUp',
   'OnDelivery',
   'Delivered',
   'Complete',
+  'ToReturn',
+  'Returned',
+  'Failed',
+  'Cancelled',
 ]
 
 const RentalOrderDetails = () => {
