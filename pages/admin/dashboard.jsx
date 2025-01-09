@@ -25,7 +25,7 @@ const Dashboard = () => {
     { name: 'Products', value: 23, icon: FaBox },
   ]
   const appointments = [
-    { name: 'Doctors Consultation', value: 67 },
+    { name: 'Consultation', value: 67 },
     { name: 'Counseling', value: 33 },
     { name: 'Pyhsiotherapy', value: 45 },
   ]
@@ -120,7 +120,7 @@ const Dashboard = () => {
             </ResponsiveContainer>
             <div className='flex justify-center gap-4 my-5 flex-wrap'>
               {appointments.map((el, i) => (
-                <div key={i} className='flex gap-2 items-center'>
+                <div key={i} className='flex gap-1 items-center'>
                   <div
                     className={`w-4 h-4 rounded-sm `}
                     style={{
@@ -147,7 +147,7 @@ const Dashboard = () => {
                   cy='50%'
                   labelLine={false}
                   outerRadius={100}
-                  innerRadius={50}
+                  // innerRadius={50}
                   dataKey='value'
                   label={renderCustomizedLabel}
                 >
@@ -164,7 +164,7 @@ const Dashboard = () => {
             </ResponsiveContainer>
             <div className='flex justify-center gap-4 my-5 flex-wrap'>
               {orders.map((el, i) => (
-                <div key={i} className='flex gap-2 items-center'>
+                <div key={i} className='flex gap-1 items-center'>
                   <div
                     className={`w-4 h-4 rounded-sm `}
                     style={{
@@ -191,7 +191,7 @@ const Dashboard = () => {
                   cy='50%'
                   labelLine={false}
                   outerRadius={100}
-                  innerRadius={50}
+                  // innerRadius={50}
                   dataKey='value'
                   label={renderCustomizedLabel}
                 >
@@ -208,7 +208,7 @@ const Dashboard = () => {
             </ResponsiveContainer>
             <div className='flex justify-center gap-4 my-5 flex-wrap'>
               {rentals.map((el, i) => (
-                <div key={i} className='flex gap-2 items-center'>
+                <div key={i} className='flex gap-1 items-center'>
                   <div
                     className={`w-4 h-4 rounded-sm `}
                     style={{
