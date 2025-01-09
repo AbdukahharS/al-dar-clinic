@@ -45,16 +45,20 @@ const User = () => {
                 <td className='px-4 py-2'>+91 76982 97862</td>
               </tr>
               <tr>
-                <td className='font-semibold px-4 py-2'>Gender:</td>
-                <td className='px-4 py-2'>Male</td>
+                <td className='font-semibold px-4 py-2'>Address:</td>
+                <td className='px-4 py-2'>Garden Hotel 29 Jalan Jenang</td>
               </tr>
               <tr>
-                <td className='font-semibold px-4 py-2'>Type:</td>
-                <td className='px-4 py-2'>Blood Count, Cholesterol Test</td>
+                <td className='font-semibold px-4 py-2'>City:</td>
+                <td className='px-4 py-2'>Batu Pahat</td>
               </tr>
               <tr>
-                <td className='font-semibold px-4 py-2'>Schedule:</td>
-                <td className='px-4 py-2'>Friday, 13 September 2024</td>
+                <td className='font-semibold px-4 py-2'>State:</td>
+                <td className='px-4 py-2'>Johor</td>
+              </tr>
+              <tr>
+                <td className='font-semibold px-4 py-2'>Postal Code:</td>
+                <td className='px-4 py-2'>83000</td>
               </tr>
             </tbody>
           </table>

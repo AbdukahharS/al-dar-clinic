@@ -1,10 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { FaCircleInfo, FaRotateRight, FaUser } from 'react-icons/fa6'
 
 import Button from '@/components/Button'
-// import Image from 'next/image'
 
 const dummyData = [
   {
@@ -47,6 +46,27 @@ const dummyData = [
 const Users = () => {
   const router = useRouter()
   const [data, setData] = useState(dummyData)
+  const [sortOrder, setSortOrder] = useState()
+
+  useEffect(() => {
+    const storedSortOrder = sessionStorage.getItem('userSort')
+    if (storedSortOrder) {
+      setSortOrder(storedSortOrder)
+      sortData(storedSortOrder)
+    }
+  }, [])
+
+  const sortData = (order) => {
+    const sortedData = [...dummyData].sort((a, b) => {
+      if (order === 'asc') {
+        return new Date(a.createdAt) - new Date(b.createdAt)
+      } else {
+        return new Date(b.createdAt) - new Date(a.createdAt)
+      }
+    })
+    setData(sortedData)
+    sessionStorage.setItem('userSort', order)
+  }
 
   return (
     <div>
@@ -55,15 +75,10 @@ const Users = () => {
         <div className='flex items-center gap-4'>
           <select
             className='mr-4 p-2 rounded-lg text-primary'
+            value={sortOrder}
             onChange={(e) => {
-              const sortedData = [...dummyData].sort((a, b) => {
-                if (e.target.value === 'asc') {
-                  return new Date(a.createdAt) - new Date(b.createdAt)
-                } else {
-                  return new Date(b.createdAt) - new Date(a.createdAt)
-                }
-              })
-              setData(sortedData)
+              setSortOrder(e.target.value)
+              sortData(e.target.value)
             }}
           >
             <option value='asc'>Ascending</option>
@@ -98,10 +113,6 @@ const Users = () => {
                   <div className='flex items-center justify-center w-10 h-10 mx-auto bg-primary text-white rounded-full text-xl'>
                     <FaUser />
                   </div>
-                  {/* <Image
-                    href='https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png'
-                    alt='User display picture'
-                  /> */}
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
                   {order.name}
