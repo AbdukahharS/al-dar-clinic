@@ -1,6 +1,9 @@
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import { FaCircleInfo } from 'react-icons/fa6'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState, useRef } from 'react'
+import { FaCircleInfo, FaRotateRight } from 'react-icons/fa6'
+
+import Button from '@/components/Button'
 
 const dummyData = [
   {
@@ -60,18 +63,31 @@ const dummyData = [
 ]
 
 const Appointments = () => {
+  const router = useRouter()
   const [data, setData] = useState(dummyData)
   const [filter, setFilter] = useState('all')
   const [sort, setSort] = useState('asc')
+  const isInitialRender = useRef(true) // Ref to track initial render
 
   useEffect(() => {
+    const storedFilter = sessionStorage.getItem('appointmentFilter')
+    const storedSort = sessionStorage.getItem('appointmentSort')
+    if (storedFilter) setFilter(storedFilter)
+    if (storedSort) setSort(storedSort)
+  }, [])
+
+  useEffect(() => {
+    if (isInitialRender.current) {
+      // Skip the effect on the initial render
+      isInitialRender.current = false
+      return
+    }
+
     const filteredData = dummyData.filter((order) => {
       if (filter === 'all') {
         return true
-      } else if (filter === 'online') {
-        return order.medium === 'online'
       } else {
-        return order.medium === 'offline'
+        return order.medium === filter
       }
     })
 
@@ -84,6 +100,8 @@ const Appointments = () => {
     })
 
     setData(sortedData)
+    sessionStorage.setItem('appointmentFilter', filter)
+    sessionStorage.setItem('appointmentSort', sort)
   }, [filter, sort])
 
   return (
@@ -91,8 +109,16 @@ const Appointments = () => {
       <div className='bg-primary text-white px-8 md:px-20 py-8 flex justify-between items-center'>
         <h1 className='text-2xl font-medium'>Appointment Management</h1>
         <div className='flex items-center gap-4'>
+          <Button
+            className='bg-white !text-primary rounded-lg flex items-center flex-row gap-2'
+            onClick={() => router.refresh()}
+          >
+            <FaRotateRight />
+            Refresh
+          </Button>
           <select
             className='mr-4 p-2 rounded-lg text-primary'
+            value={filter}
             onChange={(e) => setFilter(e.target.value)}
           >
             <option value='all'>No Filter</option>
@@ -101,6 +127,7 @@ const Appointments = () => {
           </select>
           <select
             className='mr-4 p-2 rounded-lg text-primary'
+            value={sort}
             onChange={(e) => setSort(e.target.value)}
           >
             <option value='asc'>Ascending</option>
