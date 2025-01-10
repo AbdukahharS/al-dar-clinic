@@ -1,46 +1,62 @@
 import { useState } from 'react'
-import Button from '@/components/Button'
 import { FaPen, FaTrash, FaX } from 'react-icons/fa6'
+import { useForm } from 'react-hook-form'
+import { motion } from 'framer-motion'
+
+import Button from '@/components/Button'
+import confirm from '@/components/Confirm'
 
 const ConsultingServicesManagement = () => {
   const [services, setServices] = useState([
     'Doctor Consultation',
     'Physiotherapy',
   ])
-  const [newService, setNewService] = useState('')
   const [editIndex, setEditIndex] = useState(null)
-  const [editService, setEditService] = useState('')
 
-  const handleAdd = () => {
-    if (newService.trim()) {
-      setServices([...services, newService])
-      setNewService('')
-    }
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm()
+
+  const handleAdd = (data) => {
+    const newService = data.serviceName
+    setServices([...services, newService])
+    setValue('serviceName', null)
   }
 
-  const handleDelete = (index) => {
-    setServices(services.filter((_, i) => i !== index))
+  const handleDelete = async (index) => {
+    const removeFromList = () =>
+      setServices(services.filter((_, i) => i !== index))
+    confirm(
+      'Delete Service',
+      'Are you sure you want to delete this service?',
+      'Delete',
+      removeFromList
+    )
   }
 
   const handleEdit = (index) => {
     if (index === null) {
       setEditIndex(null)
-      setEditService('')
+      setValue('serviceName', null)
       return
     }
     setEditIndex(index)
-    setEditService(services[index])
+    const service = services[index]
+    setValue('serviceName', service)
   }
 
-  const handleUpdate = () => {
-    if (editService.trim()) {
-      const updatedServices = services.map((service, index) =>
-        index === editIndex ? editService : service
-      )
-      setServices(updatedServices)
-      setEditIndex(null)
-      setEditService('')
-    }
+  const handleUpdate = (data) => {
+    const updatedService = data.serviceName
+    const updatedServices = services.map((service, index) =>
+      index === editIndex ? updatedService : service
+    )
+    setServices(updatedServices)
+    setEditIndex(null)
+    setValue('serviceName', null)
   }
 
   return (
@@ -88,27 +104,40 @@ const ConsultingServicesManagement = () => {
         </tbody>
       </table>
 
-      {editIndex !== null ? (
-        <div className='mt-8 w-fit mx-auto'>
+      <form
+        className='mt-8 w-fit mx-auto flex flex-col gap-4'
+        onSubmit={handleSubmit(editIndex !== null ? handleUpdate : handleAdd)}
+      >
+        <h3 className='text-center text-primary text-2xl font-medium'>
+          {editIndex !== null ? 'Update Service' : 'Add New Service'}
+        </h3>
+        <div>
+          <label className='block text-lg font-medium text-gray-700'>
+            Service Name
+          </label>
           <input
             type='text'
-            value={editService}
-            onChange={(e) => setEditService(e.target.value)}
-            className='border px-4 py-2 mr-4 rounded'
+            {...register('serviceName', {
+              required: 'Service Name is required',
+            })}
+            className={`mt-1 block w-full border p-2 ${
+              errors.serviceName ? 'border-red-500' : 'border-gray-300'
+            } rounded-md shadow-s sm:text-sm`}
           />
-          <Button onClick={handleUpdate}>Update</Button>
+          {errors.serviceName && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className='text-red-500 text-sm mt-1'
+            >
+              {errors.serviceName.message}
+            </motion.p>
+          )}
         </div>
-      ) : (
-        <div className='mt-8 w-fit mx-auto '>
-          <input
-            type='text'
-            value={newService}
-            onChange={(e) => setNewService(e.target.value)}
-            className='border px-4 py-2 mr-4 rounded'
-          />
-          <Button onClick={handleAdd}>Add</Button>
-        </div>
-      )}
+        <Button type='submit' className='!rounded-lg !px-12 mx-auto block'>
+          {editIndex !== null ? 'Update' : 'Add'}
+        </Button>
+      </form>
     </div>
   )
 }

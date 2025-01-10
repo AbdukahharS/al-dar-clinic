@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import { FaCircleInfo } from 'react-icons/fa6'
+import { FaCircleInfo, FaRotateRight } from 'react-icons/fa6'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+
+import Button from '@/components/Button'
 
 const rentalOrders = [
   {
@@ -117,6 +120,7 @@ const statusOptions = [
 ]
 
 const RentalOrders = () => {
+  const router = useRouter
   const [data, setData] = useState(rentalOrders)
   const [filter, setFilter] = useState('all')
   const [sort, setSort] = useState('asc')
@@ -163,6 +167,13 @@ const RentalOrders = () => {
       <div className='bg-primary text-white px-8 md:px-20 py-8 flex justify-between items-center'>
         <h1 className='text-2xl font-medium'>Manage Rental Orders</h1>
         <div className='flex items-center gap-4'>
+          <Button
+            className='bg-white !text-primary rounded-lg flex items-center flex-row gap-2'
+            onClick={() => router.refresh()}
+          >
+            <FaRotateRight className='text-xl my-[2px]' />
+            <span className='hidden xl:inline'>Refresh</span>
+          </Button>
           <select
             id='statusFilter'
             value={filter}
