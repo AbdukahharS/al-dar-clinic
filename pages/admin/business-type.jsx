@@ -42,7 +42,7 @@ const BusinessType = () => {
   }
 
   const handleEdit = (index) => {
-    if (!index) {
+    if (index === null) {
       setEditIndex(null)
       setValue('productName', null)
       setValue('productType', '')
@@ -90,7 +90,7 @@ const BusinessType = () => {
               <td className='px-4 py-2 flex gap-3 items-center justify-center'>
                 {editIndex === index ? (
                   <button
-                    onClick={() => handleEdit()}
+                    onClick={() => handleEdit(null)}
                     className='text-red-500 hover:underline mr-2'
                   >
                     <FaX />

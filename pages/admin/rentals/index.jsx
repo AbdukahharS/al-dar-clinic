@@ -5,45 +5,99 @@ import Link from 'next/link'
 const rentalOrders = [
   {
     orderId: '1010246',
-    products: '2 Product',
+    productName: 'Laptop',
+    quantity: 2,
     status: 'Requested',
     amount: '$212.50',
     timestamp: '09:09 AM, 10-10-2024',
   },
   {
     orderId: '1010247',
-    products: '3 Product',
+    productName: 'Smartphone',
+    quantity: 3,
     status: 'Cancelled',
     amount: '$312.50',
     timestamp: '10:10 AM, 11-11-2024',
   },
   {
     orderId: '1010248',
-    products: '1 Product',
+    productName: 'Headphones',
+    quantity: 1,
     status: 'Placed',
     amount: '$112.50',
     timestamp: '11:11 AM, 12-12-2024',
   },
   {
     orderId: '1010249',
-    products: '4 Product',
+    productName: 'Tablet',
+    quantity: 4,
     status: 'Delivered',
     amount: '$412.50',
     timestamp: '12:12 PM, 01-01-2025',
   },
   {
     orderId: '1010250',
-    products: '5 Product',
+    productName: 'Camera',
+    quantity: 5,
     status: 'Complete',
     amount: '$512.50',
     timestamp: '01:01 PM, 02-02-2025',
   },
   {
     orderId: '1010251',
-    products: '6 Product',
+    productName: 'Smartwatch',
+    quantity: 6,
     status: 'Failed',
     amount: '$612.50',
     timestamp: '02:02 PM, 03-03-2025',
+  },
+  {
+    orderId: '1010252',
+    productName: 'Gaming Console',
+    quantity: 2,
+    status: 'PickedUp',
+    amount: '$422.50',
+    timestamp: '03:03 PM, 04-04-2025',
+  },
+  {
+    orderId: '1010253',
+    productName: 'Bluetooth Speaker',
+    quantity: 3,
+    status: 'ForPacking',
+    amount: '$322.50',
+    timestamp: '04:04 PM, 05-05-2025',
+  },
+  {
+    orderId: '1010254',
+    productName: 'Keyboard',
+    quantity: 1,
+    status: 'Packed',
+    amount: '$122.50',
+    timestamp: '05:05 PM, 06-06-2025',
+  },
+  {
+    orderId: '1010255',
+    productName: 'Monitor',
+    quantity: 4,
+    status: 'OnDelivery',
+    amount: '$422.50',
+    timestamp: '06:06 PM, 07-07-2025',
+  },
+  {
+    orderId: '1010256',
+    productName: 'Mouse',
+    quantity: 5,
+    status: 'ToReturn',
+    amount: '$522.50',
+    timestamp: '07:07 PM, 08-08-2025',
+  },
+  {
+    orderId: '1010257',
+    productName: 'Router',
+    quantity: 6,
+    status: 'Returned',
+    amount: '$622.50',
+    timestamp: '08:08 PM, 09-09-2025',
   },
 ]
 
@@ -158,39 +212,43 @@ const RentalOrders = () => {
             </tr>
           </thead>
           <tbody>
-            {data.map((order, index) => (
-              <tr key={index} className='border'>
-                <td className='px-3 py-4 whitespace-nowrap text-center'>
-                  {order.orderId}
-                  <p className='text-xs'>{order.timestamp}</p>
-                </td>
-                <td className='px-3 py-4 whitespace-nowrap text-center'>
-                  {order.productName}
-                </td>
-                <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  {order.quantity}
-                </td>
-                <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  <div className='border mx-auto rounded-lg w-fit p-2 px-4 text-gray-500'>
-                    {order.status.replace(/([A-Z])/g, ' $1').trim()}
-                  </div>
-                </td>
-                <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  {order.amount}
-                </td>
-                <td className='px-3 py-4 text-primary whitespace-nowrap'>
-                  <Link href={`/admin/rentals/${order.orderId}`}>
-                    <FaCircleInfo className='mx-auto text-xl' />
-                  </Link>
-                </td>
-              </tr>
-            ))}
+            {data.map(
+              (order, index) =>
+                index < 6 && (
+                  <tr key={index} className='border'>
+                    <td className='px-3 py-4 whitespace-nowrap text-center'>
+                      {order.orderId}
+                      <p className='text-xs'>{order.timestamp}</p>
+                    </td>
+                    <td className='px-3 py-4 whitespace-nowrap text-center'>
+                      {order.productName}
+                    </td>
+                    <td className='px-3 py-4 text-center whitespace-nowrap'>
+                      {order.quantity}
+                    </td>
+                    <td className='px-3 py-4 text-center whitespace-nowrap'>
+                      <div className='border mx-auto rounded-lg w-fit p-2 px-4 text-gray-500'>
+                        {order.status.replace(/([A-Z])/g, ' $1').trim()}
+                      </div>
+                    </td>
+                    <td className='px-3 py-4 text-center whitespace-nowrap'>
+                      {order.amount}
+                    </td>
+                    <td className='px-3 py-4 text-primary whitespace-nowrap'>
+                      <Link href={`/admin/rentals/${order.orderId}`}>
+                        <FaCircleInfo className='mx-auto text-xl' />
+                      </Link>
+                    </td>
+                  </tr>
+                )
+            )}
           </tbody>
         </table>
       </div>
       <div className='flex flex-row items-center justify-between mt-7 md:px-4'>
         <p className='text-gray-400'>
-          Showing {data.length} of {rentalOrders.length} results
+          Showing {data.length == 12 ? '6' : data.length} of{' '}
+          {rentalOrders.length} results
         </p>
       </div>
     </div>

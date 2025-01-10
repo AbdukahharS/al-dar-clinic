@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Button from '@/components/Button'
-import { FaPen, FaTrash } from 'react-icons/fa6'
+import { FaPen, FaTrash, FaX } from 'react-icons/fa6'
 
 const ConsultingServicesManagement = () => {
   const [services, setServices] = useState([
@@ -23,6 +23,11 @@ const ConsultingServicesManagement = () => {
   }
 
   const handleEdit = (index) => {
+    if (index === null) {
+      setEditIndex(null)
+      setEditService('')
+      return
+    }
     setEditIndex(index)
     setEditService(services[index])
   }
@@ -56,12 +61,21 @@ const ConsultingServicesManagement = () => {
             <tr key={index} className='border-b'>
               <td className='px-4 py-2'>{service}</td>
               <td className='px-4 py-2 flex gap-3 items-center justify-center'>
-                <button
-                  onClick={() => handleEdit(index)}
-                  className='text-primary hover:underline mr-2'
-                >
-                  <FaPen />
-                </button>
+                {editIndex === index ? (
+                  <button
+                    onClick={() => handleEdit(null)}
+                    className='text-red-500 hover:underline mr-2'
+                  >
+                    <FaX />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => handleEdit(index)}
+                    className='text-primary hover:underline mr-2'
+                  >
+                    <FaPen />
+                  </button>
+                )}
                 <button
                   onClick={() => handleDelete(index)}
                   className='text-primary hover:underline'
