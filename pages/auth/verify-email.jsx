@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form'
 
 import Button from '@/components/Button'
 import illustration from '@/public/images/login.svg'
+import useAuth from '@/hooks/useAuth'
 
 const inter = Inter({
   weight: ['400', '500', '600'],
@@ -16,21 +17,13 @@ const inter = Inter({
 })
 
 const VerifyEmail = () => {
-  const [loading, setLoading] = useState(false)
+  const { loading, resendEmail, user, verifyEmail } = useAuth()
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm()
-
-  const onSubmit = async (data) => {
-    setLoading(true)
-    // Send OTP logic here
-    setTimeout(() => {
-      setLoading(false)
-    }, 1500)
-  }
 
   return (
     <>
@@ -50,10 +43,10 @@ const VerifyEmail = () => {
             <h2 className='text-2xl font-semibold text-center text-primary mb-5'>
               Verify Email
             </h2>
-            <form onSubmit={handleSubmit(onSubmit)} noValidate>
+            <form onSubmit={handleSubmit(verifyEmail)} noValidate>
               <div className='mb-4'>
                 <label htmlFor='code' className='text-[#1F1F39] text-sm'>
-                  Enter the code sent to jolanjose2003@gmail.com
+                  Enter the code sent to {user?.email}
                 </label>
                 <input
                   type='text'
@@ -74,10 +67,21 @@ const VerifyEmail = () => {
                   {errors.code?.message}
                 </motion.p>
               </div>
-              <p className='text-sm text-center'>
+              <p className='text-sm text-center flex flex-row items-center gap-1 justify-center'>
                 if you didn&apos;t receive a code
-                <button className='text-primary ml-1 font-semibold'>
-                  Resend Password
+                <button
+                  type='button'
+                  onClick={resendEmail}
+                  className='text-primary ml-1 font-semibold flex flex-row items-center gap-1'
+                >
+                  {loading.resendEmail ? (
+                    <>
+                      Resending...
+                      <AiOutlineLoading3Quarters className='animate-spin h-5 w-5' />
+                    </>
+                  ) : (
+                    'Resend Password'
+                  )}
                 </button>
               </p>
 
@@ -85,8 +89,8 @@ const VerifyEmail = () => {
                 type='submit'
                 className='w-full mt-7 text-lg flex flex-row justify-center items-center gap-4'
               >
-                {loading ? 'Verifying...' : 'Verify'}
-                {loading && (
+                {loading?.verifyEmail ? 'Verifying...' : 'Verify'}
+                {loading?.verifyEmail && (
                   <AiOutlineLoading3Quarters className='animate-spin h-5 w-5' />
                 )}
               </Button>

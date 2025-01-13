@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { FaArrowLeft } from 'react-icons/fa6'
+import { FaArrowLeft, FaEye, FaEyeSlash } from 'react-icons/fa6'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { Inter } from 'next/font/google'
 import { useForm, Controller } from 'react-hook-form'
@@ -12,6 +12,7 @@ import 'react-phone-number-input/style.css'
 
 import Button from '@/components/Button'
 import illustration from '@/public/images/login.svg'
+import useAuth from '@/hooks/useAuth'
 
 const inter = Inter({
   weight: ['400', '500', '600'],
@@ -20,14 +21,12 @@ const inter = Inter({
 })
 
 const ForgotPasswordPhone = () => {
-  const [loading, setLoading] = useState(false)
+  const { loading, forgotPassword, resetPassword } = useAuth()
   const [sent, setSent] = useState(false)
   const [otp, setOtp] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [phone, setPhone] = useState('')
   const [error, setError] = useState('')
-  // This is just to show error
-  // remove it when implementing real functionality
-  const sentOTP = '5555'
 
   const {
     register,
@@ -37,31 +36,23 @@ const ForgotPasswordPhone = () => {
   } = useForm()
 
   const onSubmit = async (data) => {
-    setLoading(true)
-    setPhone(data.phone)
-    // Send OTP logic here
-    setTimeout(() => {
-      setSent(true)
-      setLoading(false)
-    }, 1500)
-  }
-
-  const handleVerify = (e) => {
-    e.preventDefault()
-    setError('')
-    if (otp.length < 4) {
-      setError('Enter full code')
-    } else {
-      setLoading(true)
-      // get the sent otp logic here
-      if (otp !== sentOTP) {
-        setError('OTP is incorrect')
-      } else {
-        // after OTP verified
-      }
+    if (data.phone) {
+      setPhone(data.phone)
     }
 
-    setLoading(false)
+    const res = await forgotPassword(data)
+    if (res) {
+      setSent(true)
+    }
+  }
+
+  const handleVerify = async (data) => {
+    setError('')
+    if (otp.length < 6) {
+      setError('Enter full code')
+    } else {
+      await resetPassword({ ...data, otp })
+    }
   }
 
   return (
@@ -80,7 +71,7 @@ const ForgotPasswordPhone = () => {
             className={`w-full lg:w-auto lg:flex-1 py-10 max-w-96 mx-auto ${inter.className}`}
           >
             <div className='mb-5 relative'>
-              <Link className='absolute' href='/auth/login-with-phone'>
+              <Link className='absolute' href='/auth/login'>
                 <Button variant='ghost' size='iconSM'>
                   <FaArrowLeft className='text-primary' />
                 </Button>
@@ -89,40 +80,32 @@ const ForgotPasswordPhone = () => {
                 Forgot Password
               </h2>
             </div>
-            {/* OTP sending form */}
+            {/* Phone number input form */}
             <form
               onSubmit={handleSubmit(onSubmit)}
               noValidate
               className={sent ? 'hidden' : ''}
             >
               <div className='mb-4'>
-                <div className='flex flex-row justify-between'>
-                  <label htmlFor='phone' className='text-primary'>
-                    Phone*
-                  </label>
-                  <Link
-                    href='/auth/forgot-password'
-                    className='underline font-semibold text-[#2D3748]'
-                  >
-                    Use email Instead
-                  </Link>
-                </div>
+                <label htmlFor='phone' className='text-primary'>
+                  Phone Number*
+                </label>
                 <Controller
                   name='phone'
                   control={control}
-                  defaultValue=''
                   rules={{
                     required: 'Phone number is required',
                     validate: (value) =>
-                      isValidPhoneNumber(value) ||
-                      'Please enter a valid phone number',
+                      isValidPhoneNumber(value) || 'Invalid phone number',
                   }}
                   render={({ field }) => (
                     <PhoneInput
                       {...field}
-                      id='phone'
-                      defaultCountry='AE'
-                      className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-0 ${
+                      international
+                      defaultCountry='IN'
+                      value={phone}
+                      onChange={setPhone}
+                      className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
                         errors.phone ? 'border-red-500' : 'border-gray-300'
                       }`}
                     />
@@ -133,7 +116,7 @@ const ForgotPasswordPhone = () => {
                   animate={{ opacity: errors.phone ? 1 : 0 }}
                   transition={{ duration: 0.3 }}
                   className='text-red-500 text-sm mt-1'
-                  style={{ opacity: errors.email ? 1 : 0 }}
+                  style={{ opacity: errors.phone ? 1 : 0 }}
                 >
                   {errors.phone?.message}
                 </motion.p>
@@ -143,55 +126,89 @@ const ForgotPasswordPhone = () => {
                 type='submit'
                 className='w-full mt-7 text-lg flex flex-row justify-center items-center gap-4'
               >
-                {loading ? 'Sending OTP...' : 'Get OTP'}
-                {loading && (
+                {loading?.forgotPassword ? 'Sending OTP...' : 'Get OTP'}
+                {loading?.forgotPassword && (
                   <AiOutlineLoading3Quarters className='animate-spin h-5 w-5' />
                 )}
               </Button>
             </form>
-            {/* OTP verifying form */}
-            <form className={sent ? '' : 'hidden'} onSubmit={handleVerify}>
-              <p className='text-sm mb-5'>
-                OTP shared on{' '}
-                <b>{`${phone.slice(0, 2)}****${phone.slice(
-                  phone.length - 3
-                )}`}</b>
-              </p>
-              <p className='text-sm font-medium mb-4'>OTP</p>
-              <OtpInput
-                value={otp}
-                onChange={setOtp}
-                numInputs={4}
-                containerStyle={{ justifyContent: 'space-between' }}
-                renderInput={(props) => (
+            {/* OTP verification form */}
+            {sent && (
+              <form onSubmit={handleSubmit(handleVerify)}>
+                <p className='text-sm mb-5'>
+                  OTP shared on <b>{phone}</b>
+                </p>
+                <p className='text-sm font-medium mb-4'>OTP</p>
+                <OtpInput
+                  value={otp}
+                  onChange={setOtp}
+                  numInputs={6}
+                  containerStyle={{ justifyContent: 'space-between' }}
+                  renderInput={(props) => (
+                    <input
+                      {...props}
+                      className={`!w-16 !h-14 rounded text-2xl text-black border ${
+                        error && 'border-red-500'
+                      }`}
+                    />
+                  )}
+                />
+                <div className='flex flex-row justify-between items-center mt-2'>
+                  <p className='text-xs text-red-500'>{error}</p>
+                  <Button
+                    size='sm'
+                    variant='ghost'
+                    className='text-xs text-[#949CAB]'
+                    onClick={() => onSubmit({ phone })}
+                  >
+                    {loading?.forgotPassword ? 'Resending...' : 'Resend OTP'}
+                  </Button>
+                </div>
+                <label htmlFor='password' className='text-primary'>
+                  New Password*
+                </label>
+                <div className='relative'>
                   <input
-                    {...props}
-                    className={`!w-16 !h-14 rounded text-2xl text-black border ${
-                      error && 'border-red-500'
+                    type={showPassword ? 'text' : 'password'}
+                    id='password'
+                    {...register('password', {
+                      required: 'Password is required',
+                    })}
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
+                      errors.password ? 'border-red-500' : 'border-gray-300'
                     }`}
                   />
-                )}
-              />
-              <div className='flex flex-row justify-between items-center mt-2'>
-                <p className='text-xs text-red-500'>{error}</p>
-                <Button
-                  size='sm'
-                  variant='ghost'
-                  className='text-xs text-[#949CAB]'
+                  <button
+                    type='button'
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className='absolute text-xl top-1/2 right-3 -translate-y-1/2 text-black'
+                  >
+                    {showPassword ? <FaEye /> : <FaEyeSlash />}
+                  </button>
+                </div>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: errors.password ? 1 : 0 }}
+                  transition={{ duration: 0.3 }}
+                  className='text-red-500 text-sm mt-1'
+                  style={{ opacity: errors.password ? 1 : 0 }}
                 >
-                  Resend OTP
+                  {errors.password?.message}
+                </motion.p>
+
+                <Button
+                  type='submit'
+                  className='w-full mt-7 text-lg flex flex-row justify-center items-center gap-4'
+                >
+                  {loading?.resetPassword
+                    ? 'Requesting reset...'
+                    : 'Reset Password'}
+                  {loading?.resetPassword && (
+                    <AiOutlineLoading3Quarters className='animate-spin h-5 w-5' />
+                  )}
                 </Button>
-              </div>
-              <Button
-                type='submit'
-                className='w-full mt-7 text-lg flex flex-row justify-center items-center gap-4'
-              >
-                {loading ? 'Verifying...' : 'Verify'}
-                {loading && (
-                  <AiOutlineLoading3Quarters className='animate-spin h-5 w-5' />
-                )}
-              </Button>
-            </form>
+              </form>
+            )}
 
             <Link
               href='/auth/login-with-phone'

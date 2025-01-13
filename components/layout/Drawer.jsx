@@ -53,7 +53,7 @@ export default function Drawer() {
         className='fixed top-0 left-0 w-full h-full bg-[#F3F3F3] z-30 p-12 flex flex-col'
       >
         <div className='relative h-28'>
-          {!loading && isAuthenticated && (
+          {!loading?.user && isAuthenticated && (
             <Link href='/profile/settings'>
               <Button
                 variant='outline'
@@ -98,7 +98,7 @@ export default function Drawer() {
               Book now
             </Button>
           </Link>
-          {!isAuthenticated && !loading && (
+          {!isAuthenticated && !loading?.user && (
             <Link href='/auth/login'>
               <Button onClick={() => setIsOpen(false)}>Login</Button>
             </Link>

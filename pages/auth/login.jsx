@@ -126,7 +126,11 @@ const Login = () => {
               </motion.p>
               <div className='mt-6 flex flex-row justify-between items-center'>
                 <label className='inline-flex items-center'>
-                  <input type='checkbox' className='form-checkbox h-5 w-5' />
+                  <input
+                    type='checkbox'
+                    className='form-checkbox h-5 w-5'
+                    {...register('remember')}
+                  />
                   <span className='ml-2 text-sm'>Remember Me</span>
                 </label>
 
@@ -141,8 +145,8 @@ const Login = () => {
                 type='submit'
                 className='w-full mt-7 text-lg flex flex-row justify-center items-center gap-4'
               >
-                {loading ? 'Logging in...' : 'Sign In'}
-                {loading && (
+                {loading?.user ? 'Logging in...' : 'Sign In'}
+                {loading?.user && (
                   <AiOutlineLoading3Quarters className='animate-spin h-5 w-5' />
                 )}
               </Button>

@@ -10,6 +10,7 @@ import { useForm } from 'react-hook-form'
 
 import Button from '@/components/Button'
 import illustration from '@/public/images/login.svg'
+import useAuth from '@/hooks/useAuth'
 
 const inter = Inter({
   weight: ['400', '500', '600'],
@@ -18,17 +19,13 @@ const inter = Inter({
 })
 
 const Register = () => {
-  const [loading, setLoadint] = useState(false)
+  const { registerUser, loading } = useAuth()
   const router = useRouter()
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm()
-
-  const onSubmit = async (data) => {
-    router.push('/auth/verify-email')
-  }
 
   // State to toggle password visibility
   const [showPassword, setShowPassword] = useState(false)
@@ -56,7 +53,7 @@ const Register = () => {
               Sign Up
             </h2>
 
-            <form onSubmit={handleSubmit(onSubmit)} noValidate>
+            <form onSubmit={handleSubmit(registerUser)} noValidate>
               <div className='mb-4'>
                 <div className='flex flex-row justify-between'>
                   <label htmlFor='name' className='text-primary'>
@@ -128,6 +125,11 @@ const Register = () => {
                   id='password'
                   {...register('password', {
                     required: 'Password is required',
+                    validate: (value) => {
+                      return value.length < 6
+                        ? 'Password must be at least 6 characters long'
+                        : true
+                    },
                   })}
                   className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
                     errors.password ? 'border-red-500' : 'border-gray-300'
@@ -152,7 +154,11 @@ const Register = () => {
               </motion.p>
               <div className='mt-6 flex flex-row justify-between items-center'>
                 <label className='inline-flex items-center'>
-                  <input type='checkbox' className='form-checkbox h-5 w-5' />
+                  <input
+                    type='checkbox'
+                    className='form-checkbox h-5 w-5'
+                    {...register('remember')}
+                  />
                   <span className='ml-2 text-sm'>Remember Me</span>
                 </label>
               </div>
@@ -160,8 +166,8 @@ const Register = () => {
                 type='submit'
                 className='w-full mt-7 text-lg flex flex-row justify-center items-center gap-4'
               >
-                {loading ? 'Logging up...' : 'Sign Up'}
-                {loading && (
+                {loading?.register ? 'Signing up...' : 'Sign Up'}
+                {loading?.register && (
                   <AiOutlineLoading3Quarters className='animate-spin h-5 w-5' />
                 )}
               </Button>

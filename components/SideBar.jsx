@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import {
   FaUser,
@@ -16,6 +16,7 @@ import Image from 'next/image'
 
 import useSidebarState from '@/hooks/useSidebar'
 import Button from './Button'
+import useAuth from '@/hooks/useAuth'
 
 const variants = {
   close: { x: '-150%' },
@@ -23,7 +24,9 @@ const variants = {
 }
 
 const SideBar = () => {
+  const router = useRouter()
   const path = usePathname()
+  const { user, logoutUser } = useAuth()
   const { isOpen, close } = useSidebarState()
   const [shouldAnimate, setShouldAnimate] = useState(true)
 
@@ -41,6 +44,11 @@ const SideBar = () => {
       mediaQuery.removeEventListener('change', handleChange)
     }
   }, [])
+
+  const handleLogout = async () => {
+    logoutUser()
+    router.push('/')
+  }
 
   return (
     <motion.div
@@ -64,7 +72,7 @@ const SideBar = () => {
             <FaUserLarge />
           )}
         </div>
-        <h3 className='text-gray-700 font-medium'>Sam Jordan</h3>
+        <h3 className='text-gray-700 font-medium'>{user?.name}</h3>
       </div>
       <div className='text-gray-700 mt-14'>
         <Link
@@ -118,7 +126,7 @@ const SideBar = () => {
           <span>Addresses</span>
         </Link>
         <button
-          onClick={close}
+          onClick={handleLogout}
           className='w-full flex flex-row items-center gap-2 border-b p-[10px] font-medium transform transition-all duration-300 ease-in-out hover:scale-105 hover:text-red-500'
         >
           <FaArrowRightFromBracket className='rotate-180 text-red-500' />

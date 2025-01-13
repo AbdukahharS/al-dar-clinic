@@ -20,17 +20,16 @@ const inter = Inter({
 })
 
 const LoginWithPhone = () => {
-  const { login, loading } = useAuth()
+  const { loginWithPhone, loading } = useAuth()
   const {
-    register,
     handleSubmit,
     control,
+    register,
     formState: { errors },
-  } = useForm() // Ensuring register is defined here
+  } = useForm()
 
   const onSubmit = async (data) => {
-    await login(data)
-    onClose()
+    await loginWithPhone(data)
   }
 
   // State to toggle password visibility
@@ -70,11 +69,10 @@ const LoginWithPhone = () => {
                     href='/auth/login'
                     className='underline font-semibold text-[#2D3748]'
                   >
-                    Use email Instead
+                    Use Email Instead
                   </Link>
                 </div>
 
-                {/* PhoneInput with react-hook-form Controller */}
                 <Controller
                   name='phone'
                   control={control}
@@ -82,21 +80,20 @@ const LoginWithPhone = () => {
                   rules={{
                     required: 'Phone number is required',
                     validate: (value) =>
-                      isValidPhoneNumber(value) >= 10 ||
+                      isValidPhoneNumber(value) ||
                       'Please enter a valid phone number',
                   }}
                   render={({ field }) => (
                     <PhoneInput
                       {...field}
                       id='phone'
-                      defaultCountry='AE'
-                      className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-0 ${
+                      defaultCountry='IN'
+                      className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
                         errors.phone ? 'border-red-500' : 'border-gray-300'
                       }`}
                     />
                   )}
                 />
-
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: errors.phone ? 1 : 0 }}
@@ -140,10 +137,13 @@ const LoginWithPhone = () => {
 
               <div className='mt-6 flex flex-row justify-between items-center'>
                 <label className='inline-flex items-center'>
-                  <input type='checkbox' className='form-checkbox h-5 w-5' />
+                  <input
+                    type='checkbox'
+                    className='form-checkbox h-5 w-5'
+                    {...register('remember')}
+                  />
                   <span className='ml-2 text-sm'>Remember Me</span>
                 </label>
-
                 <Link
                   href='/auth/forgot-password-phone'
                   className='text-primary text-sm font-semibold'
@@ -151,21 +151,22 @@ const LoginWithPhone = () => {
                   Forgot Password
                 </Link>
               </div>
-
               <Button
                 type='submit'
                 className='w-full mt-7 text-lg flex flex-row justify-center items-center gap-4'
               >
-                {loading ? 'Logging in...' : 'Sign In'}
-                {loading && (
+                {loading?.user ? 'Logging in...' : 'Sign In'}
+                {loading?.user && (
                   <AiOutlineLoading3Quarters className='animate-spin h-5 w-5' />
                 )}
               </Button>
             </form>
-
             <p className='text-sm font-semibold text-center mt-4 text-black'>
               Don&apos;t have an account?{' '}
-              <Link href='/auth/register' className='font-bold text-base ml-4'>
+              <Link
+                href='/auth/register-with-phone'
+                className='font-bold text-base ml-4'
+              >
                 Sign up
               </Link>
             </p>

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { FaArrowLeft } from 'react-icons/fa6'
+import { FaArrowLeft, FaEye, FaEyeSlash } from 'react-icons/fa6'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { Inter } from 'next/font/google'
 import { useForm } from 'react-hook-form'
@@ -10,6 +10,7 @@ import OtpInput from 'react-otp-input'
 
 import Button from '@/components/Button'
 import illustration from '@/public/images/login.svg'
+import useAuth from '@/hooks/useAuth'
 
 const inter = Inter({
   weight: ['400', '500', '600'],
@@ -18,14 +19,12 @@ const inter = Inter({
 })
 
 const ForgotPassword = () => {
-  const [loading, setLoading] = useState(false)
+  const { loading, forgotPassword, resetPassword } = useAuth()
   const [sent, setSent] = useState(false)
   const [otp, setOtp] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
-  // This is just to show error
-  // remove it when implementing real functionality
-  const sentOTP = '5555'
 
   const {
     register,
@@ -34,31 +33,23 @@ const ForgotPassword = () => {
   } = useForm()
 
   const onSubmit = async (data) => {
-    setLoading(true)
-    setEmail(data.email)
-    // Send OTP logic here
-    setTimeout(() => {
-      setSent(true)
-      setLoading(false)
-    }, 1500)
-  }
-
-  const handleVerify = (e) => {
-    e.preventDefault()
-    setError('')
-    if (otp.length < 4) {
-      setError('Enter full code')
-    } else {
-      setLoading(true)
-      // get the sent otp logic here
-      if (otp !== sentOTP) {
-        setError('OTP is incorrect')
-      } else {
-        // after OTP verified
-      }
+    if (data.email) {
+      setEmail(data.email)
     }
 
-    setLoading(false)
+    const res = await forgotPassword(data)
+    if (res) {
+      setSent(true)
+    }
+  }
+
+  const handleVerify = async (data) => {
+    setError('')
+    if (otp.length < 6) {
+      setError('Enter full code')
+    } else {
+      await resetPassword({ ...data, otp })
+    }
   }
 
   return (
@@ -107,6 +98,7 @@ const ForgotPassword = () => {
                 <input
                   type='email'
                   id='email'
+                  onChange={(e) => setEmail(e.target.value)}
                   {...register('email', {
                     required: 'Email is required',
                     pattern: {
@@ -133,52 +125,89 @@ const ForgotPassword = () => {
                 type='submit'
                 className='w-full mt-7 text-lg flex flex-row justify-center items-center gap-4'
               >
-                {loading ? 'Sending OTP...' : 'Get OTP'}
-                {loading && (
+                {loading?.forgotPassword ? 'Sending OTP...' : 'Get OTP'}
+                {loading?.forgotPassword && (
                   <AiOutlineLoading3Quarters className='animate-spin h-5 w-5' />
                 )}
               </Button>
             </form>
             {/* OTP verifying form */}
-            <form className={sent ? '' : 'hidden'} onSubmit={handleVerify}>
-              <p className='text-sm mb-5'>
-                OTP shared on <b>{email}</b>
-              </p>
-              <p className='text-sm font-medium mb-4'>OTP</p>
-              <OtpInput
-                value={otp}
-                onChange={setOtp}
-                numInputs={4}
-                containerStyle={{ justifyContent: 'space-between' }}
-                renderInput={(props) => (
+            {sent && (
+              <form onSubmit={handleSubmit(handleVerify)}>
+                <p className='text-sm mb-5'>
+                  OTP shared on <b>{email}</b>
+                </p>
+                <p className='text-sm font-medium mb-4'>OTP</p>
+                <OtpInput
+                  value={otp}
+                  onChange={setOtp}
+                  numInputs={6}
+                  containerStyle={{ justifyContent: 'space-between' }}
+                  renderInput={(props) => (
+                    <input
+                      {...props}
+                      className={`!w-16 !h-14 rounded text-2xl text-black border ${
+                        error && 'border-red-500'
+                      }`}
+                    />
+                  )}
+                />
+                <div className='flex flex-row justify-between items-center mt-2'>
+                  <p className='text-xs text-red-500'>{error}</p>
+                  <Button
+                    size='sm'
+                    variant='ghost'
+                    className='text-xs text-[#949CAB]'
+                    onClick={() => onSubmit({ email })}
+                  >
+                    {loading?.forgotPassword ? 'Resending...' : 'Resend OTP'}
+                  </Button>
+                </div>
+                <label htmlFor='password' className='text-primary'>
+                  New Password*
+                </label>
+                <div className='relative'>
                   <input
-                    {...props}
-                    className={`!w-16 !h-14 rounded text-2xl text-black border ${
-                      error && 'border-red-500'
+                    type={showPassword ? 'text' : 'password'}
+                    id='password'
+                    {...register('password', {
+                      required: 'Password is required',
+                    })}
+                    className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
+                      errors.password ? 'border-red-500' : 'border-gray-300'
                     }`}
                   />
-                )}
-              />
-              <div className='flex flex-row justify-between items-center mt-2'>
-                <p className='text-xs text-red-500'>{error}</p>
-                <Button
-                  size='sm'
-                  variant='ghost'
-                  className='text-xs text-[#949CAB]'
+                  <button
+                    type='button'
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className='absolute text-xl top-1/2 right-3 -translate-y-1/2 text-black'
+                  >
+                    {showPassword ? <FaEye /> : <FaEyeSlash />}
+                  </button>
+                </div>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: errors.password ? 1 : 0 }}
+                  transition={{ duration: 0.3 }}
+                  className='text-red-500 text-sm mt-1'
+                  style={{ opacity: errors.password ? 1 : 0 }}
                 >
-                  Resend OTP
+                  {errors.password?.message}
+                </motion.p>
+
+                <Button
+                  type='submit'
+                  className='w-full mt-7 text-lg flex flex-row justify-center items-center gap-4'
+                >
+                  {loading?.resetPassword
+                    ? 'Requesting reset...'
+                    : 'Reset Password'}
+                  {loading?.resetPassword && (
+                    <AiOutlineLoading3Quarters className='animate-spin h-5 w-5' />
+                  )}
                 </Button>
-              </div>
-              <Button
-                type='submit'
-                className='w-full mt-7 text-lg flex flex-row justify-center items-center gap-4'
-              >
-                {loading ? 'Verifying...' : 'Verify'}
-                {loading && (
-                  <AiOutlineLoading3Quarters className='animate-spin h-5 w-5' />
-                )}
-              </Button>
-            </form>
+              </form>
+            )}
 
             <Link
               href='/auth/login'

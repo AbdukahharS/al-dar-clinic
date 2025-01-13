@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -12,7 +13,6 @@ import 'react-phone-number-input/style.css'
 import useAuth from '@/hooks/useAuth'
 import Button from '@/components/Button'
 import illustration from '@/public/images/login.svg'
-import { useRouter } from 'next/navigation'
 
 const inter = Inter({
   weight: ['400', '500', '600'],
@@ -22,18 +22,13 @@ const inter = Inter({
 
 const RegisterWithPhone = () => {
   const router = useRouter()
-  const { register: registerUser, loading } = useAuth()
+  const { registerUser, loading } = useAuth()
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
   } = useForm()
-
-  const onSubmit = async (data) => {
-    await registerUser(data)
-    router.push('/auth/verify-phone')
-  }
 
   const [showPassword, setShowPassword] = useState(false)
 
@@ -63,7 +58,7 @@ const RegisterWithPhone = () => {
               Create a new account
             </p>
 
-            <form onSubmit={handleSubmit(onSubmit)} noValidate>
+            <form onSubmit={handleSubmit(registerUser)} noValidate>
               <div className='mb-4'>
                 <label htmlFor='name' className='text-primary'>
                   Name*
@@ -168,7 +163,11 @@ const RegisterWithPhone = () => {
 
               <div className='mt-6 flex flex-row justify-between items-center'>
                 <label className='inline-flex items-center'>
-                  <input type='checkbox' className='form-checkbox h-5 w-5' />
+                  <input
+                    type='checkbox'
+                    className='form-checkbox h-5 w-5'
+                    {...register('remember')}
+                  />
                   <span className='ml-2 text-sm'>Remember Me</span>
                 </label>
               </div>
@@ -177,8 +176,8 @@ const RegisterWithPhone = () => {
                 type='submit'
                 className='w-full mt-7 text-lg flex flex-row justify-center items-center gap-4'
               >
-                {loading ? 'Signing up...' : 'Sign Up'}
-                {loading && (
+                {loading?.register ? 'Signing up...' : 'Sign Up'}
+                {loading?.register && (
                   <AiOutlineLoading3Quarters className='animate-spin h-5 w-5' />
                 )}
               </Button>

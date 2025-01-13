@@ -68,7 +68,7 @@ const Navbar = () => {
               Book now
             </Button>
           </Link>
-          {isAuthenticated && !loading && (
+          {isAuthenticated && !loading?.user && (
             <>
               <Cart />
               <Link href='/profile/settings'>
