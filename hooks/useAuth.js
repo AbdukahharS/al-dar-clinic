@@ -273,6 +273,31 @@ const useAuth = () => {
     dispatch(endLoading('resetPassword'))
   }
 
+  const updateUser = async (updatedData) => {
+    dispatch(startLoading('updateUser'))
+    try {
+      // Make the PUT request to update user data
+      const res = await axios.put(`/users/${user.id}`, updatedData, {
+        headers: {
+          Authorization:
+            localStorage.getItem('userToken') ||
+            sessionStorage.getItem('userToken'),
+        },
+      })
+
+      // Update Redux store with the new user data
+      dispatch(loginUser(res.data))
+
+      // Show success message
+      toast.success('Your details have been successfully updated!')
+    } catch (err) {
+      console.error(err)
+      toast.error(err?.response?.data?.message || 'Error updating user data')
+    } finally {
+      dispatch(endLoading('updateUser'))
+    }
+  }
+
   return {
     isAuthenticated,
     user,
@@ -288,6 +313,7 @@ const useAuth = () => {
     verifyPhone,
     forgotPassword,
     loginWithPhone,
+    updateUser,
   }
 }
 
