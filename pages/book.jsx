@@ -509,7 +509,7 @@ const Book = () => {
           </Animated>
           <Animated className='flex flex-row items-center gap-[25px]'>
             <Button type='submit' className='font-semibold !py-3 !px-14'>
-              {loading ? 'Submitting...' : 'Submit'}
+              {loading.book ? 'Submitting...' : 'Submit'}
             </Button>
             <Button
               variant='outline'
