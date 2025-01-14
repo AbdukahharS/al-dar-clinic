@@ -60,8 +60,10 @@ export default function Home() {
       }
     }
 
-    fetchTeamMembers()
-  }, [])
+    if (axios.defaults.baseURL) {
+      fetchTeamMembers()
+    }
+  }, [axios])
 
   const tags = {
     en: ['Counseling', 'Spine', 'Geriatric', 'Pain', 'Neutro', 'Physio'],
