@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import Image from 'next/image'
 import { FaUserLarge, FaUpload } from 'react-icons/fa6'
 

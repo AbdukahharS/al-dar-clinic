@@ -1,17 +1,19 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Inter } from 'next/font/google'
 import { Controller, useForm } from 'react-hook-form'
 import { motion } from 'framer-motion'
 import toast from 'react-hot-toast'
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
 import { FaCircleXmark, FaCircleCheck } from 'react-icons/fa6'
+import Link from 'next/link'
+import DatePicker from 'react-datepicker'
+import axios from 'axios'
 import 'react-phone-number-input/style.css'
 import 'react-datepicker/dist/react-datepicker.css'
 
 import Animated from '@/components/Animated'
 import Button from '@/components/Button'
-import Link from 'next/link'
-import DatePicker from 'react-datepicker'
+
 const inter = Inter({
   weight: ['400', '500', '600'],
   subsets: ['latin'],
@@ -19,8 +21,14 @@ const inter = Inter({
 })
 
 const Book = () => {
+  const [loading, setLoading] = useState({
+    book: false,
+    serviceType: false,
+    location: false,
+  })
+  const [serviceTypes, setServiceTypes] = useState([])
+  const [locations, setLocations] = useState([])
   const [message, setMessage] = useState()
-  const [startDate, setStartDate] = useState(new Date())
   const {
     register,
     handleSubmit,
@@ -29,71 +37,160 @@ const Book = () => {
     reset,
   } = useForm()
 
-  const onSubmit = (data) => {
-    toast.custom(
-      (t) => (
-        <motion.div
-          initial={{ zIndex: -20, opacity: 0 }}
-          animate={
-            t.visible
-              ? { zIndex: 100, opacity: 1 }
-              : { zIndex: -20, opacity: 0 }
-          }
-          transition={{ duration: 0.3 }}
-          className='absolute -top-4 -left-4 w-screen !h-screen bg-black/60 flex items-center justify-center p-5'
-        >
-          <motion.div
-            initial={{ y: 15 }}
-            animate={t.visible ? { y: 0 } : { y: 15 }}
-            className='w-fit xl:w-full max-w-2xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
-          >
-            <Button
-              size='icon'
-              variant='ghost'
-              onClick={() => toast.dismiss(t.id)}
-              className='ml-auto'
-            >
-              <FaCircleXmark className='text-primary text-4xl' />
-            </Button>
-            <div>
-              <FaCircleCheck className='text-primary text-[100px] md:text-[136px] lg:text-[180px] xl:text-[218px] mx-auto' />
-            </div>
-            <p className='text-xl font-medium md:text-2xl xl:text-4xl text-center py-12 md:mt-18 tracking-wide'>
-              Your Appointment is Confirmed
-            </p>
+  const fetchServiceTypes = async () => {
+    setLoading((prev) => {
+      return { ...prev, serviceType: true }
+    })
+    try {
+      const res = await axios.get('/service-type/all', {
+        headers: {
+          Authorization:
+            localStorage.getItem('userToken') ||
+            sessionStorage.getItem('userToken'),
+        },
+      })
 
-            <div className='flex flex-row items-center justify-center gap-4 md:hidden'>
-              <Link href='/profile/appointments/1'>
-                <Button
-                  variant='outline'
-                  className='text-primary border-primary'
-                  size='sm'
-                  onClick={() => toast.dismiss(t.id)}
-                >
-                  Appointment details
-                </Button>
-              </Link>
-              <Button size='sm' onClick={() => toast.dismiss(t.id)}>
-                Continue
+      setServiceTypes(res.data.data)
+    } catch (error) {
+      console.log(error)
+
+      toast.error(
+        error?.response?.data?.message ||
+          'Something went wrong while fetching service types. Please, reload the page!'
+      )
+    } finally {
+      setLoading((prev) => {
+        return { ...prev, serviceType: false }
+      })
+    }
+  }
+  const fetchLocations = async () => {
+    setLoading((prev) => {
+      return { ...prev, location: true }
+    })
+    try {
+      const res = await axios.get('/location/all', {
+        headers: {
+          Authorization:
+            localStorage.getItem('userToken') ||
+            sessionStorage.getItem('userToken'),
+        },
+      })
+
+      setLocations(res.data.data)
+    } catch (error) {
+      console.log(error)
+
+      toast.error(
+        error?.response?.data?.message ||
+          'Something went wrong while fetching locations. Please, reload the page!'
+      )
+    } finally {
+      setLoading((prev) => {
+        return { ...prev, location: false }
+      })
+    }
+  }
+
+  useEffect(() => {
+    if (axios.defaults.baseURL) {
+      fetchServiceTypes()
+      fetchLocations()
+    }
+  }, [axios.defaults])
+
+  const onSubmit = async (data) => {
+    setLoading((prev) => {
+      return { ...prev, book: true }
+    })
+    try {
+      await axios.post(
+        '/appointments/create',
+        { ...data, age: Number(data.age) },
+        {
+          headers: {
+            Authorization:
+              localStorage.getItem('userToken') ||
+              sessionStorage.getItem('userToken'),
+          },
+        }
+      )
+      toast.custom(
+        (t) => (
+          <motion.div
+            initial={{ zIndex: -20, opacity: 0 }}
+            animate={
+              t.visible
+                ? { zIndex: 100, opacity: 1 }
+                : { zIndex: -20, opacity: 0 }
+            }
+            transition={{ duration: 0.3 }}
+            className='absolute -top-4 -left-4 w-screen !h-screen bg-black/60 flex items-center justify-center p-5'
+          >
+            <motion.div
+              initial={{ y: 15 }}
+              animate={t.visible ? { y: 0 } : { y: 15 }}
+              className='w-fit xl:w-full max-w-2xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
+            >
+              <Button
+                size='icon'
+                variant='ghost'
+                onClick={() => toast.dismiss(t.id)}
+                className='ml-auto'
+              >
+                <FaCircleXmark className='text-primary text-4xl' />
               </Button>
-            </div>
-            <div className='hidden flex-row items-center justify-center gap-8 md:flex'>
-              <Link href='/profile/appointments/1'>
-                <Button
-                  variant='outline'
-                  className='text-primary border-primary'
-                  onClick={() => toast.dismiss(t.id)}
-                >
-                  Appointment details
+              <div>
+                <FaCircleCheck className='text-primary text-[100px] md:text-[136px] lg:text-[180px] xl:text-[218px] mx-auto' />
+              </div>
+              <p className='text-xl font-medium md:text-2xl xl:text-4xl text-center py-12 md:mt-18 tracking-wide'>
+                Your Appointment is Confirmed
+              </p>
+
+              <div className='flex flex-row items-center justify-center gap-4 md:hidden'>
+                <Link href='/profile/appointments/1'>
+                  <Button
+                    variant='outline'
+                    className='text-primary border-primary'
+                    size='sm'
+                    onClick={() => toast.dismiss(t.id)}
+                  >
+                    Appointment details
+                  </Button>
+                </Link>
+                <Button size='sm' onClick={() => toast.dismiss(t.id)}>
+                  Continue
                 </Button>
-              </Link>
-              <Button onClick={() => toast.dismiss(t.id)}>Continue</Button>
-            </div>
+              </div>
+              <div className='hidden flex-row items-center justify-center gap-8 md:flex'>
+                <Link href='/profile/appointments/1'>
+                  <Button
+                    variant='outline'
+                    className='text-primary border-primary'
+                    onClick={() => toast.dismiss(t.id)}
+                  >
+                    Appointment details
+                  </Button>
+                </Link>
+                <Button onClick={() => toast.dismiss(t.id)}>Continue</Button>
+              </div>
+            </motion.div>
           </motion.div>
-        </motion.div>
-      ),
-      { duration: Infinity }
-    )
+        ),
+        { duration: Infinity }
+      )
+    } catch (error) {
+      console.log(error)
+
+      toast.error(
+        error?.response?.data?.message ||
+          'Something went wrong with booking. Please, try again!'
+      )
+    } finally {
+      setLoading((prev) => {
+        return { ...prev, book: false }
+      })
+    }
   }
 
   return (
@@ -112,7 +209,7 @@ const Book = () => {
             <input
               type='text'
               id='name'
-              {...register('name', {
+              {...register('fullname', {
                 required: 'Name is required',
               })}
               className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
@@ -291,7 +388,7 @@ const Book = () => {
             <input
               type='text'
               id='postal'
-              {...register('postal', {
+              {...register('postalCode', {
                 required: 'Postal code is required',
               })}
               className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
@@ -318,13 +415,18 @@ const Book = () => {
             <select
               name='serviceType'
               id='serviceType'
-              defaultValue='consultation'
               className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 border-gray-300 focus:ring-primary`}
               {...register('serviceType')}
             >
-              <option value='consultation'>Doctor&apos;s Consultation</option>
-              <option value='counseling'>Counseling</option>
-              <option value='physio'>Physio</option>
+              {loading.serviceType ? (
+                <option>Loading...</option>
+              ) : serviceTypes?.length > 0 ? (
+                serviceTypes.map((el) => (
+                  <option value={el.id}>{el.name}</option>
+                ))
+              ) : (
+                <option>No service types available</option>
+              )}
             </select>
           </Animated>
           <Animated className='mb-4 w-full md:w-[calc(50%-20px)]'>
@@ -337,12 +439,12 @@ const Book = () => {
             <select
               name='gender'
               id='gender'
-              defaultValue='male'
+              defaultValue='MALE'
               className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 border-gray-300 focus:ring-primary`}
               {...register('gender')}
             >
-              <option value='male'>Male</option>
-              <option value='female'>Female</option>
+              <option value='MALE'>Male</option>
+              <option value='FEMALE'>Female</option>
             </select>
           </Animated>
           <Animated className='mb-4 w-full md:w-[calc(50%-20px)]'>
@@ -359,9 +461,13 @@ const Book = () => {
               className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 border-gray-300 focus:ring-primary`}
               {...register('location')}
             >
-              <option value='dubai'>Dubai</option>
-              <option value='oman'>Oman</option>
-              <option value='Iraq'>Iraq</option>
+              {loading.location ? (
+                <option>Loading...</option>
+              ) : location?.length > 0 ? (
+                location.map((el) => <option value={el.id}>{el.name}</option>)
+              ) : (
+                <option>No locations available</option>
+              )}
             </select>
           </Animated>
           <Animated className='mb-4 w-full md:w-[calc(50%-20px)]'>
@@ -374,12 +480,12 @@ const Book = () => {
             <select
               name='medium'
               id='medium'
-              defaultValue='offline'
+              defaultValue='OFFLINE'
               className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 border-gray-300 focus:ring-primary`}
               {...register('medium')}
             >
-              <option value='offline'>Offline</option>
-              <option value='online'>Online</option>
+              <option value='OFFLINE'>Offline</option>
+              <option value='ONLINE'>Online</option>
             </select>
           </Animated>
           <Animated className='relative w-full mb-4'>
@@ -403,7 +509,7 @@ const Book = () => {
           </Animated>
           <Animated className='flex flex-row items-center gap-[25px]'>
             <Button type='submit' className='font-semibold !py-3 !px-14'>
-              Submit
+              {loading ? 'Submitting...' : 'Submit'}
             </Button>
             <Button
               variant='outline'
