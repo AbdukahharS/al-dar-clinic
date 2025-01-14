@@ -1,22 +1,18 @@
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { FaCircleXmark } from 'react-icons/fa6'
 import { useForm, Controller } from 'react-hook-form'
 import { Country, State, City } from 'country-state-city'
-import { useEffect, useState } from 'react'
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
+import axios from 'axios'
+import toast from 'react-hot-toast'
 import 'react-phone-number-input/style.css'
 
 import Button from './Button'
 import Animated from './Animated'
 
-const Address = ({ open, setOpen }) => {
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-    reset,
-  } = useForm()
+const Address = ({ open, setOpen, address, setAddresses }) => {
+  const [loading, setLoading] = useState(false)
   const countries = Country.getAllCountries()
   const [country, setCountry] = useState(countries[0].isoCode)
   const [states, setStates] = useState(
@@ -26,11 +22,13 @@ const Address = ({ open, setOpen }) => {
     State.getStatesOfCountry(countries[0].isoCode)[0].isoCode
   )
 
-  const close = () => {
-    reset()
-    setCountry(countries[0].isoCode)
-    setOpen(false)
-  }
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+    reset,
+  } = useForm()
 
   useEffect(() => {
     if (country) {
@@ -42,8 +40,102 @@ const Address = ({ open, setOpen }) => {
     }
   }, [country, countries])
 
-  const onSubmit = () => {
-    close()
+  useEffect(() => {
+    if (address) {
+      const count = countries.find(
+        (c) =>
+          c.name.toLocaleUpperCase() === address.country.toLocaleUpperCase()
+      )
+      setCountry(count?.isoCode)
+
+      const sta = State.getStatesOfCountry(count.isoCode).find(
+        (s) => s.name.toLocaleUpperCase() === address.state.toLocaleUpperCase()
+      )
+
+      setState(sta.isoCode)
+
+      const cit = City.getCitiesOfState(count?.isoCode, sta?.isoCode).find(
+        (s) => s.name.toLocaleUpperCase() === address.city.toLocaleUpperCase()
+      )
+
+      reset({
+        fullname: address.fullname || '',
+        email: address.email || '',
+        phone: address.phone || '',
+        country: count?.isoCode || countries[0].isoCode,
+        state: sta?.isoCode || states[0]?.isoCode,
+        city:
+          cit?.name ||
+          City.getCitiesOfState(count?.isoCode, sta?.isoCode)[0]?.name,
+        postalCode: address.postalCode || '',
+        street: address.street,
+      })
+    }
+  }, [address, reset, countries, states])
+
+  const close = () => {
+    reset()
+    setCountry(countries[0].isoCode)
+    setOpen(false)
+  }
+
+  const onSubmit = async (data) => {
+    setLoading(true)
+    try {
+      if (address) {
+        const res = await axios.put(
+          `/address/update/${address.id}`,
+          {
+            ...data,
+            country: Country.getCountryByCode(data.country).name,
+            state: State.getStateByCodeAndCountry(data.state, data.country)
+              .name,
+          },
+          {
+            headers: {
+              Authorization:
+                localStorage.getItem('userToken') ||
+                sessionStorage.getItem('userToken'),
+            },
+          }
+        )
+
+        setAddresses((prev) =>
+          prev.map((el) => {
+            return el.id === address.id ? res.data.data : el
+          })
+        )
+        toast.success('Address edited!')
+      } else {
+        const res = await axios.post(
+          '/address/create',
+          {
+            ...data,
+            country: Country.getCountryByCode(data.country).name,
+            state: State.getStateByCodeAndCountry(data.state, data.country)
+              .name,
+          },
+          {
+            headers: {
+              Authorization:
+                localStorage.getItem('userToken') ||
+                sessionStorage.getItem('userToken'),
+            },
+          }
+        )
+        setAddresses((prev) => [...prev, res.data.data])
+        toast.success('New address added successfully!')
+      }
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.errors?.[0]?.message ||
+          error?.response?.data?.message ||
+          'Something went wrong. Please, try again!'
+      )
+    } finally {
+      setLoading(false)
+      close()
+    }
   }
 
   return (
@@ -81,7 +173,7 @@ const Address = ({ open, setOpen }) => {
               <input
                 type='text'
                 id='name'
-                {...register('name', {
+                {...register('fullname', {
                   required: 'Name is required',
                 })}
                 className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
@@ -266,7 +358,7 @@ const Address = ({ open, setOpen }) => {
               <input
                 type='text'
                 id='postal'
-                {...register('postal', {
+                {...register('postalCode', {
                   required: 'Postal code is required',
                 })}
                 className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
@@ -292,7 +384,7 @@ const Address = ({ open, setOpen }) => {
               <input
                 type='text'
                 id='address'
-                {...register('address', {
+                {...register('street', {
                   required: 'Address is required',
                 })}
                 className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
@@ -310,7 +402,13 @@ const Address = ({ open, setOpen }) => {
             </Animated>
             <Animated className='flex flex-row items-center gap-[25px]'>
               <Button type='submit' className='font-semibold !py-3 md:!px-14'>
-                Save Address
+                {address
+                  ? loading
+                    ? 'Updating Address...'
+                    : 'Update Address'
+                  : loading
+                  ? 'Saving Address...'
+                  : 'Save Address'}
               </Button>
               <Button
                 variant='outline'

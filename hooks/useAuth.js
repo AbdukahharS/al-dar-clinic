@@ -131,6 +131,8 @@ const useAuth = () => {
     dispatch(logout())
     localStorage.removeItem('userId')
     localStorage.removeItem('userToken')
+    sessionStorage.removeItem('userId')
+    sessionStorage.removeItem('userToken')
     toast.success('Logged out successfully.')
   }
 

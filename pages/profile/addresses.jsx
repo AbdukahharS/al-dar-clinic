@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   FaCirclePlus,
@@ -13,27 +14,75 @@ import Header from '@/components/layout/Header'
 import Button from '@/components/Button'
 import Address from '@/components/Address'
 
-const Adresses = () => {
-  const addresses = Array(2).fill({
-    name: 'Will Smith',
-    number: '+880125333344',
-    email: 'customer@example.com',
-    city: 'Dhaka',
-    state: 'Dhaka',
-    country: 'Bangladesh',
-    street: 'House:3, Road:1, Block: c, Mirpur 2',
-    postal: '1216',
-  })
+const menuVariants = {
+  hidden: { opacity: 0, scale: 0.95, y: -10 },
+  visible: { opacity: 1, scale: 1, y: 0 },
+}
 
+const Adresses = () => {
+  const [addresses, setAddresses] = useState([])
+  const [address, setAddress] = useState(null)
   const [focusedIndex, setFocusedIndex] = useState(null)
+  const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
 
-  const menuVariants = {
-    hidden: { opacity: 0, scale: 0.95, y: -10 },
-    visible: { opacity: 1, scale: 1, y: 0 },
+  const openEdit = (address) => {
+    setOpen(true)
+    setAddress(address)
   }
 
-  const handleDelete = () => {
+  const fetchAdresses = async () => {
+    setLoading(true)
+    try {
+      const res = await axios.get('/address/all', {
+        headers: {
+          Authorization:
+            localStorage.getItem('userToken') ||
+            sessionStorage.getItem('userToken'),
+        },
+      })
+
+      setAddresses(res.data.data)
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.errors?.[0]?.message ||
+          error?.response?.data?.message ||
+          'Something went wrong. Please, reload the page!'
+      )
+    }
+  }
+
+  useEffect(() => {
+    if (axios.defaults.baseURL) {
+      fetchAdresses()
+    }
+  }, [axios.defaults])
+
+  const handleDelete = (id) => {
+    const onDelete = async (tId) => {
+      setLoading(true)
+      try {
+        await axios.put(`/address/${id}`, {
+          headers: {
+            Authorization:
+              localStorage.getItem('userToken') ||
+              sessionStorage.getItem('userToken'),
+          },
+        })
+
+        toast.success('Address is Deleted!')
+        setAddress((prev) => prev.filter((el) => el.id !== id))
+      } catch (error) {
+        toast.error(
+          error?.response?.data?.errors?.[0]?.message ||
+            error?.response?.data?.message ||
+            'Something went wrong. Please, try again later!'
+        )
+      } finally {
+        toast.dismiss(tId)
+        setLoading(false)
+      }
+    }
     toast.custom(
       (t) => (
         <motion.div
@@ -69,7 +118,9 @@ const Adresses = () => {
               You will not be able to recover the deleted record!
             </p>
             <div className='flex flex-row items-center justify-center gap-4 md:hidden'>
-              <Button size='sm'>Yes, Delete it!</Button>
+              <Button size='sm' onClick={() => onDelete(t.id)}>
+                Yes, Delete it!
+              </Button>
               <Button
                 size='sm'
                 variant='secondary'
@@ -79,7 +130,7 @@ const Adresses = () => {
               </Button>
             </div>
             <div className='hidden flex-row items-center justify-center gap-8 md:flex'>
-              <Button>Yes, Delete it!</Button>
+              <Button onClick={() => onDelete(t.id)}>Yes, Delete it!</Button>
               <Button variant='secondary' onClick={() => toast.dismiss(t.id)}>
                 No, Cancel
               </Button>
@@ -117,14 +168,14 @@ const Adresses = () => {
                 variants={menuVariants}
               >
                 <button
-                  onClick={() => setOpen(true)}
+                  onClick={() => openEdit(address)}
                   className='py-1 px-2 border-b hover:bg-gray-100 cursor-pointer'
                 >
                   Edit
                 </button>
                 <button
                   className='p-1 hover:bg-gray-100 cursor-pointer'
-                  onClick={handleDelete}
+                  onClick={() => handleDelete(address.id)}
                 >
                   Delete
                 </button>
@@ -132,8 +183,9 @@ const Adresses = () => {
             </div>
             <br />
             <p className='max-w-full break-words'>
-              {address.number},{address.email},{address.city},{address.state},
-              {address.country},{address.street},{address.postal}
+              {address.number && `${address.number},`}
+              {address.email},{address.city},{address.state},{address.country},
+              {address.street},{address.postal}
             </p>
           </Animated>
         ))}
@@ -145,7 +197,12 @@ const Adresses = () => {
           Add New Address
         </div>
       </div>
-      <Address open={open} setOpen={setOpen} />
+      <Address
+        open={open}
+        setOpen={setOpen}
+        setAddresses={setAddresses}
+        address={address}
+      />
     </div>
   )
 }
