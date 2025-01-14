@@ -5,62 +5,39 @@ import { FaPen, FaTrashCan } from 'react-icons/fa6'
 import Image from 'next/image'
 import confirm from '@/components/Confirm'
 
-import Mohammed from '@/public/images/dr-mohamad.webp'
-import Alex from '@/public/images/dr-alex.webp'
-import Nauf from '@/public/images/dr-nauf.webp'
-import Abdul from '@/public/images/dr-abdul.webp'
-import Othman from '@/public/images/dr-dillibabu.webp'
-
-const dummyData = [
-  {
-    id: 1,
-    name: 'Mohammed',
-    role: 'Project Manager',
-    email: 'mohammed@example.com',
-    picture: Mohammed,
-  },
-  {
-    id: 2,
-    name: 'Alex',
-    role: 'Developer',
-    email: 'alex@example.com',
-    picture: Alex,
-  },
-  {
-    id: 3,
-    name: 'Nauf',
-    role: 'Designer',
-    email: 'nauf@example.com',
-    picture: Nauf,
-  },
-  {
-    id: 4,
-    name: 'Abdul',
-    role: 'Marketing',
-    email: 'abdul@example.com',
-    picture: Abdul,
-  },
-  {
-    id: 5,
-    name: 'Othman',
-    role: 'QA Engineer',
-    email: 'othman@example.com',
-    picture: Othman,
-  },
-]
+import axios from 'axios'
 
 const TeamManagement = () => {
-  const [data, setData] = useState(dummyData)
+  const [data, setData] = useState([])
 
   useEffect(() => {
-    setData(dummyData)
+    const fetchTeamMembers = async () => {
+      try {
+        const response = await axios.get('/team-member/all')
+        setData(response.data.data)
+      } catch (error) {
+        console.error('Error fetching team members:', error)
+      }
+    }
+
+    fetchTeamMembers()
   }, [])
 
-  const handleDelete = async () => {
+  const handleDelete = async (id) => {
+    const deleteMember = async () => {
+      try {
+        await axios.delete('/team-member/' + id)
+        setData((prev) => prev.filter((el) => el.id !== id))
+      } catch (error) {
+        console.error('Error fetching team members:', error)
+      }
+    }
+
     confirm(
       'Delete Team Member',
       'Are you sure you want to delete this team member?',
-      'Delete'
+      'Delete',
+      deleteMember
     )
   }
 
@@ -81,8 +58,9 @@ const TeamManagement = () => {
           <thead>
             <tr>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>Name</th>
-              <th className='px-4 py-5 font-medium whitespace-nowrap'>Role</th>
-              <th className='px-4 py-5 font-medium whitespace-nowrap'>Email</th>
+              <th className='px-4 py-5 font-medium whitespace-nowrap'>
+                Position
+              </th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
                 Picture
               </th>
@@ -98,15 +76,14 @@ const TeamManagement = () => {
                   {member.name}
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  {member.role}
-                </td>
-                <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  {member.email}
+                  {member.position}
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
                   <Image
-                    src={member.picture}
+                    src={member.image.thumbnail}
                     alt={member.name}
+                    width={96}
+                    height={96}
                     loading='lazy'
                     className='w-24 h-24 rounded-full mx-auto'
                   />
@@ -116,7 +93,7 @@ const TeamManagement = () => {
                     <Link href={`/admin/team/${member.id}`}>
                       <FaPen className='mx-auto text-xl' />
                     </Link>
-                    <button onClick={handleDelete}>
+                    <button onClick={() => handleDelete(member.id)}>
                       <FaTrashCan className='mx-auto text-xl' />
                     </button>
                   </div>

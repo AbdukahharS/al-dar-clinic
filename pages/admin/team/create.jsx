@@ -4,6 +4,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { motion } from 'framer-motion'
 import Button from '@/components/Button'
 import Image from 'next/image'
+import axios from 'axios'
 
 const AddTeamMember = () => {
   const router = useRouter()
@@ -15,8 +16,23 @@ const AddTeamMember = () => {
     formState: { errors },
   } = useForm()
 
-  const onSubmit = (data) => {
-    console.log(data)
+  const onSubmit = async (data) => {
+    try {
+      const formData = new FormData()
+      formData.append('name', data.name)
+      formData.append('position', data.position)
+      formData.append('file', data.picture)
+
+      const response = await axios.post('/team-member/create', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+
+      router.push('/admin/team')
+    } catch (error) {
+      console.error('Error adding team member:', error)
+    }
   }
 
   return (
@@ -58,48 +74,24 @@ const AddTeamMember = () => {
 
           <div>
             <label className='block text-lg font-medium text-gray-700'>
-              Role
+              Position
             </label>
             <input
               type='text'
-              {...register('role', {
-                required: 'Role is required',
+              {...register('position', {
+                required: 'Position is required',
               })}
               className={`mt-1 block w-full border p-2 ${
-                errors.role ? 'border-red-500' : 'border-gray-300'
+                errors.position ? 'border-red-500' : 'border-gray-300'
               } rounded-md shadow-sm sm:text-sm`}
             />
-            {errors.role && (
+            {errors.position && (
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className='text-red-500 text-sm mt-1'
               >
-                {errors.role.message}
-              </motion.p>
-            )}
-          </div>
-
-          <div>
-            <label className='block text-lg font-medium text-gray-700'>
-              Email
-            </label>
-            <input
-              type='email'
-              {...register('email', {
-                required: 'Email is required',
-              })}
-              className={`mt-1 block w-full border p-2 ${
-                errors.email ? 'border-red-500' : 'border-gray-300'
-              } rounded-md shadow-sm sm:text-sm`}
-            />
-            {errors.email && (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className='text-red-500 text-sm mt-1'
-              >
-                {errors.email.message}
+                {errors.position.message}
               </motion.p>
             )}
           </div>
@@ -113,8 +105,6 @@ const AddTeamMember = () => {
               name='picture'
               rules={{
                 required: 'Picture is required',
-                validate: (value) =>
-                  value.length === 1 ? true : 'Picture should be only 1',
               }}
               render={({ field }) => (
                 <>

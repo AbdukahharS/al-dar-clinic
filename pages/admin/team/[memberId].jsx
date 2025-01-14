@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { FaArrowLeft, FaTrash, FaPlus } from 'react-icons/fa6'
 import { useForm, Controller } from 'react-hook-form'
 import { motion } from 'framer-motion'
+import axios from 'axios'
 import Button from '@/components/Button'
 import Image from 'next/image'
 
@@ -19,25 +20,15 @@ const EditTeamMember = () => {
   } = useForm()
 
   useEffect(() => {
-    // Use dummy data to pre-fill form fields
     const fetchTeamMember = async () => {
-      const data = {
-        name: 'John Doe',
-        role: 'Developer',
-        email: 'john.doe@example.com',
-        picture: '/images/dr-dillibabu.webp',
-      }
+      try {
+        const response = await axios.get(`/team-member/${memberId}`)
+        const data = response.data.data
 
-      setValue('name', data.name)
-      setValue('role', data.role)
-      setValue('email', data.email)
-      if (data.picture) {
-        const response = await fetch(data.picture).catch((err) =>
-          console.error(err)
-        )
-        const blob = await response.blob()
-        const file = new File([blob], 'picture.jpg', { type: 'image/jpeg' })
-        setValue('picture', file)
+        setValue('name', data.name)
+        setValue('position', data.position)
+      } catch (error) {
+        console.error('Error fetching team member:', error)
       }
     }
 
@@ -46,9 +37,25 @@ const EditTeamMember = () => {
     }
   }, [memberId, setValue])
 
-  const onSubmit = (data) => {
-    console.log(data)
-    // Handle update team member logic here
+  const onSubmit = async (data) => {
+    try {
+      const formData = new FormData()
+      formData.append('name', data.name)
+      formData.append('position', data.position)
+      if (data.picture) {
+        formData.append('file', data.picture)
+      }
+
+      await axios.put(`/team-member/update/${memberId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+
+      router.push('/admin/team')
+    } catch (error) {
+      console.error('Error updating team member:', error)
+    }
   }
 
   return (
@@ -90,48 +97,24 @@ const EditTeamMember = () => {
 
           <div>
             <label className='block text-lg font-medium text-gray-700'>
-              Role
+              Position
             </label>
             <input
               type='text'
-              {...register('role', {
-                required: 'Role is required',
+              {...register('position', {
+                required: 'Position is required',
               })}
               className={`mt-1 block w-full border p-2 ${
-                errors.role ? 'border-red-500' : 'border-gray-300'
+                errors.position ? 'border-red-500' : 'border-gray-300'
               } rounded-md shadow-sm sm:text-sm`}
             />
-            {errors.role && (
+            {errors.position && (
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className='text-red-500 text-sm mt-1'
               >
-                {errors.role.message}
-              </motion.p>
-            )}
-          </div>
-
-          <div>
-            <label className='block text-lg font-medium text-gray-700'>
-              Email
-            </label>
-            <input
-              type='email'
-              {...register('email', {
-                required: 'Email is required',
-              })}
-              className={`mt-1 block w-full border p-2 ${
-                errors.email ? 'border-red-500' : 'border-gray-300'
-              } rounded-md shadow-sm sm:text-sm`}
-            />
-            {errors.email && (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className='text-red-500 text-sm mt-1'
-              >
-                {errors.email.message}
+                {errors.position.message}
               </motion.p>
             )}
           </div>
@@ -143,11 +126,6 @@ const EditTeamMember = () => {
             <Controller
               control={control}
               name='picture'
-              rules={{
-                required: 'Picture of member is required',
-                validate: (value) =>
-                  value.length === 1 ? true : 'Picture should be only 1',
-              }}
               render={({ field }) => (
                 <>
                   <div className='mt-2 flex flex-wrap gap-2'>
