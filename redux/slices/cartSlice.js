@@ -22,8 +22,8 @@ const initialState = {
     //   total: 250,
     // },
   ],
-  totalQuantity: 2,
-  totalPrice: 350,
+  totalQuantity: 0,
+  totalPrice: 0,
 }
 
 const cartSlice = createSlice({

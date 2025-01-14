@@ -183,7 +183,8 @@ const Book = () => {
       console.log(error)
 
       toast.error(
-        error?.response?.data?.message ||
+        error?.response?.data?.errors[0]?.message ||
+          error?.response?.data?.message ||
           'Something went wrong with booking. Please, try again!'
       )
     } finally {
@@ -415,8 +416,12 @@ const Book = () => {
             <select
               name='serviceType'
               id='serviceType'
-              className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 border-gray-300 focus:ring-primary`}
-              {...register('serviceType')}
+              className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
+                errors.serviceTypeId ? 'border-red-500' : 'border-gray-300'
+              }`}
+              {...register('serviceTypeId', {
+                required: 'Service type is required',
+              })}
             >
               {loading.serviceType ? (
                 <option>Loading...</option>
@@ -457,14 +462,15 @@ const Book = () => {
             <select
               name='location'
               id='location'
-              defaultValue='dubai'
-              className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 border-gray-300 focus:ring-primary`}
-              {...register('location')}
+              className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
+                errors.locationId ? 'border-red-500' : 'border-gray-300'
+              }`}
+              {...register('locationId', { required: 'Location is required' })}
             >
               {loading.location ? (
                 <option>Loading...</option>
-              ) : location?.length > 0 ? (
-                location.map((el) => <option value={el.id}>{el.name}</option>)
+              ) : locations?.length > 0 ? (
+                locations.map((el) => <option value={el.id}>{el.name}</option>)
               ) : (
                 <option>No locations available</option>
               )}
