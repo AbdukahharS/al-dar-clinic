@@ -9,29 +9,28 @@ import ADR from '@/public/images/ADR.webp'
 import Vision from '@/public/images/our-vision.webp'
 import Mission from '@/public/images/our-mission.webp'
 import Training from '@/public/images/training.webp'
-import Mohammed from '@/public/images/dr-mohamad.webp'
-import Alex from '@/public/images/dr-alex.webp'
-import Nauf from '@/public/images/dr-nauf.webp'
-import Abdul from '@/public/images/dr-abdul.webp'
-import Othman from '@/public/images/dr-dillibabu.webp'
 import Connector from '@/public/icons/connector.svg'
 import Recovery from '@/public/images/patient-recovery.webp'
 import Button from '@/components/Button'
 import GalleryCarousel from '@/components/carousels/GalleryCarousel'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 const TeamCard = ({ item }) => {
   return (
     <Animated className='w-80 h-96 max-w-[calc(100vw-54px)] lg:h-[450px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.15)] rounded-2xl'>
       <Image
-        src={item.img}
+        src={item.image.thumbnail}
         alt={item.name}
+        loading='lazy'
+        height={320}
+        width={320}
         className='shadow-[0px_4px_10px_0px_rgba(0,0,0,0.15)] rounded-2xl h-64 lg:h-[320px]'
       />
       <h4 className='font-medium text-2xl text-[#151515] text-center mt-5 mb-4'>
         {item.name}
       </h4>
-      <p className='text-center opacity-70 font-medium'>{item.desc}</p>
+      <p className='text-center opacity-70 font-medium'>{item.position}</p>
     </Animated>
   )
 }
@@ -49,6 +48,20 @@ const variants = {
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false)
+  const [team, setTeam] = useState([])
+
+  useEffect(() => {
+    const fetchTeamMembers = async () => {
+      try {
+        const response = await axios.get('/team-member/all')
+        setTeam(response.data.data)
+      } catch (error) {
+        console.error('Error fetching team members:', error)
+      }
+    }
+
+    fetchTeamMembers()
+  }, [])
 
   const tags = {
     en: ['Counseling', 'Spine', 'Geriatric', 'Pain', 'Neutro', 'Physio'],
@@ -61,17 +74,17 @@ export default function Home() {
       'علاج الألم',
     ],
   }
-  const team = [
-    {
-      name: 'Dr. Mohammed',
-      desc: 'Founder and CEO of Al - Dar',
-      img: Mohammed,
-    },
-    { name: 'Dr. Alex Elizabeth', desc: 'Al - Dar', img: Alex },
-    { name: 'Dr. Nauf AlBendar', desc: 'Al - Dar', img: Nauf },
-    { name: 'Dr. Abdul', desc: 'Al - Dar', img: Abdul },
-    { name: 'Dr. Varalakshmi Dillibabu', desc: 'Al - Dar', img: Othman },
-  ]
+  // const team = [
+  //   {
+  //     name: 'Dr. Mohammed',
+  //     desc: 'Founder and CEO of Al - Dar',
+  //     img: Mohammed,
+  //   },
+  //   { name: 'Dr. Alex Elizabeth', desc: 'Al - Dar', img: Alex },
+  //   { name: 'Dr. Nauf AlBendar', desc: 'Al - Dar', img: Nauf },
+  //   { name: 'Dr. Abdul', desc: 'Al - Dar', img: Abdul },
+  //   { name: 'Dr. Varalakshmi Dillibabu', desc: 'Al - Dar', img: Othman },
+  // ]
 
   return (
     <main className='w-full'>
@@ -270,25 +283,29 @@ export default function Home() {
               <TeamCard key={ind} item={item} />
             ))}
           </div>
-          <motion.div
-            initial='closed'
-            animate={isOpen ? 'open' : 'closed'}
-            variants={variants}
-            className='flex flex-col md:!h-auto md:flex-row gap-20 md:gap-12 lg:gap-20 justify-between py-8 md:mt-14 items-center overflow-hidden px-7 md:px-2'
-          >
-            {team.slice(2).map((item, ind) => (
-              <TeamCard key={ind} item={item} />
-            ))}
-          </motion.div>
-          <div className='flex justify-center mt-7'>
-            <Button
-              onClick={() => setIsOpen(!isOpen)}
-              size='lg'
-              className='md:hidden'
-            >
-              Show {isOpen ? 'Less' : 'More'}
-            </Button>
-          </div>
+          {team.length > 2 && (
+            <>
+              <motion.div
+                initial='closed'
+                animate={isOpen ? 'open' : 'closed'}
+                variants={variants}
+                className='flex flex-col md:!h-auto md:flex-row gap-20 md:gap-12 lg:gap-20 justify-between py-8 md:mt-14 items-center overflow-hidden px-7 md:px-2'
+              >
+                {team.slice(2).map((item, ind) => (
+                  <TeamCard key={ind} item={item} />
+                ))}
+              </motion.div>
+              <div className='flex justify-center mt-7'>
+                <Button
+                  onClick={() => setIsOpen(!isOpen)}
+                  size='lg'
+                  className='md:hidden'
+                >
+                  Show {isOpen ? 'Less' : 'More'}
+                </Button>
+              </div>
+            </>
+          )}
         </div>
         <div className='w-full mt-16 md:mt-20'>
           <Animated
