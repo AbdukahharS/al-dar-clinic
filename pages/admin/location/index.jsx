@@ -1,16 +1,30 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FaPen, FaTrash, FaX } from 'react-icons/fa6'
 import { useForm } from 'react-hook-form'
 import { motion } from 'framer-motion'
 
 import Button from '@/components/Button'
 import confirm from '@/components/Confirm'
-
-const dummyLocations = [{ name: 'Dubai' }, { name: 'Oman' }, { name: 'Iraq' }]
+import axios from 'axios'
 
 const LocationManagement = () => {
-  const [locations, setLocations] = useState(dummyLocations)
+  const [locations, setLocations] = useState([])
   const [editIndex, setEditIndex] = useState(null)
+
+  const fetchLocations = async () => {
+    try {
+      const res = await axios.get('/location/all')
+      setLocations(res.data.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    if (axios.defaults.baseURL) {
+      fetchLocations()
+    }
+  }, [axios.defaults])
 
   const {
     register,
@@ -20,15 +34,27 @@ const LocationManagement = () => {
     formState: { errors },
   } = useForm()
 
-  const handleAdd = (data) => {
-    const newLocation = { name: data.locationName }
-    setLocations([...locations, newLocation])
+  const handleAdd = async (data) => {
+    try {
+      const res = await axios.post('/location/create', {
+        name: data.locationName,
+      })
+      setLocations([...locations, res.data.data])
+    } catch (error) {
+      console.log(error)
+    }
     setValue('locationName', null)
   }
 
-  const handleDelete = async (index) => {
-    const removeFromList = () =>
-      setLocations(locations.filter((_, i) => i !== index))
+  const handleDelete = (id) => {
+    const removeFromList = async () => {
+      try {
+        await axios.delete(`/location/${id}`)
+        setLocations((prev) => prev.filter((el) => el.id !== id))
+      } catch (error) {
+        console.log(error)
+      }
+    }
     confirm(
       'Delete Location',
       'Are you sure you want to delete this location?',
@@ -48,14 +74,23 @@ const LocationManagement = () => {
     setValue('locationName', location.name)
   }
 
-  const handleUpdate = (data) => {
-    const updatedLocation = { name: data.locationName }
-    const updatedLocations = locations.map((location, index) =>
-      index === editIndex ? updatedLocation : location
-    )
-    setLocations(updatedLocations)
-    setEditIndex(null)
-    setValue('locationName', null)
+  const handleUpdate = async (data) => {
+    const id = locations[editIndex].id
+    try {
+      await axios.put('/location/update/' + id, {
+        name: data.locationName,
+      })
+      setLocations((prev) =>
+        prev.map((el, i) =>
+          i === editIndex ? { ...el, name: data.locationName } : el
+        )
+      )
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setEditIndex(null)
+      setValue('locationName', null)
+    }
   }
 
   return (
@@ -92,7 +127,7 @@ const LocationManagement = () => {
                   </button>
                 )}
                 <button
-                  onClick={() => handleDelete(index)}
+                  onClick={() => handleDelete(location.id)}
                   className='text-primary hover:underline'
                 >
                   <FaTrash />

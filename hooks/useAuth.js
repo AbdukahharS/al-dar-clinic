@@ -36,6 +36,7 @@ const useAuth = () => {
           })
 
           // Assuming the response contains user data
+          axios.defaults.headers.common.Authorization = userToken
           dispatch(loginUser(res.data))
         } catch (error) {
           console.error('Error fetching user information:', error)
@@ -45,6 +46,7 @@ const useAuth = () => {
         }
       }
     }
+    dispatch(endLoading('user'))
   }
 
   useEffect(() => {

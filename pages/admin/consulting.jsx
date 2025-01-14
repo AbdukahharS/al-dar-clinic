@@ -1,17 +1,29 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FaPen, FaTrash, FaX } from 'react-icons/fa6'
 import { useForm } from 'react-hook-form'
 import { motion } from 'framer-motion'
 
 import Button from '@/components/Button'
 import confirm from '@/components/Confirm'
+import axios from 'axios'
 
 const ConsultingServicesManagement = () => {
-  const [services, setServices] = useState([
-    'Doctor Consultation',
-    'Physiotherapy',
-  ])
+  const [services, setServices] = useState([])
   const [editIndex, setEditIndex] = useState(null)
+
+  const fetchServices = async () => {
+    try {
+      const res = await axios.get('/service-type/all')
+
+      setServices(res.data.data)
+    } catch (error) {}
+  }
+
+  useEffect(() => {
+    if (axios.defaults.baseURL) {
+      fetchServices()
+    }
+  }, [axios.defaults])
 
   const {
     register,
@@ -21,15 +33,27 @@ const ConsultingServicesManagement = () => {
     formState: { errors },
   } = useForm()
 
-  const handleAdd = (data) => {
-    const newService = data.serviceName
-    setServices([...services, newService])
+  const handleAdd = async (data) => {
+    try {
+      const res = await axios.post('/service-type/create', {
+        name: data.serviceName,
+      })
+      setServices([...services, res.data.data])
+    } catch (error) {
+      console.log(error)
+    }
     setValue('serviceName', null)
   }
 
-  const handleDelete = async (index) => {
-    const removeFromList = () =>
-      setServices(services.filter((_, i) => i !== index))
+  const handleDelete = (id) => {
+    const removeFromList = async () => {
+      try {
+        await axios.delete(`/service-type/${id}`)
+        setServices((prev) => prev.filter((el) => el.id !== id))
+      } catch (error) {
+        console.log(error)
+      }
+    }
     confirm(
       'Delete Service',
       'Are you sure you want to delete this service?',
@@ -46,17 +70,26 @@ const ConsultingServicesManagement = () => {
     }
     setEditIndex(index)
     const service = services[index]
-    setValue('serviceName', service)
+    setValue('serviceName', service.name)
   }
 
-  const handleUpdate = (data) => {
-    const updatedService = data.serviceName
-    const updatedServices = services.map((service, index) =>
-      index === editIndex ? updatedService : service
-    )
-    setServices(updatedServices)
-    setEditIndex(null)
-    setValue('serviceName', null)
+  const handleUpdate = async (data) => {
+    const id = services[editIndex].id
+    try {
+      await axios.put('/service-type/update/' + id, {
+        name: data.serviceName,
+      })
+      setServices((prev) =>
+        prev.map((el, i) =>
+          i === editIndex ? { ...el, name: data.serviceName } : el
+        )
+      )
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setEditIndex(null)
+      setValue('serviceName', null)
+    }
   }
 
   return (
@@ -75,7 +108,7 @@ const ConsultingServicesManagement = () => {
         <tbody>
           {services.map((service, index) => (
             <tr key={index} className='border-b'>
-              <td className='px-4 py-2'>{service}</td>
+              <td className='px-4 py-2'>{service.name}</td>
               <td className='px-4 py-2 flex gap-3 items-center justify-center'>
                 {editIndex === index ? (
                   <button
@@ -93,7 +126,7 @@ const ConsultingServicesManagement = () => {
                   </button>
                 )}
                 <button
-                  onClick={() => handleDelete(index)}
+                  onClick={() => handleDelete(service.id)}
                   className='text-primary hover:underline'
                 >
                   <FaTrash />

@@ -13,16 +13,19 @@ import Link from 'next/link'
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
 
 import Button from '@/components/Button'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 
 const Dashboard = () => {
   const router = useRouter()
+  const [stats, setStats] = useState({})
 
   const data = [
-    { name: 'Users', value: 45, icon: FaUser },
-    { name: 'Appointments', value: 21, icon: FaCalendarCheck },
-    { name: 'Orders', value: 12, icon: FaBagShopping },
-    { name: 'Rental Orders', value: 16, icon: FaHourglassHalf },
-    { name: 'Products', value: 23, icon: FaBox },
+    { name: 'Users', value: 'users', icon: FaUser },
+    { name: 'Appointments', value: 'appointments', icon: FaCalendarCheck },
+    { name: 'Orders', value: 'orders', icon: FaBagShopping },
+    { name: 'Rental Orders', value: 'rentOrders', icon: FaHourglassHalf },
+    { name: 'Products', value: 'products', icon: FaBox },
   ]
   const appointments = [
     { name: 'Consultation', value: 67 },
@@ -66,6 +69,22 @@ const Dashboard = () => {
       </text>
     )
   }
+
+  const fetchStats = async () => {
+    try {
+      const res = await axios.get('/stats')
+
+      setStats(res.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    if (axios.defaults.baseURL) {
+      fetchStats()
+    }
+  }, [axios.defaults])
   return (
     <div>
       <div className='bg-primary text-white px-8 md:px-20 py-8 flex justify-between items-center'>
@@ -88,7 +107,7 @@ const Dashboard = () => {
               <el.icon className='text-2xl lg:text-4xl' />
               <div>
                 <p>{el.name}</p>
-                <p className='text-2xl font-semibold'>{el.value}</p>
+                <p className='text-2xl font-semibold'>{stats[el.value]}</p>
               </div>
             </div>
           ))}

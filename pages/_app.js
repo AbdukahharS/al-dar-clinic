@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { Provider } from 'react-redux'
-import { Toaster } from 'react-hot-toast'
+import toast, { Toaster } from 'react-hot-toast'
 import { usePathname, useRouter } from 'next/navigation'
 import axios from 'axios'
 
@@ -34,11 +34,34 @@ const Layout = ({ Component, pageProps }) => {
     }
   }, [])
 
+  const fetchStats = async () => {
+    try {
+      await axios.get('/stats')
+    } catch (error) {
+      if (error.status === 401) {
+        router.push('/')
+        toast.error('You are not authorized!')
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (
+      axios.defaults.baseURL &&
+      isAuthenticated &&
+      path?.startsWith('/admin') &&
+      !path?.startsWith('/admin/auth')
+    ) {
+      fetchStats()
+    }
+  }, [axios.defaults, isAuthenticated])
+
   useEffect(() => {
     if (
       !isAuthenticated &&
       path?.startsWith('/admin') &&
-      !path?.startsWith('/admin/auth')
+      !path?.startsWith('/admin/auth') &&
+      !loading?.user
     ) {
       router.push('/admin/auth/login')
     }
@@ -63,12 +86,14 @@ const Layout = ({ Component, pageProps }) => {
             </div>
           )
         ) : path?.startsWith('/admin') && !path?.startsWith('/admin/auth') ? (
-          <div className='w-full flex flex-col md:flex-row'>
-            <AdminSidebar />
-            <div className='flex-1'>
-              <Component {...pageProps} />
+          !loading?.user && (
+            <div className='w-full flex flex-col md:flex-row'>
+              <AdminSidebar />
+              <div className='flex-1'>
+                <Component {...pageProps} />
+              </div>
             </div>
-          </div>
+          )
         ) : (
           <Component {...pageProps} />
         )}

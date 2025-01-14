@@ -41,7 +41,7 @@ const Address = ({ open, setOpen, address, setAddresses }) => {
   }, [country, countries])
 
   useEffect(() => {
-    if (address) {
+    if (address?.id) {
       const count = countries.find(
         (c) =>
           c.name.toLocaleUpperCase() === address.country.toLocaleUpperCase()

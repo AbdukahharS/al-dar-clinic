@@ -133,7 +133,9 @@ const Login = () => {
       </motion.div>
       <motion.div
         animate={
-          loading ? { opacity: 1, zIndex: 100 } : { opacity: 0, zIndex: -1 }
+          loading.user
+            ? { opacity: 1, zIndex: 100 }
+            : { opacity: 0, zIndex: -1 }
         }
         className='absolute top-0 left-0 h-screen w-screen bg-black/20 flex justify-center items-center'
       >

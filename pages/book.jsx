@@ -79,8 +79,6 @@ const Book = () => {
 
       setLocations(res.data.data)
     } catch (error) {
-      console.log(error)
-
       toast.error(
         error?.response?.data?.message ||
           'Something went wrong while fetching locations. Please, reload the page!'
@@ -106,7 +104,12 @@ const Book = () => {
     try {
       await axios.post(
         '/appointments/create',
-        { ...data, age: Number(data.age) },
+        {
+          ...data,
+          age: Number(data.age),
+          serviceTypeId: data.serviceTypeId || serviceTypes[0].id,
+          locationId: data.locationId || locations[0].id,
+        },
         {
           headers: {
             Authorization:
@@ -416,6 +419,7 @@ const Book = () => {
             <select
               name='serviceType'
               id='serviceType'
+              defaultValue={serviceTypes[0]}
               className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
                 errors.serviceTypeId ? 'border-red-500' : 'border-gray-300'
               }`}
@@ -425,12 +429,12 @@ const Book = () => {
             >
               {loading.serviceType ? (
                 <option>Loading...</option>
-              ) : serviceTypes?.length > 0 ? (
-                serviceTypes.map((el) => (
-                  <option value={el.id}>{el.name}</option>
-                ))
               ) : (
-                <option>No service types available</option>
+                serviceTypes.map((el) => (
+                  <option key={el.id} value={el.id}>
+                    {el.name}
+                  </option>
+                ))
               )}
             </select>
           </Animated>
@@ -470,9 +474,13 @@ const Book = () => {
               {loading.location ? (
                 <option>Loading...</option>
               ) : locations?.length > 0 ? (
-                locations.map((el) => <option value={el.id}>{el.name}</option>)
+                locations.map((el) => (
+                  <option key={el.id} value={el.id}>
+                    {el.name}
+                  </option>
+                ))
               ) : (
-                <option>No locations available</option>
+                <option value=''>No locations available</option>
               )}
             </select>
           </Animated>

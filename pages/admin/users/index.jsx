@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { FaCircleInfo, FaRotateRight, FaUser } from 'react-icons/fa6'
 
 import Button from '@/components/Button'
+import axios from 'axios'
 
 const dummyData = [
   {
@@ -45,8 +46,23 @@ const dummyData = [
 
 const Users = () => {
   const router = useRouter()
-  const [data, setData] = useState(dummyData)
+  const [data, setData] = useState([])
   const [sortOrder, setSortOrder] = useState()
+
+  const fetchUsers = async () => {
+    try {
+      const res = await axios.get('/users/all')
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    if (axios.defaults.baseURL) {
+      fetchUsers()
+    }
+  }, [axios.defaults])
 
   useEffect(() => {
     const storedSortOrder = sessionStorage.getItem('userSort')

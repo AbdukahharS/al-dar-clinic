@@ -64,14 +64,18 @@ const Adresses = () => {
       try {
         await axios.put(`/address/${id}`, {
           headers: {
-            Authorization:
-              localStorage.getItem('userToken') ||
-              sessionStorage.getItem('userToken'),
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImIzZTkxYjE5LWJiYmYtNGFiMy1hOTVlLTA0OTJjNzQxMjNhOSIsImlhdCI6MTczNjY0NTkzOSwiZXhwIjoxNzM3OTQxOTM5fQ.mqWrY8mwwiyvyTZdKcXMIkAhYaHRyItBFZUET85qAfw`,
           },
         })
 
         toast.success('Address is Deleted!')
-        setAddress((prev) => prev.filter((el) => el.id !== id))
+        setAddresses((prev) => {
+          if (prev) {
+            return prev.filter((el) => el.id !== id)
+          } else {
+            return []
+          }
+        })
       } catch (error) {
         toast.error(
           error?.response?.data?.errors?.[0]?.message ||
