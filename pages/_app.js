@@ -28,9 +28,9 @@ const Layout = ({ Component, pageProps }) => {
   const router = useRouter()
 
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_API_URL) {
-      axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL
-      axios.defaults.headers['x-api-key'] = process.env.NEXT_PUBLIC_API_KEY
+    if (process.env.API_URL) {
+      axios.defaults.baseURL = process.env.API_URL
+      axios.defaults.headers['x-api-key'] = process.env.API_KEY
     }
   }, [])
 

@@ -2,26 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   cartState: false,
-  items: [
-    // {
-    //   id: 1,
-    //   name: 'Dumbbell 6Kgs',
-    //   img: '/images/products/dumbbell.webp',
-    //   price: 100,
-    //   category: 'PHYSIOTHERAPY TOOLS',
-    //   quantity: 1,
-    //   total: 100,
-    // },
-    // {
-    //   id: 2,
-    //   name: 'Sponge Dumbbell',
-    //   img: '/images/products/sponge.webp',
-    //   price: 250,
-    //   category: 'PHYSIOTHERAPY TOOLS',
-    //   quantity: 1,
-    //   total: 250,
-    // },
-  ],
+  items: [],
   totalQuantity: 0,
   totalPrice: 0,
 }
