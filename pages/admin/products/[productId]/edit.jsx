@@ -98,8 +98,6 @@ const EditProduct = () => {
   }
 
   const onSubmit = async (data) => {
-    console.log(data)
-
     const { stockQuantity, price, weightInKg } = data
 
     const validationError = validateMultipleFields(
