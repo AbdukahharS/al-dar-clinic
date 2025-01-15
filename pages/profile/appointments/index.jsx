@@ -71,16 +71,16 @@ const Appointments = () => {
             {appointments.map((appointment, index) => (
               <tr key={index} className='border'>
                 <td className='px-4 py-6 text-center whitespace-nowrap'>
-                  {appointment.patientName}
+                  {appointment.fullname}
                 </td>
                 <td className='px-4 py-6 text-center whitespace-nowrap'>
-                  {appointment.type}
+                  {appointment.medium}
                 </td>
                 <td className='px-4 py-6 text-center whitespace-nowrap'>
                   {appointment.email}
                 </td>
                 <td className='px-4 py-6 text-center whitespace-nowrap'>
-                  {appointment.schedule}
+                  {new Date(appointment.date).toLocaleString()}
                 </td>
                 <td className='px-4 py-6 text-primary whitespace-nowrap'>
                   <Link href={`/profile/appointments/${appointment.id}`}>

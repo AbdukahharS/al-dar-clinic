@@ -2,72 +2,40 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState, useRef } from 'react'
 import { FaCircleInfo, FaRotateRight } from 'react-icons/fa6'
+import axios from 'axios'
+import toast from 'react-hot-toast'
 
 import Button from '@/components/Button'
 
-const dummyData = [
-  {
-    id: 1,
-    name: 'Emily Carter',
-    type: "Doctor's Consultation",
-    email: 'emily.carter@example.com',
-    schedule: '08-01-2025',
-    medium: 'online',
-    createdAt: '2025-01-05T09:00:00Z',
-  },
-  {
-    id: 2,
-    name: 'John Smith',
-    type: 'Counseling',
-    email: 'john.smith@example.com',
-    schedule: '10-01-2025',
-    medium: 'offline',
-    createdAt: '2025-01-06T11:30:00Z',
-  },
-  {
-    id: 3,
-    name: 'Sarah Brown',
-    type: 'Physiotherapy',
-    email: 'sarah.brown@example.com',
-    schedule: '12-01-2025',
-    medium: 'online',
-    createdAt: '2025-01-07T13:45:00Z',
-  },
-  {
-    id: 4,
-    name: 'Anna White',
-    type: 'Counseling',
-    email: 'anna.white@example.com',
-    schedule: '15-01-2025',
-    medium: 'offline',
-    createdAt: '2025-01-06T15:20:00Z',
-  },
-  {
-    id: 5,
-    name: 'Michael Green',
-    type: "Doctor's Consultation",
-    email: 'michael.green@example.com',
-    schedule: '18-01-2025',
-    medium: 'online',
-    createdAt: '2025-01-07T17:10:00Z',
-  },
-  {
-    id: 6,
-    name: 'Laura Wilson',
-    type: 'Physiotherapy',
-    email: 'laura.wilson@example.com',
-    schedule: '20-01-2025',
-    medium: 'offline',
-    createdAt: '2025-01-07T19:00:00Z',
-  },
-]
-
 const Appointments = () => {
   const router = useRouter()
-  const [data, setData] = useState(dummyData)
+  const [data, setData] = useState([])
   const [filter, setFilter] = useState('all')
   const [sort, setSort] = useState('asc')
-  const isInitialRender = useRef(true) // Ref to track initial render
+  const [page, setPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const limit = 10
+  const isInitialRender = useRef(true)
+
+  const fetchAppointments = async () => {
+    try {
+      const { data } = await axios.post('/appointments/filter', {
+        page,
+        limit,
+        medium: filter !== 'all' ? filter.toUpperCase() : undefined,
+        sort,
+      })
+
+      setTotal(data.total)
+      setData(data.data)
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.errors?.[0]?.message ||
+          error?.response?.data?.message ||
+          'Something went wrong. Please refresh the page!'
+      )
+    }
+  }
 
   useEffect(() => {
     const storedFilter = sessionStorage.getItem('appointmentFilter')
@@ -78,31 +46,21 @@ const Appointments = () => {
 
   useEffect(() => {
     if (isInitialRender.current) {
-      // Skip the effect on the initial render
       isInitialRender.current = false
       return
     }
 
-    const filteredData = dummyData.filter((order) => {
-      if (filter === 'all') {
-        return true
-      } else {
-        return order.medium === filter
-      }
-    })
-
-    const sortedData = [...filteredData].sort((a, b) => {
-      if (sort === 'asc') {
-        return new Date(a.createdAt) - new Date(b.createdAt)
-      } else {
-        return new Date(b.createdAt) - new Date(a.createdAt)
-      }
-    })
-
-    setData(sortedData)
+    fetchAppointments()
     sessionStorage.setItem('appointmentFilter', filter)
     sessionStorage.setItem('appointmentSort', sort)
-  }, [filter, sort])
+  }, [filter, sort, page])
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage)
+  }
+
+  const showingFrom = (page - 1) * limit + 1
+  const showingTo = Math.min(page * limit, total)
 
   return (
     <div>
@@ -156,16 +114,16 @@ const Appointments = () => {
             {data.map((order, index) => (
               <tr key={index} className='border'>
                 <td className='px-3 py-4 whitespace-nowrap text-center'>
-                  {order.name}
+                  {order.fullname}
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  {order.type}
+                  {order.medium}
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
                   {order.email}
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  {order.schedule}
+                  {new Date(order.date).toLocaleString()}
                 </td>
                 <td className='px-3 py-4 text-primary whitespace-nowrap'>
                   <Link href={`/admin/appointments/${order.id}`}>
@@ -176,6 +134,29 @@ const Appointments = () => {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className='flex flex-row items-center justify-between mt-7 md:px-4'>
+        <p className='text-gray-400'>
+          Showing {data.length > 0 ? `${showingFrom} to ${showingTo}` : 0} of{' '}
+          {total} results
+        </p>
+        <div className='flex flex-row items-center gap-2'>
+          {Array.from({ length: Math.ceil(total / limit) }, (_, i) => i + 1)
+            .filter((pageNumber) => pageNumber !== page)
+            .map((pageNumber) => (
+              <button
+                key={pageNumber}
+                onClick={() => handlePageChange(pageNumber)}
+                className={`w-7 h-7 flex items-center justify-center rounded-full ${
+                  pageNumber === page
+                    ? 'text-white bg-primary'
+                    : 'text-primary border border-primary'
+                } cursor-pointer`}
+              >
+                {pageNumber}
+              </button>
+            ))}
+        </div>
       </div>
     </div>
   )
