@@ -1,12 +1,16 @@
 import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { FaArrowLeft, FaTrash, FaPlus } from 'react-icons/fa6'
 import { useForm, Controller } from 'react-hook-form'
 import { motion } from 'framer-motion'
+import axios from 'axios'
 
 import Button from '@/components/Button'
+import toast from 'react-hot-toast'
 
 const CreateProduct = () => {
   const router = useRouter()
+  const [categories, setCategories] = useState([])
 
   const {
     register,
@@ -15,8 +19,85 @@ const CreateProduct = () => {
     formState: { errors },
   } = useForm()
 
-  const onSubmit = (data) => {
-    console.log(data)
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('/category')
+        setCategories(response.data)
+      } catch (error) {
+        console.error('Error fetching categories:', error)
+      }
+    }
+
+    fetchCategories()
+  }, [])
+
+  const validateMultipleFields = (quantity, price, weight) => {
+    const hasValidNumbers = (input) => {
+      return input.split(',').every((val) => /^\d+(\.\d+)?$/.test(val.trim()))
+    }
+
+    if (!hasValidNumbers(quantity)) {
+      return 'Each value in Stock Quantity must be a valid number.'
+    }
+    if (!hasValidNumbers(price)) {
+      return 'Each value in Price must be a valid number.'
+    }
+    if (!hasValidNumbers(weight)) {
+      return 'Each value in Weight must be a valid number.'
+    }
+
+    const qCount = quantity.split(',').length
+    const pCount = price.split(',').length
+    const wCount = weight.split(',').length
+
+    if (qCount !== pCount || pCount !== wCount) {
+      return 'Quantity, Price, and Weight must have the same number of values when separated by commas.'
+    }
+    return true
+  }
+
+  const onSubmit = async (data) => {
+    const { stockQuantity, price, weight } = data
+
+    const validationError = validateMultipleFields(stockQuantity, price, weight)
+    if (validationError !== true) {
+      toast.error(validationError)
+      return
+    }
+
+    const stockQuantityArray = stockQuantity
+      .split(',')
+      .map((q) => Number(q.trim()))
+    const priceArray = price.split(',').map((p) => Number(p.trim()))
+    const weightArray = weight.split(',').map((w) => Number(w.trim()))
+    console.log(data, priceArray)
+
+    const formData = new FormData()
+    formData.append('name', data.productName)
+    formData.append('productType', data.productType.toLocaleUpperCase())
+    formData.append('categoryId', data.productCategory)
+    formData.append('stock', JSON.stringify(stockQuantityArray))
+    formData.append(`rentPrice`, JSON.stringify(priceArray))
+    formData.append(`buyPrice`, JSON.stringify(priceArray))
+    formData.append('weightInKg', JSON.stringify(weightArray))
+    formData.append('description', data.productDescription)
+    Array.from(data.productImages).forEach((file) => {
+      formData.append('images', file)
+    })
+
+    try {
+      await axios.post('/products/create', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      toast.success('New product added')
+      router.push('/admin/products')
+    } catch (error) {
+      console.error('Error creating product:', error)
+      toast.error('Error creating product')
+    }
   }
 
   return (
@@ -112,8 +193,11 @@ const CreateProduct = () => {
               } rounded-md shadow-sm sm:text-sm`}
             >
               <option value=''>Select a category</option>
-              <option value='Physiotherapy Tools'>Physiotherapy Tools</option>
-              {/* Add more options here */}
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
             </select>
             {errors.productCategory && (
               <motion.p
@@ -186,7 +270,7 @@ const CreateProduct = () => {
                           const newFiles = Array.from(e.target.files)
                           field.onChange([...(field.value || []), ...newFiles])
                         }}
-                        className={`hidden `}
+                        className='hidden'
                       />
                     </label>
                   </div>
@@ -206,14 +290,12 @@ const CreateProduct = () => {
 
           <div>
             <label className='block text-lg font-medium text-gray-700'>
-              Stock Quantity
+              Stock Quantity (Comma-separated for variants)
             </label>
             <input
-              type='number'
+              type='text'
               {...register('stockQuantity', {
                 required: 'Stock Quantity is required',
-                valueAsNumber: true,
-                min: { value: 1, message: 'Minimum quantity is 1' },
               })}
               className={`mt-1 block w-full border p-2 ${
                 errors.stockQuantity ? 'border-red-500' : 'border-gray-300'
@@ -232,15 +314,12 @@ const CreateProduct = () => {
 
           <div>
             <label className='block text-lg font-medium text-gray-700'>
-              Price
+              Price (Comma-separated for variants)
             </label>
             <input
-              type='number'
-              step='0.01'
+              type='text'
               {...register('price', {
                 required: 'Price is required',
-                valueAsNumber: true,
-                min: { value: 0.01, message: 'Minimum price is 0.01' },
               })}
               className={`mt-1 block w-full border p-2 ${
                 errors.price ? 'border-red-500' : 'border-gray-300'
@@ -253,6 +332,30 @@ const CreateProduct = () => {
                 className='text-red-500 text-sm mt-1'
               >
                 {errors.price.message}
+              </motion.p>
+            )}
+          </div>
+
+          <div>
+            <label className='block text-lg font-medium text-gray-700'>
+              Weight in KG (Comma-separated for variants)
+            </label>
+            <input
+              type='text'
+              {...register('weight', {
+                required: 'Weight is required',
+              })}
+              className={`mt-1 block w-full border p-2 ${
+                errors.weight ? 'border-red-500' : 'border-gray-300'
+              } rounded-md shadow-sm sm:text-sm`}
+            />
+            {errors.weight && (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className='text-red-500 text-sm mt-1'
+              >
+                {errors.weight.message}
               </motion.p>
             )}
           </div>

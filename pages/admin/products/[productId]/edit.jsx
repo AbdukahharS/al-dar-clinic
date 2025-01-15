@@ -1,27 +1,17 @@
 import { useRouter } from 'next/navigation'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { FaArrowLeft, FaPlus, FaTrash } from 'react-icons/fa6'
 import { useForm, Controller } from 'react-hook-form'
 import { motion } from 'framer-motion'
+import axios from 'axios'
+import toast from 'react-hot-toast'
 
 import Button from '@/components/Button'
-import dumbbell from '@/public/images/products/dumbbell.webp'
 
 const EditProduct = () => {
   const isInitialRender = useRef(true)
   const router = useRouter()
-
-  const product = {
-    id: 1,
-    productName: 'Dumbbell 6Kgs',
-    img: dumbbell,
-    price: 100,
-    productType: 'Buy',
-    productCategory: 'Physiotherapy Tools',
-    stockQuantity: 26,
-    productDescription:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam',
-  }
+  const [categories, setCategories] = useState([])
 
   const {
     register,
@@ -31,29 +21,130 @@ const EditProduct = () => {
     formState: { errors },
   } = useForm()
 
+  const productId = 1 // Replace with dynamic ID from route params or props
+
   useEffect(() => {
-    const fetchFile = async () => {
-      const response = await fetch('/images/products/dumbbell.webp')
-      const blob = await response.blob()
-      const file = new File([blob], 'dumbbell.webp', { type: 'image/webp' })
-      setValue('productImages', Array(3).fill(file) || [])
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(`/category`)
+        setCategories(response.data)
+      } catch (error) {
+        console.error('Error fetching product:', error)
+        toast.error('Failed to load product details')
+      }
+    }
+    const fetchProduct = async () => {
+      try {
+        const response = await axios.get(`/products/${productId}`)
+        const product = response.data
+
+        setValue('productName', product.name)
+        setValue('productType', product.productType)
+        setValue('productCategory', product.category.id)
+        setValue(
+          'stockQuantity',
+          Object.entries(product.stock)
+            .map(([_, value]) => value)
+            .join(',')
+        )
+        setValue(
+          'price',
+          Object.entries(product.buyPrice)
+            .map(([_, value]) => value)
+            .join(',')
+        )
+        setValue('weightInKg', product.weightInKg.join(','))
+        setValue('productDescription', product.description)
+      } catch (error) {
+        console.error('Error fetching product:', error)
+        toast.error('Failed to load product details')
+      }
     }
 
-    if (product && isInitialRender.current) {
-      setValue('productName', product.productName)
-      setValue('productType', product.productType)
-      setValue('productCategory', product.productCategory)
-      setValue('stockQuantity', product.stockQuantity)
-      setValue('price', product.price)
-      setValue('productDescription', product.productDescription)
-      fetchFile()
-      isInitialRender.current = false // After first render, set to false
+    if (
+      isInitialRender.current &&
+      axios.defaults.baseURL &&
+      axios.defaults.headers.common['Authorization']
+    ) {
+      fetchProduct()
+      fetchCategories()
+      isInitialRender.current = false
     }
-  }, [product])
+  }, [setValue])
 
-  const onSubmit = (data) => {
+  const validateMultipleFields = (quantity, price, weight) => {
+    const hasValidNumbers = (input) => {
+      return input.split(',').every((val) => /^\d+(\.\d+)?$/.test(val.trim()))
+    }
+
+    if (!hasValidNumbers(quantity)) {
+      return 'Each value in Stock Quantity must be a valid number.'
+    }
+    if (!hasValidNumbers(price)) {
+      return 'Each value in Price must be a valid number.'
+    }
+    if (!hasValidNumbers(weight)) {
+      return 'Each value in Weight must be a valid number.'
+    }
+
+    const qCount = quantity.split(',').length
+    const pCount = price.split(',').length
+    const wCount = weight.split(',').length
+
+    if (qCount !== pCount || pCount !== wCount) {
+      return 'Quantity, Price, and Weight must have the same number of values when separated by commas.'
+    }
+    return true
+  }
+
+  const onSubmit = async (data) => {
     console.log(data)
-    // Handle update product logic here
+
+    const { stockQuantity, price, weightInKg } = data
+
+    const validationError = validateMultipleFields(
+      stockQuantity,
+      price,
+      weightInKg
+    )
+    if (validationError !== true) {
+      toast.error(validationError)
+      return
+    }
+
+    const stockQuantityArray = stockQuantity
+      .split(',')
+      .map((q) => Number(q.trim()))
+    const priceArray = price.split(',').map((p) => Number(p.trim()))
+    const weightArray = weightInKg.split(',').map((w) => Number(w.trim()))
+
+    const formData = new FormData()
+    formData.append('name', data.productName)
+    formData.append('productType', data.productType)
+    formData.append('categoryId', data.productCategory)
+    formData.append('stock', JSON.stringify(stockQuantityArray))
+    formData.append('buyPrice', JSON.stringify(priceArray))
+    formData.append('rentPrice', JSON.stringify(priceArray))
+    formData.append('weightInKg', JSON.stringify(weightArray))
+    formData.append('description', data.productDescription)
+    if (data.productImages) {
+      Array.from(data.productImages).forEach((file) => {
+        formData.append('images', file)
+      })
+    }
+
+    try {
+      await axios.put(`/products/${productId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      toast.success('Product updated successfully')
+      router.push('/admin/products')
+    } catch (error) {
+      console.error('Error updating product:', error)
+      toast.error('Failed to update product')
+    }
   }
 
   return (
@@ -69,7 +160,7 @@ const EditProduct = () => {
           onSubmit={handleSubmit(onSubmit)}
           className='space-y-6 p-4 max-w-lg'
         >
-          {/* Product Name */}
+          {/* Add similar input fields as in CreateProduct */}
           <div>
             <label className='block text-lg font-medium text-gray-700'>
               Product Name
@@ -104,7 +195,7 @@ const EditProduct = () => {
                 <span>Buy</span>
                 <input
                   type='radio'
-                  value='Buy'
+                  value='BUY'
                   {...register('productType', {
                     required: 'Product Type is required',
                   })}
@@ -117,7 +208,7 @@ const EditProduct = () => {
                 <span>Rent</span>
                 <input
                   type='radio'
-                  value='Rent'
+                  value='RENT'
                   {...register('productType', {
                     required: 'Product Type is required',
                   })}
@@ -147,14 +238,16 @@ const EditProduct = () => {
               {...register('productCategory', {
                 required: 'Product Category is required',
               })}
-              defaultValue={product?.productCategory || ''}
               className={`mt-1 block w-full border p-2 ${
                 errors.productCategory ? 'border-red-500' : 'border-gray-300'
               } rounded-md shadow-sm sm:text-sm`}
             >
               <option value=''>Select a category</option>
-              <option value='Physiotherapy Tools'>Physiotherapy Tools</option>
-              {/* Add more options here */}
+              {categories.map((el) => (
+                <option value={el.id} key={el.id}>
+                  {el.name}
+                </option>
+              ))}
             </select>
             {errors.productCategory && (
               <motion.p
@@ -176,13 +269,9 @@ const EditProduct = () => {
               control={control}
               name='productImages'
               rules={{
-                required: 'Product Images are required',
-                validate: (value) => {
-                  if (value.length < 2) {
-                    return 'Minimum 2 images are required'
-                  }
-                  return true
-                },
+                required: 'Images are required',
+                validate: (value) =>
+                  value.length >= 2 ? true : 'Choose at least 2 pictures',
               }}
               render={({ field }) => (
                 <>
@@ -252,19 +341,41 @@ const EditProduct = () => {
             )}
           </div>
 
+          {/* Weight Quantity */}
+          <div>
+            <label className='block text-lg font-medium text-gray-700'>
+              Weight in KG
+            </label>
+            <input
+              type='text'
+              {...register('weightInKg', {
+                required: 'Weight is required',
+              })}
+              className={`mt-1 block w-full border p-2 ${
+                errors.stockQuantity ? 'border-red-500' : 'border-gray-300'
+              } rounded-md shadow-sm sm:text-sm`}
+            />
+            {errors.weightInKg && (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className='text-red-500 text-sm mt-1'
+              >
+                {errors.weightInKg.message}
+              </motion.p>
+            )}
+          </div>
+
           {/* Stock Quantity */}
           <div>
             <label className='block text-lg font-medium text-gray-700'>
               Stock Quantity
             </label>
             <input
-              type='number'
+              type='text'
               {...register('stockQuantity', {
                 required: 'Stock Quantity is required',
-                valueAsNumber: true,
-                min: { value: 1, message: 'Minimum quantity is 1' },
               })}
-              defaultValue={product?.stockQuantity || 1}
               className={`mt-1 block w-full border p-2 ${
                 errors.stockQuantity ? 'border-red-500' : 'border-gray-300'
               } rounded-md shadow-sm sm:text-sm`}
@@ -286,14 +397,10 @@ const EditProduct = () => {
               Price
             </label>
             <input
-              type='number'
-              step='0.01'
+              type='text'
               {...register('price', {
                 required: 'Price is required',
-                valueAsNumber: true,
-                min: { value: 0.01, message: 'Minimum price is 0.01' },
               })}
-              defaultValue={product?.price || 0.01}
               className={`mt-1 block w-full border p-2 ${
                 errors.price ? 'border-red-500' : 'border-gray-300'
               } rounded-md shadow-sm sm:text-sm`}
@@ -318,7 +425,6 @@ const EditProduct = () => {
               {...register('productDescription', {
                 required: 'Product Description is required',
               })}
-              defaultValue={product?.productDescription || ''}
               className={`mt-1 block w-full border p-2 ${
                 errors.productDescription ? 'border-red-500' : 'border-gray-300'
               } rounded-md shadow-sm sm:text-sm`}
@@ -334,7 +440,6 @@ const EditProduct = () => {
             )}
           </div>
 
-          {/* Submit Button */}
           <Button type='submit' variant='primary' className='w-72'>
             Save Changes
           </Button>

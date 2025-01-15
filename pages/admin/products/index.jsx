@@ -2,109 +2,45 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState, useRef } from 'react'
 import { FaCircleInfo, FaPen, FaRotateRight, FaTrashCan } from 'react-icons/fa6'
+import axios from 'axios'
+import toast from 'react-hot-toast'
 
 import Button from '@/components/Button'
 import confirm from '@/components/Confirm'
 
-const dummyData = [
-  {
-    id: 1,
-    name: 'Foam Roller',
-    quantity: 15,
-    price: 25.99,
-    category: 'Tool',
-    createdAt: '2025-01-08T10:00:00Z',
-    type: 'Buy',
-  },
-  {
-    id: 2,
-    name: 'Resistance Bands',
-    quantity: 50,
-    price: 12.49,
-    category: 'Tool',
-    createdAt: '2025-01-08T10:05:00Z',
-    type: 'Buy',
-  },
-  {
-    id: 3,
-    name: 'Therapy Ball',
-    quantity: 30,
-    price: 18.75,
-    category: 'Tool',
-    createdAt: '2025-01-08T10:10:00Z',
-    type: 'Rent',
-  },
-  {
-    id: 4,
-    name: 'Massage Stick',
-    quantity: 20,
-    price: 22.0,
-    category: 'Tool',
-    createdAt: '2025-01-08T10:15:00Z',
-    type: 'Buy',
-  },
-  {
-    id: 5,
-    name: 'Stretch Strap',
-    quantity: 40,
-    price: 9.99,
-    category: 'Tool',
-    createdAt: '2025-01-08T10:20:00Z',
-    type: 'Rent',
-  },
-  {
-    id: 6,
-    name: 'Balance Pad',
-    quantity: 10,
-    price: 45.5,
-    category: 'Equipment',
-    createdAt: '2025-01-08T10:25:00Z',
-    type: 'Buy',
-  },
-  {
-    id: 7,
-    name: 'Wobble Board',
-    quantity: 8,
-    price: 55.0,
-    category: 'Equipment',
-    createdAt: '2025-01-08T10:30:00Z',
-    type: 'Rent',
-  },
-  {
-    id: 8,
-    name: 'Hot/Cold Pack',
-    quantity: 100,
-    price: 7.25,
-    category: 'Devices',
-    createdAt: '2025-01-08T10:35:00Z',
-    type: 'Buy',
-  },
-  {
-    id: 9,
-    name: 'Neck Traction Device',
-    quantity: 12,
-    price: 29.99,
-    category: 'Device',
-    createdAt: '2025-01-08T10:40:00Z',
-    type: 'Rent',
-  },
-  {
-    id: 10,
-    name: 'Hand Therapy Putty',
-    quantity: 60,
-    price: 14.95,
-    category: 'Tool',
-    createdAt: '2025-01-08T10:45:00Z',
-    type: 'Buy',
-  },
-]
-
 const Products = () => {
   const router = useRouter()
-  const [data, setData] = useState(dummyData)
+  const [data, setData] = useState([])
   const [filter, setFilter] = useState('all')
   const [sort, setSort] = useState('asc')
+  const [page, setPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const limit = 12
   const isInitialRender = useRef(true) // Ref to track initial render
+
+  const fetchProducts = async () => {
+    try {
+      const { data } = await axios.post('/products/filter', {
+        page,
+        limit,
+        productType: filter !== 'all' ? filter.toUpperCase() : undefined,
+        sort,
+      })
+
+      setTotal(data.total)
+      setData(data.data)
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.errors?.[0]?.message ||
+          error?.response?.data?.message ||
+          'Something went wrong. Please refresh the page!'
+      )
+    }
+  }
+
+  useEffect(() => {
+    fetchProducts()
+  }, [page, filter, sort])
 
   useEffect(() => {
     const storedFilter = sessionStorage.getItem('productFilter')
@@ -121,34 +57,34 @@ const Products = () => {
       return
     }
 
-    const filteredData = dummyData.filter((order) => {
-      if (filter === 'all') {
-        return true
-      } else {
-        return order.type.toLocaleLowerCase() === filter
-      }
-    })
-
-    const sortedData = [...filteredData].sort((a, b) => {
-      if (sort === 'asc') {
-        return new Date(a.createdAt) - new Date(b.createdAt)
-      } else {
-        return new Date(b.createdAt) - new Date(a.createdAt)
-      }
-    })
-
-    setData(sortedData)
     sessionStorage.setItem('productFilter', filter)
     sessionStorage.setItem('productSort', sort)
   }, [filter, sort])
 
-  const handleDelete = async () => {
+  const handleDelete = async (id) => {
+    const removeItem = async () => {
+      try {
+        await axios.delete('/products/' + id)
+        toast.success('Product deleted')
+        setData((prev) => prev.filter((item) => item.id !== id))
+      } catch (error) {
+        toast.error(error.message || 'Something went wrong')
+      }
+    }
     confirm(
       'Delete Product',
       'Are you sure you want to delete the Product',
-      'Delete'
+      'Delete',
+      removeItem
     )
   }
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage)
+  }
+
+  const showingFrom = (page - 1) * limit + 1
+  const showingTo = Math.min(page * limit, total)
 
   return (
     <div>
@@ -191,8 +127,9 @@ const Products = () => {
           <thead>
             <tr>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
-                Prodduct Name
+                Product Name
               </th>
+              <th className='px-4 py-5 font-medium whitespace-nowrap'>Type</th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
                 Category
               </th>
@@ -211,14 +148,21 @@ const Products = () => {
                 <td className='px-3 py-4 whitespace-nowrap text-center'>
                   {order.name}
                 </td>
-                <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  {order.category}
+                <td className='px-3 py-4 whitespace-nowrap text-center'>
+                  {order.productType}
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  {order.quantity}
+                  {order.category.name}
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  {order.price}
+                  {Object.entries(order.stock)
+                    .map(([key, value]) => `${key}KG: ${value}`)
+                    .join(', ')}
+                </td>
+                <td className='px-3 py-4 text-center whitespace-nowrap'>
+                  {Object.entries(order.buyPrice)
+                    .map(([key, value]) => `${key}KG: ${value}`)
+                    .join(', ')}
                 </td>
                 <td className='px-3 py-4 text-primary whitespace-nowrap'>
                   <div className='flex items-center justify-center gap-3'>
@@ -227,7 +171,7 @@ const Products = () => {
                     </Link>
                     <button>
                       <FaTrashCan
-                        onClick={handleDelete}
+                        onClick={() => handleDelete(order.id)}
                         className='mx-auto text-xl'
                       />
                     </button>
@@ -240,6 +184,29 @@ const Products = () => {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className='flex flex-row items-center justify-between mt-7 md:px-4'>
+        <p className='text-gray-400'>
+          Showing {data.length > 0 ? `${showingFrom} to ${showingTo}` : 0} of{' '}
+          {total} results
+        </p>
+        <div className='flex flex-row items-center gap-2'>
+          {Array.from({ length: Math.ceil(total / limit) }, (_, i) => i + 1)
+            .filter((pageNumber) => pageNumber !== page)
+            .map((pageNumber) => (
+              <button
+                key={pageNumber}
+                onClick={() => handlePageChange(pageNumber)}
+                className={`w-7 h-7 flex items-center justify-center rounded-full ${
+                  pageNumber === page
+                    ? 'text-white bg-primary'
+                    : 'text-primary border border-primary'
+                } cursor-pointer`}
+              >
+                {pageNumber}
+              </button>
+            ))}
+        </div>
       </div>
     </div>
   )

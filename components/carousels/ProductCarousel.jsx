@@ -79,6 +79,7 @@ export default function ProductCarousel({ data }) {
               src={item}
               alt={`Secondary carousel ${i + 1}`}
               loading='lazy'
+              fill
             />
           </SwiperSlide>
         ))}
