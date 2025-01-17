@@ -1,52 +1,49 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { FaArrowLeft, FaPencil, FaCirclePlus } from 'react-icons/fa6'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 
 import Button from '@/components/Button'
-import dumbbell from '@/public/images/products/dumbbell.webp'
-import sponge from '@/public/images/products/sponge.webp'
 import Animated from '@/components/Animated'
 import Address from '@/components/Address'
 import Link from 'next/link'
-
-const cartItems = [
-  {
-    id: 1,
-    name: 'Dumbbell 6Kgs',
-    img: dumbbell,
-    price: 100,
-    category: 'PHYSIOTHERAPY TOOLS',
-    quantity: 1,
-  },
-  {
-    category: 'PHYSIOTHERAPY TOOLS',
-    id: 2,
-    name: 'Sponge Dumbbell',
-    img: sponge,
-    price: 250,
-    quantity: 1,
-  },
-]
+import useCart from '@/hooks/useCart'
+import axios from 'axios'
+import toast from 'react-hot-toast'
 
 const Checkout = () => {
-  const [chosenAddress, setChosenAddress] = useState()
-  const [chosenBilling, setChosenBilling] = useState()
+  const [chosenAddress, setChosenAddress] = useState(null)
+  const [chosenBilling, setChosenBilling] = useState(null)
   const [open, setOpen] = useState(false)
   const [sameBilling, setSameBilling] = useState(true)
+  const [addresses, setAddresses] = useState([])
+  const [address, setAddress] = useState(null)
   const router = useRouter()
+  const { items, totalPrice } = useCart()
 
-  const addresses = Array(2).fill({
-    name: 'Will Smith',
-    number: '+880125333344',
-    email: 'customer@example.com',
-    city: 'Dhaka',
-    state: 'Dhaka',
-    country: 'Bangladesh',
-    street: 'House:3, Road:1, Block: c, Mirpur 2',
-    postal: '1216',
-  })
+  const fetchAdresses = async () => {
+    try {
+      const res = await axios.get('/address/all')
+
+      setAddresses(res.data.data)
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.errors?.[0]?.message ||
+          error?.response?.data?.message ||
+          'Something went wrong. Please, reload the page!'
+      )
+    }
+  }
+
+  useEffect(() => {
+    if (
+      axios.defaults.baseURL &&
+      axios.defaults.headers.common['Authorization']
+    ) {
+      fetchAdresses()
+    }
+  }, [axios.defaults, axios.defaults.headers.common['Authorization']])
 
   return (
     <div className='px-3 w-full max-w-7xl mx-auto py-9 md:py-20'>
@@ -103,12 +100,17 @@ const Checkout = () => {
             <div className='flex flex-row items-center justify-between px-3 md:px-6 pt-7 pb-3 border-b'>
               <h3 className='font-medium'>Shipping Address</h3>
               <div className='flex flex-row items-center gap-2 md:gap-6'>
-                <button
-                  onClick={() => setOpen(true)}
-                  className='bg-green-200/30 text-green-500 text-xs md:text-base flex flex-row items-center gap-1 md:gap-2 rounded-lg py-1 px-[6px] transition-all duration-200 hover:scale-110'
-                >
-                  <FaPencil /> Edit
-                </button>
+                {chosenAddress && (
+                  <button
+                    onClick={() => {
+                      setAddress(chosenAddress)
+                      setOpen(true)
+                    }}
+                    className='bg-green-200/30 text-green-500 text-xs md:text-base flex flex-row items-center gap-1 md:gap-2 rounded-lg py-1 px-[6px] transition-all duration-200 hover:scale-110'
+                  >
+                    <FaPencil /> Edit
+                  </button>
+                )}
                 <button
                   onClick={() => setOpen(true)}
                   className='bg-blue-200/30 text-blue-500 text-xs md:text-base flex flex-row items-center gap-1 md:gap-2 rounded-lg py-1 px-[6px] transition-all duration-200 hover:scale-110'
@@ -122,19 +124,19 @@ const Checkout = () => {
                 <div
                   key={i}
                   className={`w-1/2 py-4 px-5 ${
-                    chosenAddress === i &&
+                    chosenAddress?.id === el.id &&
                     'border border-primary bg-primary/10 rounded-xl'
                   }`}
-                  onClick={() => setChosenAddress(i)}
+                  onClick={() => setChosenAddress(el)}
                 >
-                  <p>{el.name}</p>
+                  <p>{el.fullname}</p>
                   <p>{el.number}</p>
                   <p>{el.email}</p>
                   <p>{el.city},</p>
                   <p>{el.state},</p>
                   <p>{el.country},</p>
                   <p>{el.street},</p>
-                  <p>{el.postal}</p>
+                  <p>{el.postalCode}</p>
                 </div>
               ))}
             </div>
@@ -144,7 +146,7 @@ const Checkout = () => {
               type='checkbox'
               name='same-billing'
               id='same-billing'
-              value={sameBilling}
+              defaultChecked={sameBilling}
               onClick={() => setSameBilling(!sameBilling)}
               className='w-5 h-5'
             />
@@ -164,12 +166,19 @@ const Checkout = () => {
             <div className='flex flex-row items-center justify-between px-3 md:px-6 pt-7 pb-3 border-b'>
               <h3 className='font-medium'>Billing Address</h3>
               <div className='flex flex-row items-center gap-2 md:gap-6'>
-                <button
-                  onClick={() => setOpen(true)}
-                  className='bg-green-200/30 text-green-500 text-xs md:text-base flex flex-row items-center gap-1 md:gap-2 rounded-lg py-1 px-[6px] transition-all duration-200 hover:scale-110'
-                >
-                  <FaPencil /> Edit
-                </button>
+                {chosenBilling ? (
+                  <button
+                    onClick={() => {
+                      setAddress(chosenBilling)
+                      setOpen(true)
+                    }}
+                    className='bg-green-200/30 text-green-500 text-xs md:text-base flex flex-row items-center gap-1 md:gap-2 rounded-lg py-1 px-[6px] transition-all duration-200 hover:scale-110'
+                  >
+                    <FaPencil /> Edit
+                  </button>
+                ) : (
+                  ''
+                )}
                 <button
                   onClick={() => setOpen(true)}
                   className='bg-blue-200/30 text-blue-500 text-xs md:text-base flex flex-row items-center gap-1 md:gap-2 rounded-lg py-1 px-[6px] transition-all duration-200 hover:scale-110'
@@ -183,12 +192,12 @@ const Checkout = () => {
                 <div
                   key={i}
                   className={`w-1/2 py-4 px-5 ${
-                    chosenBilling === i &&
+                    chosenBilling?.id === el.id &&
                     'border border-primary bg-primary/10 rounded-xl'
                   }`}
-                  onClick={() => setChosenBilling(i)}
+                  onClick={() => setChosenBilling(el)}
                 >
-                  <p>{el.name}</p>
+                  <p>{el.fullname}</p>
                   <p>{el.number}</p>
                   <p>{el.email}</p>
                   <p>{el.city},</p>
@@ -206,14 +215,14 @@ const Checkout = () => {
             <h3 className='text-center font-medium'>Order Summary</h3>
           </div>
           <div className='px-[11.5px] py-7 md:px-6'>
-            {cartItems.map((el, i) => (
+            {items.map((el, i) => (
               <div
                 key={i}
                 className={`w-full flex flex-row gap-4 items-stretch p-5 pt-6 `}
               >
                 <Image
-                  src={el.img}
-                  alt={el.name}
+                  src={el.product.images[0].thumbnail}
+                  alt={el.product.name}
                   width={58}
                   height={58}
                   loading='lazy'
@@ -225,12 +234,14 @@ const Checkout = () => {
                       <span className='text-[10px] font-medium'>
                         {el.category}
                       </span>
-                      <p className='text-lg'>{el.name}</p>
+                      <p className='text-lg'>{el.product.name}</p>
                     </div>
                     <p className='text-[10px]'>Quantity: {el.quantity}</p>
                   </div>
                   <div className='flex flex-col justify-end'>
-                    <p className='text-xs font-medium'>Dhs {el.price}</p>
+                    <p className='text-xs font-medium'>
+                      Dhs {el.product.buyPrice[el.weightInKg]}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -238,13 +249,7 @@ const Checkout = () => {
           </div>
           <div className='border-t border-gray-600 py-2 px-4 flex flex-row items-center justify-between mx-[11.5px] mb-4 md:mx-6'>
             <p className='font-semibold text-gray-700'>Total</p>
-            <p className='font-semibold text-gray-700'>
-              Dhs{' '}
-              {cartItems.reduce(
-                (total, item) => total + item.price * item.quantity,
-                0
-              )}
-            </p>
+            <p className='font-semibold text-gray-700'>Dhs {totalPrice}</p>
           </div>
         </div>
       </div>
@@ -252,11 +257,17 @@ const Checkout = () => {
         <Button variant='outline' className='border-primary text-primary'>
           Back to Cart
         </Button>
-        <Link href='/order/payment'>
+        <Link href={'/order/payment?address=' + chosenAddress?.id}>
           <Button>Save and Pay</Button>
         </Link>
       </Animated>
-      <Address open={open} setOpen={setOpen} />
+      <Address
+        open={open}
+        setOpen={setOpen}
+        setAddresses={setAddresses}
+        address={address}
+        setAddress={setAddress}
+      />
     </div>
   )
 }

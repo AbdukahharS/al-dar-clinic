@@ -1,62 +1,48 @@
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import { FaCircleInfo } from 'react-icons/fa6'
 import Link from 'next/link'
-
+import { useRouter } from 'next/router'
 import Header from '@/components/layout/Header'
-
-const rentalOrders = [
-  {
-    orderId: '1010246',
-    productName: 'Dumbbell',
-    quantity: 2,
-    status: 'Requested',
-    amount: '$212.50',
-    timestamp: '09:09 AM, 10-10-2024',
-  },
-  {
-    orderId: '1010246',
-    productName: 'Dumbbell',
-    quantity: 2,
-    status: 'Cancelled',
-    amount: '$212.50',
-    timestamp: '09:09 AM, 10-10-2024',
-  },
-  {
-    orderId: '1010246',
-    productName: 'Gym Ball',
-    quantity: 3,
-    status: 'Placed',
-    amount: '$212.50',
-    timestamp: '09:09 AM, 10-10-2024',
-  },
-  {
-    orderId: '1010246',
-    productName: 'Soft Dumbbell',
-    quantity: 4,
-    status: 'OnDelivery',
-    amount: '$212.50',
-    timestamp: '09:09 AM, 10-10-2024',
-  },
-  {
-    orderId: '1010246',
-    productName: 'Weight Ball',
-    quantity: 6,
-    status: 'Delivered',
-    amount: '$212.50',
-    timestamp: '09:09 AM, 10-10-2024',
-  },
-  {
-    orderId: '1010246',
-    productName: 'Weight Ball',
-    quantity: 6,
-    status: 'Returned',
-    amount: '$212.50',
-    timestamp: '09:09 AM, 10-10-2024',
-  },
-]
+import { useSearchParams } from 'next/navigation'
 
 const Rental = () => {
+  const router = useRouter()
+  const [data, setData] = useState([])
+  const [page, setPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const limit = 10
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    setPage(Number(searchParams.get('page')) || 1)
+  }, [searchParams])
+
+  const fetchRentals = async () => {
+    try {
+      const { data } = await axios.post('/rent/all', {
+        page,
+        limit,
+      })
+
+      setTotal(data.total)
+      setData(data.data)
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.errors?.[0]?.message ||
+          error?.response?.data?.message ||
+          error.message ||
+          'Something went wrong. Please refresh the page!'
+      )
+    }
+  }
+
+  useEffect(() => {
+    fetchRentals()
+  }, [page])
+
   return (
-    <div className=' md:w-[calc(100%+(100vw-1280px)/2)]'>
+    <div className='md:w-[calc(100%+(100vw-1280px)/2)]'>
       <Header pageTitle='Rental History' />
       <div className='overflow-x-auto'>
         <table className='min-w-full table-auto text-gray-700'>
@@ -74,58 +60,71 @@ const Rental = () => {
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
                 Status
               </th>
-              <th className='px-4 py-5 font-medium whitespace-nowrap'>
-                Amount
-              </th>
+              <th className='px-4 py-5 font-medium whitespace-nowrap'>Price</th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
                 Action
               </th>
             </tr>
           </thead>
           <tbody>
-            {rentalOrders.map((order, index) => (
-              <tr key={index} className='border'>
-                <td className='px-3 py-4 whitespace-nowrap'>
-                  {order.orderId}
-                  <p className='text-xs'>{order.timestamp}</p>
-                </td>
-                <td className='px-3 py-4 whitespace-nowrap'>
-                  {order.productName}
-                </td>
-                <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  {order.quantity}
-                </td>
-                <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  <div className='border mx-auto rounded-lg w-fit p-2 px-4 text-gray-500'>
-                    {order.status.replace(/([A-Z])/g, ' $1').trim()}
-                  </div>
-                </td>
-                <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  {order.amount}
-                </td>
-                <td className='px-3 py-4 text-primary whitespace-nowrap'>
-                  <Link href={`/profile/rental/${order.orderId}`}>
-                    <FaCircleInfo className='mx-auto text-xl' />
-                  </Link>
-                </td>
-              </tr>
-            ))}
+            {data?.length ? (
+              data.map((order, index) => (
+                <tr key={index} className='border'>
+                  <td className='px-3 py-4 whitespace-nowrap'>
+                    {order.id}
+                    <p className='text-xs'>{order.timestamp}</p>
+                  </td>
+                  <td className='px-3 py-4 whitespace-nowrap text-center'>
+                    {order.product.name}
+                  </td>
+                  <td className='px-3 py-4 text-center whitespace-nowrap'>
+                    {order.quantity}
+                  </td>
+                  <td className='px-3 py-4 text-center whitespace-nowrap'>
+                    <div className='border mx-auto rounded-lg w-fit p-2 px-4 text-gray-500'>
+                      {order.orderStatus.replace(/([A-Z])/g, ' $1').trim()}
+                    </div>
+                  </td>
+                  <td className='px-3 py-4 text-center whitespace-nowrap'>
+                    {order.product.rentPrice[order.weightInKg]}
+                  </td>
+                  <td className='px-3 py-4 text-primary whitespace-nowrap'>
+                    <Link href={`/profile/rental/${order.id}`}>
+                      <FaCircleInfo className='mx-auto text-xl' />
+                    </Link>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr></tr>
+            )}
           </tbody>
         </table>
       </div>
-      <div className='flex flex-row items-center justify-between mt-7 md:px-4'>
-        <p className='text-gray-400'>Showing 1 to 6 of 30 results</p>
+      <div className='flex flex-row items-center justify-between my-7 md:px-4'>
+        <p className='text-gray-400'>
+          Showing{' '}
+          {total === 0
+            ? '0'
+            : `${page * limit - 9} to ${page * limit - 10 + data.length}`}{' '}
+          of {total} results
+        </p>
         <div className='flex flex-row items-center gap-2'>
-          <button className='w-7 h-7 flex items-center justify-center rounded-full text-white bg-primary cursor-pointer'>
-            1
-          </button>
-          <button className='w-7 h-7 flex items-center justify-center rounded-full text-primary border border-primary cursor-pointer'>
-            2
-          </button>
-          <span>....</span>
-          <button className='w-7 h-7 flex items-center justify-center rounded-full text-primary border border-primary cursor-pointer'>
-            5
-          </button>
+          {Array.from({ length: Math.ceil(total / limit) }, (_, i) => i + 1)
+            .filter((pageNumber) => pageNumber !== page)
+            .map((pageNumber) => (
+              <button
+                key={pageNumber}
+                onClick={() => router.push('/admin/users/?page=' + pageNumber)}
+                className={`w-7 h-7 flex items-center justify-center rounded-full ${
+                  pageNumber === page
+                    ? 'text-white bg-primary'
+                    : 'text-primary border border-primary'
+                } cursor-pointer`}
+              >
+                {pageNumber}
+              </button>
+            ))}
         </div>
       </div>
     </div>

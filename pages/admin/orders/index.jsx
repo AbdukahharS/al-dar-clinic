@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 import Button from '@/components/Button'
+import toast from 'react-hot-toast'
+import axios from 'axios'
 
 const orders = [
   {
@@ -67,46 +69,52 @@ const statusOptions = [
 
 const Orders = () => {
   const router = useRouter()
-  const [data, setData] = useState(orders)
+  const [data, setData] = useState([])
   const [filter, setFilter] = useState('all')
   const [sort, setSort] = useState('asc')
-  const isInitialRender = useRef(true) // Ref to track initial render
+  const [page, setPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const limit = 10
+  const isInitialRender = useRef(true)
+
+  const fetchOrders = async () => {
+    try {
+      const { data } = await axios.post('/order/filter', {
+        page,
+        limit,
+        status: filter !== 'all' ? filter : undefined,
+        sort,
+      })
+
+      setTotal(data.total)
+      setData(data.data)
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.errors?.[0]?.message ||
+          error?.response?.data?.message ||
+          error.message ||
+          'Something went wrong. Please refresh the page!'
+      )
+    }
+  }
 
   useEffect(() => {
     const storedFilter = sessionStorage.getItem('orderFilter')
     const storedSort = sessionStorage.getItem('orderSort')
-
     if (storedFilter) setFilter(storedFilter)
     if (storedSort) setSort(storedSort)
   }, [])
 
   useEffect(() => {
     if (isInitialRender.current) {
-      // Skip the effect on the initial render
       isInitialRender.current = false
       return
     }
 
-    const filteredData = orders.filter((order) => {
-      if (filter === 'all') {
-        return true
-      } else {
-        return order.status === filter
-      }
-    })
-
-    const sortedData = [...filteredData].sort((a, b) => {
-      if (sort === 'asc') {
-        return new Date(a.timestamp) - new Date(b.timestamp)
-      } else {
-        return new Date(b.timestamp) - new Date(a.timestamp)
-      }
-    })
-
-    setData(sortedData)
+    fetchOrders()
     sessionStorage.setItem('orderFilter', filter)
     sessionStorage.setItem('orderSort', sort)
-  }, [filter, sort])
+  }, [filter, sort, page])
 
   return (
     <div>
@@ -193,10 +201,31 @@ const Orders = () => {
           </tbody>
         </table>
       </div>
-      <div className='flex flex-row items-center justify-between mt-7 md:px-4'>
+      <div className='flex flex-row items-center justify-between my-7 md:px-4'>
         <p className='text-gray-400'>
-          Showing {data.length} of {orders.length} results
+          Showing{' '}
+          {total === 0
+            ? '0'
+            : `${page * limit - 9} to ${page * limit - 10 + data.length}`}{' '}
+          of {total} results
         </p>
+        <div className='flex flex-row items-center gap-2'>
+          {Array.from({ length: Math.ceil(total / limit) }, (_, i) => i + 1)
+            .filter((pageNumber) => pageNumber !== page)
+            .map((pageNumber) => (
+              <button
+                key={pageNumber}
+                onClick={() => router.push('/admin/orders/?page=' + pageNumber)}
+                className={`w-7 h-7 flex items-center justify-center rounded-full ${
+                  pageNumber === page
+                    ? 'text-white bg-primary'
+                    : 'text-primary border border-primary'
+                } cursor-pointer`}
+              >
+                {pageNumber}
+              </button>
+            ))}
+        </div>
       </div>
     </div>
   )

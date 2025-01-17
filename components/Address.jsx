@@ -11,7 +11,7 @@ import 'react-phone-number-input/style.css'
 import Button from './Button'
 import Animated from './Animated'
 
-const Address = ({ open, setOpen, address, setAddresses }) => {
+const Address = ({ open, setOpen, address, setAddresses, setAddress }) => {
   const [loading, setLoading] = useState(false)
   const countries = Country.getAllCountries()
   const [country, setCountry] = useState(countries[0].isoCode)
@@ -41,7 +41,7 @@ const Address = ({ open, setOpen, address, setAddresses }) => {
   }, [country, countries])
 
   useEffect(() => {
-    if (address?.id) {
+    if (address?.id && open) {
       const count = countries.find(
         (c) =>
           c.name.toLocaleUpperCase() === address.country.toLocaleUpperCase()
@@ -74,9 +74,16 @@ const Address = ({ open, setOpen, address, setAddresses }) => {
   }, [address, reset, countries, states])
 
   const close = () => {
-    reset()
-    setCountry(countries[0].isoCode)
     setOpen(false)
+    setAddress(null)
+    reset({
+      fullname: '',
+      email: '',
+      phone: '',
+      postalCode: '',
+      street: '',
+    })
+    setCountry(countries[0].isoCode)
   }
 
   const onSubmit = async (data) => {

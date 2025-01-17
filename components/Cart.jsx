@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { FaCartShopping, FaCircleXmark, FaPlus, FaMinus } from 'react-icons/fa6'
+import { FaCartShopping, FaCircleXmark, FaPlus } from 'react-icons/fa6'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 
@@ -14,8 +14,7 @@ const Cart = () => {
     totalPrice,
     totalQuantity,
     removeFromCart,
-    addToCart,
-    decrementQuantity,
+    increment,
     cartState,
     close,
     open,
@@ -81,8 +80,8 @@ const Cart = () => {
                     }`}
                   >
                     <Image
-                      src={el.img}
-                      alt={el.name}
+                      src={el.product.images?.[0].thumbnail}
+                      alt={el.product.name}
                       width={80}
                       height={80}
                       loading='lazy'
@@ -91,31 +90,25 @@ const Cart = () => {
                     <div className='flex-1 flex flex-row items-stretch'>
                       <div className='flex-1 flex flex-col justify-between'>
                         <div className='flex-1 flex flex-col justify-start'>
-                          <span className='text-[10px] font-medium'>
-                            {el.category}
+                          <span className='text-[12px] font-medium'>
+                            {el.weightInKg} KG
                           </span>
-                          <p className='text-lg'>{el.name}</p>
+                          <p className='text-lg'>{el.product.name}</p>
                         </div>
                         <div className='rounded-full bg-gray-200/70 h-fit p-1 w-fit flex gap-2 flex-row items-center'>
-                          <button
+                          {/* <button
                             className={`text-[10px] inline-block p-[3px] cursor-pointer rounded-full text-white bg-black`}
                             disable={true ? 'true' : 'false'}
                             onClick={() => decrementQuantity(el.id)}
                           >
                             <FaMinus />
-                          </button>
+                          </button> */}
                           <span className='text-black text-xs'>
                             {el.quantity}
                           </span>
                           <button
                             className={`text-[10px] inline-block p-[3px] cursor-pointer rounded-full bg-black text-white`}
-                            onClick={() =>
-                              addToCart({
-                                id: el.id,
-                                quantity: 1,
-                                price: el.price,
-                              })
-                            }
+                            onClick={() => increment(el.id)}
                           >
                             <FaPlus />
                           </button>
@@ -130,7 +123,9 @@ const Cart = () => {
                         >
                           Remove
                         </button>
-                        <p className='text-xs font-medium'>Dhs {el.price}</p>
+                        <p className='text-xs font-medium'>
+                          Dhs {el.product.buyPrice[el.weightInKg]}
+                        </p>
                       </div>
                     </div>
                   </div>

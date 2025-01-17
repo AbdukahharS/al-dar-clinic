@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { FaArrowLeft, FaCircleCheck, FaCircleXmark } from 'react-icons/fa6'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
@@ -7,103 +7,105 @@ import Link from 'next/link'
 import toast from 'react-hot-toast'
 
 import Button from '@/components/Button'
-import dumbbell from '@/public/images/products/dumbbell.webp'
-import sponge from '@/public/images/products/sponge.webp'
 import Animated from '@/components/Animated'
 import cod from '@/public/images/cod.webp'
-
-const cartItems = [
-  {
-    id: 1,
-    name: 'Dumbbell 6Kgs',
-    img: dumbbell,
-    price: 100,
-    category: 'PHYSIOTHERAPY TOOLS',
-    quantity: 1,
-  },
-  {
-    category: 'PHYSIOTHERAPY TOOLS',
-    id: 2,
-    name: 'Sponge Dumbbell',
-    img: sponge,
-    price: 250,
-    quantity: 1,
-  },
-]
+import useCart from '@/hooks/useCart'
+import axios from 'axios'
 
 const Payment = () => {
   const [chosenMethod, setChosenMethod] = useState()
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const { items, totalPrice } = useCart()
 
   const methods = Array(2).fill({
     img: cod,
     name: 'Cash on Delivery',
   })
 
-  const handleConfirm = (e) => {
-    toast.custom(
-      (t) => (
-        <motion.div
-          initial={{ zIndex: -20, opacity: 0 }}
-          animate={
-            t.visible
-              ? { zIndex: 100, opacity: 1 }
-              : { zIndex: -20, opacity: 0 }
-          }
-          transition={{ duration: 0.3 }}
-          className='fixed -top-4 -left-4 w-screen !h-screen bg-black/60 flex items-center justify-center p-5'
-        >
+  const handleConfirm = async (e) => {
+    let orderId = null
+
+    try {
+      // console.log({
+      //   addressId: searchParams.get('address'),
+      //   quantityIds: items.map((el) => el.id),
+      // })
+
+      const res = await axios.post('/order/create', {
+        addressId: searchParams.get('address'),
+        quantityIds: items.map((el) => el.id),
+      })
+      console.log(res)
+      orderId = res.data.id
+
+      toast.custom(
+        (t) => (
           <motion.div
-            initial={{ y: 15 }}
-            animate={t.visible ? { y: 0 } : { y: 15 }}
-            className='w-fit xl:w-full max-w-2xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
+            initial={{ zIndex: -20, opacity: 0 }}
+            animate={
+              t.visible
+                ? { zIndex: 100, opacity: 1 }
+                : { zIndex: -20, opacity: 0 }
+            }
+            transition={{ duration: 0.3 }}
+            className='fixed -top-4 -left-4 w-screen !h-screen bg-black/60 flex items-center justify-center p-5'
           >
-            <Button
-              size='icon'
-              variant='ghost'
-              onClick={() => toast.dismiss(t.id)}
-              className='ml-auto'
+            <motion.div
+              initial={{ y: 15 }}
+              animate={t.visible ? { y: 0 } : { y: 15 }}
+              className='w-fit xl:w-full max-w-2xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
             >
-              <FaCircleXmark className='text-primary text-4xl' />
-            </Button>
-            <div>
-              <FaCircleCheck className='text-primary text-[100px] md:text-[136px] lg:text-[180px] xl:text-[218px] mx-auto' />
-            </div>
-            <p className='text-xl font-medium md:text-2xl xl:text-4xl text-center py-12 md:mt-18 tracking-wide'>
-              Your Order is Confirmed
-            </p>
-            <div className='flex flex-row items-center justify-center gap-4 md:hidden'>
-              <Link href='/profile/orders/1'>
-                <Button
-                  variant='outline'
-                  className='text-primary border-primary'
-                  size='sm'
-                  onClick={() => toast.dismiss(t.id)}
-                >
-                  Order details
-                </Button>
-              </Link>
-              <Button size='sm' onClick={() => toast.dismiss(t.id)}>
-                Continue
+              <Button
+                size='icon'
+                variant='ghost'
+                onClick={() => toast.dismiss(t.id)}
+                className='ml-auto'
+              >
+                <FaCircleXmark className='text-primary text-4xl' />
               </Button>
-            </div>
-            <div className='hidden flex-row items-center justify-center gap-8 md:flex'>
-              <Link href='/profile/orders/1'>
-                <Button
-                  variant='outline'
-                  className='text-primary border-primary'
-                  onClick={() => toast.dismiss(t.id)}
-                >
-                  Order details
+              <div>
+                <FaCircleCheck className='text-primary text-[100px] md:text-[136px] lg:text-[180px] xl:text-[218px] mx-auto' />
+              </div>
+              <p className='text-xl font-medium md:text-2xl xl:text-4xl text-center py-12 md:mt-18 tracking-wide'>
+                Your Order is Confirmed
+              </p>
+              <div className='flex flex-row items-center justify-center gap-4 md:hidden'>
+                <Link href={'/profile/orders/' + orderId}>
+                  <Button
+                    variant='outline'
+                    className='text-primary border-primary'
+                    size='sm'
+                    onClick={() => toast.dismiss(t.id)}
+                  >
+                    Order details
+                  </Button>
+                </Link>
+                <Button size='sm' onClick={() => toast.dismiss(t.id)}>
+                  Continue
                 </Button>
-              </Link>
-              <Button onClick={() => toast.dismiss(t.id)}>Continue</Button>
-            </div>
+              </div>
+              <div className='hidden flex-row items-center justify-center gap-8 md:flex'>
+                <Link href={'/profile/orders/' + orderId}>
+                  <Button
+                    variant='outline'
+                    className='text-primary border-primary'
+                    onClick={() => toast.dismiss(t.id)}
+                  >
+                    Order details
+                  </Button>
+                </Link>
+                <Button onClick={() => toast.dismiss(t.id)}>Continue</Button>
+              </div>
+            </motion.div>
           </motion.div>
-        </motion.div>
-      ),
-      { duration: Infinity }
-    )
+        ),
+        { duration: Infinity }
+      )
+    } catch (error) {
+      toast.error(error.response.data.message)
+      console.error(error)
+    }
   }
 
   return (
@@ -188,14 +190,14 @@ const Payment = () => {
             <h3 className='text-center font-medium'>Order Summary</h3>
           </div>
           <div className='px-[11.5px] py-7 md:px-6'>
-            {cartItems.map((el, i) => (
+            {items.map((el, i) => (
               <div
                 key={i}
                 className={`w-full flex flex-row gap-4 items-stretch p-5 pt-6 `}
               >
                 <Image
-                  src={el.img}
-                  alt={el.name}
+                  src={el.product.images[0].thumbnail}
+                  alt={el.product.name}
                   width={58}
                   height={58}
                   loading='lazy'
@@ -207,12 +209,14 @@ const Payment = () => {
                       <span className='text-[10px] font-medium'>
                         {el.category}
                       </span>
-                      <p className='text-lg'>{el.name}</p>
+                      <p className='text-lg'>{el.product.name}</p>
                     </div>
                     <p className='text-[10px]'>Quantity: {el.quantity}</p>
                   </div>
                   <div className='flex flex-col justify-end'>
-                    <p className='text-xs font-medium'>Dhs {el.price}</p>
+                    <p className='text-xs font-medium'>
+                      Dhs {el.product.buyPrice[el.weightInKg]}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -220,13 +224,7 @@ const Payment = () => {
           </div>
           <div className='border-t border-gray-600 py-2 px-4 flex flex-row items-center justify-between mx-[11.5px] mb-4 md:mx-6'>
             <p className='font-semibold text-gray-700'>Total</p>
-            <p className='font-semibold text-gray-700'>
-              Dhs{' '}
-              {cartItems.reduce(
-                (total, item) => total + item.price * item.quantity,
-                0
-              )}
-            </p>
+            <p className='font-semibold text-gray-700'>Dhs {totalPrice}</p>
           </div>
         </Animated>
       </div>

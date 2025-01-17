@@ -1,54 +1,39 @@
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import { FaCircleInfo } from 'react-icons/fa6'
 import Link from 'next/link'
-
+import { useRouter } from 'next/router'
 import Header from '@/components/layout/Header'
 
-const orders = [
-  {
-    orderId: '1010246',
-    products: '2 Product',
-    status: 'Requested',
-    amount: '$212.50',
-    timestamp: '09:09 AM, 10-10-2024',
-  },
-  {
-    orderId: '1010246',
-    products: '2 Product',
-    status: 'Cancelled',
-    amount: '$212.50',
-    timestamp: '09:09 AM, 10-10-2024',
-  },
-  {
-    orderId: '1010246',
-    products: '2 Product',
-    status: 'Placed',
-    amount: '$212.50',
-    timestamp: '09:09 AM, 10-10-2024',
-  },
-  {
-    orderId: '1010246',
-    products: '2 Product',
-    status: 'OnDelivery',
-    amount: '$212.50',
-    timestamp: '09:09 AM, 10-10-2024',
-  },
-  {
-    orderId: '1010246',
-    products: '2 Product',
-    status: 'Delivered',
-    amount: '$212.50',
-    timestamp: '09:09 AM, 10-10-2024',
-  },
-  {
-    orderId: '1010246',
-    products: '2 Product',
-    status: 'Returned',
-    amount: '$212.50',
-    timestamp: '09:09 AM, 10-10-2024',
-  },
-]
-
 const Orders = () => {
+  const router = useRouter()
+  const [data, setData] = useState([])
+  const [page, setPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const limit = 10
+
+  const fetchOrders = async () => {
+    try {
+      const { data } = await axios.post('/order/all', {
+        page,
+        limit,
+      })
+
+      setTotal(data.total)
+      setData(data.data)
+    } catch (error) {
+      console.error(
+        error?.response?.data?.message ||
+          error.message ||
+          'Something went wrong!'
+      )
+    }
+  }
+
+  useEffect(() => {
+    fetchOrders()
+  }, [page])
+
   return (
     <div>
       <Header pageTitle='Order History' />
@@ -74,46 +59,69 @@ const Orders = () => {
             </tr>
           </thead>
           <tbody>
-            {orders.map((order, index) => (
-              <tr key={index} className='border'>
-                <td className='px-3 py-4 whitespace-nowrap'>
-                  {order.orderId}
-                  <p className='text-xs'>{order.timestamp}</p>
-                </td>
-                <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  {order.products}
-                </td>
-                <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  <div className='border mx-auto rounded-lg w-fit p-2 px-4 text-gray-500'>
-                    {order.status.replace(/([A-Z])/g, ' $1').trim()}
-                  </div>
-                </td>
-                <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  {order.amount}
-                </td>
-                <td className='px-3 py-4 text-primary whitespace-nowrap'>
-                  <Link href={`/profile/orders/${order.orderId}`}>
-                    <FaCircleInfo className='mx-auto text-xl' />
-                  </Link>
+            {data?.length ? (
+              data.map((order, index) => (
+                <tr key={index} className='border'>
+                  <td className='px-3 py-4 whitespace-nowrap'>
+                    {order.id}
+                    <p className='text-xs'>{order.timestamp}</p>
+                  </td>
+                  <td className='px-3 py-4 text-center whitespace-nowrap'>
+                    {order.products.length}
+                  </td>
+                  <td className='px-3 py-4 text-center whitespace-nowrap'>
+                    <div className='border mx-auto rounded-lg w-fit p-2 px-4 text-gray-500'>
+                      {order.orderStatus.replace(/([A-Z])/g, ' $1').trim()}
+                    </div>
+                  </td>
+                  <td className='px-3 py-4 text-center whitespace-nowrap'>
+                    {order.total}
+                  </td>
+                  <td className='px-3 py-4 text-primary whitespace-nowrap'>
+                    <Link href={`/profile/orders/${order.id}`}>
+                      <FaCircleInfo className='mx-auto text-xl' />
+                    </Link>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan='5' className='text-center py-4'>
+                  No orders found.
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
-      <div className='flex flex-row items-center justify-between mt-7 md:px-4'>
-        <p className='text-gray-400'>Showing 1 to 6 of 30 results</p>
+      <div className='flex flex-row items-center justify-between my-7 md:px-4'>
+        <p className='text-gray-400'>
+          Showing{' '}
+          {total === 0
+            ? '0'
+            : `${(page - 1) * limit + 1} to ${Math.min(
+                page * limit,
+                total
+              )}`}{' '}
+          of {total} results
+        </p>
         <div className='flex flex-row items-center gap-2'>
-          <button className='w-7 h-7 flex items-center justify-center rounded-full text-white bg-primary cursor-pointer'>
-            1
-          </button>
-          <button className='w-7 h-7 flex items-center justify-center rounded-full text-primary border border-primary cursor-pointer'>
-            2
-          </button>
-          <span>....</span>
-          <button className='w-7 h-7 flex items-center justify-center rounded-full text-primary border border-primary cursor-pointer'>
-            5
-          </button>
+          {Array.from(
+            { length: Math.ceil(total / limit) },
+            (_, i) => i + 1
+          ).map((pageNumber) => (
+            <button
+              key={pageNumber}
+              onClick={() => setPage(pageNumber)}
+              className={`w-7 h-7 flex items-center justify-center rounded-full ${
+                pageNumber === page
+                  ? 'text-white bg-primary'
+                  : 'text-primary border border-primary'
+              } cursor-pointer`}
+            >
+              {pageNumber}
+            </button>
+          ))}
         </div>
       </div>
     </div>

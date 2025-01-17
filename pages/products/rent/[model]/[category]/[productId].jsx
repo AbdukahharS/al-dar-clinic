@@ -4,79 +4,39 @@ import { useParams } from 'next/navigation'
 import { useRouter } from 'next/router'
 
 import Button from '@/components/Button'
-import dumbbell from '@/public/images/products/dumbbell.webp'
-import sponge from '@/public/images/products/sponge.webp'
-import dumbbellCase from '@/public/images/products/case.webp'
-import handle from '@/public/images/products/handle-ball.webp'
-import weight from '@/public/images/products/weight-ball.webp'
-import kettle from '@/public/images/products/kettle.webp'
 import ProductCarousel from '@/components/carousels/ProductCarousel'
 import Animated from '@/components/Animated'
-
-const products = [
-  {
-    id: 1,
-    name: 'Dumbbell 6Kgs',
-    img: dumbbell,
-    price: 100,
-  },
-  {
-    id: 2,
-    name: 'Sponge Dumbbell',
-    img: sponge,
-    price: 250,
-  },
-  {
-    id: 3,
-    name: 'Portable Case 6 Dumbbells',
-    img: dumbbellCase,
-    price: 100,
-  },
-  {
-    id: 4,
-    name: 'Weight Ball with Handles',
-    img: handle,
-    price: 100,
-  },
-  {
-    id: 5,
-    name: 'Soft Weight Ball',
-    img: weight,
-    price: 100,
-  },
-  {
-    id: 6,
-    name: 'Kettle Dumbbel 2Kg',
-    img: kettle,
-    price: 100,
-  },
-]
+import axios from 'axios'
 
 const ProductPage = () => {
   const [loading, setLoading] = useState(true)
   const [product, setProduct] = useState(null)
   const [quantity, setQuantity] = useState(0)
+  const [type, setType] = useState(null)
 
   const params = useParams()
   const router = useRouter()
 
   useEffect(() => {
-    if (params?.productId) {
+    const fetchProduct = async () => {
       setLoading(true)
-      // Fetch product
-      const res = products.find((p) => p.id == params.productId)
-
-      if (res) {
-        setProduct(res)
-      } else {
-        console.error('not found')
+      try {
+        const res = await axios.get(`/products/${params.productId}`)
+        setProduct(res.data)
+      } catch (error) {
+        console.error('Error fetching product:', error)
+      } finally {
+        setLoading(false)
       }
-      setLoading(false)
     }
-  }, [params])
+
+    if (params?.productId && axios.defaults.headers.common['Authorization']) {
+      fetchProduct()
+    }
+  }, [params, axios.defaults.headers.common['Authorization']])
 
   const handleAddToCard = () => {
-    router.push('/order/rental')
+    router.push(`/order/rental?id=${params.productId}&w=${type}&q=${quantity}`)
   }
 
   return (
@@ -90,25 +50,49 @@ const ProductPage = () => {
         >
           <FaArrowLeft className=' text-black' />
         </Button>
-        {!loading && (
+        {!loading && product && (
           <>
             <div className='flex flex-col md:flex-row gap-14 md:gap-24'>
               <Animated className='md:hidden'>
-                <p>PHYSIOTHERAPY {params.category.toUpperCase()}</p>
-                <h1 className='text-4xl mt-3'>Dumbbell 6Kg</h1>
+                <p>{product?.category.name.toUpperCase()}</p>
+                <h1 className='text-4xl mt-3'>{product.name}</h1>
               </Animated>
               <Animated animationType='fadeInLeft'>
-                <ProductCarousel data={Array(7).fill(product.img)} />
+                <ProductCarousel
+                  data={product.images?.map((img) => img.original) || []}
+                />
               </Animated>
               <Animated className='flex-1'>
                 <div className='hidden md:block'>
-                  <p>PHYSIOTHERAPY {params.category.toUpperCase()}</p>
-                  <h1 className='text-4xl mt-3 mb-8'>Dumbbell 6Kg</h1>
+                  <p>{product?.category.name.toUpperCase()}</p>
+                  <h1 className='text-4xl mt-3 mb-8'>{product.name}</h1>
                 </div>
                 <div>
-                  <p className='text-2xl'>Dhs {product.price}/Day</p>
+                  <p className='text-2xl'>
+                    Dhs{' '}
+                    {type
+                      ? product.buyPrice[type]
+                      : product.buyPrice[Object.keys(product.buyPrice)[0]]}
+                    /Day
+                  </p>
                 </div>
                 <div className='h-[1px] w-full bg-gray-300 my-9'></div>
+                <div className='flex flex-row gap-2 items-center'>
+                  <span>Weight:</span>
+                  {product.weightInKg?.map((weight, i) => (
+                    <span
+                      key={i}
+                      className={`text-xs inline-block py-[6px] px-3 cursor-pointer rounded-full ${
+                        type === weight
+                          ? 'bg-primary text-white'
+                          : 'bg-gray-200 text-black'
+                      }`}
+                      onClick={() => setType(weight)}
+                    >
+                      {weight} KG
+                    </span>
+                  ))}
+                </div>
 
                 <div className='flex flex-row gap-2 items-center mt-5'>
                   <span>Quantity:</span>
@@ -147,15 +131,7 @@ const ProductPage = () => {
             <Animated className='border border-[#BDBDBD] rounded-3xl mt-16'>
               <h3 className='text-3xl m-8'>Product Details</h3>
               <div className='bg-[#BDBDBD] h-[1px] w-full mb-4'></div>
-              <p className='text-xl m-8'>
-                Al Dar Rehabilitation Clinic opened its doors in 2006 and is
-                prevalent as a dedicated post-acute inpatient rehabilitation
-                facility, offering a wide range of rehabilitation and homecare
-                services in the region for more than 16 years of quality care.
-                With a primary focus on providing excellent patient and
-                family-centered care, we provide the entire continuum of
-                post-acute rehabilitation and nursing services.
-              </p>
+              <p className='text-xl m-8'>{product.description}</p>
             </Animated>
           </>
         )}

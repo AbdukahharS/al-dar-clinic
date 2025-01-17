@@ -2,10 +2,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import axios from 'axios'
 import { useEffect } from 'react'
 import {
-  addItem,
-  removeItem,
   clearCart,
-  decrementQuantity as decrementItemQuantity,
   openCart,
   closeCart,
   setCart,
@@ -17,24 +14,22 @@ const useCart = () => {
   const { items, totalQuantity, totalPrice, cartState } = useSelector(
     (state) => state.cart
   )
-  const { isAuthenticated, user } = useAuth()
+  const { isAuthenticated } = useAuth()
 
   const fetchCart = async () => {
     try {
-      const res = await axios.get(`/api/cart/${user.id}`)
-      console.log(res)
+      const res = await axios.get(`/cart`)
+      const cart = await res.data
 
-      // dispatch(setCart(res.data))
+      dispatch(
+        setCart({
+          items: cart.quantity,
+          totalPrice: cart.total,
+          totalQuantity: cart.quantity.length,
+        })
+      )
     } catch (error) {
       console.error('Error fetching cart:', error)
-    }
-  }
-
-  const updateCart = async (cart) => {
-    try {
-      await axios.put(`/api/cart/${user.id}`, cart)
-    } catch (error) {
-      console.error('Error updating cart:', error)
     }
   }
 
@@ -44,24 +39,60 @@ const useCart = () => {
     }
   }, [isAuthenticated])
 
-  const addToCart = (item) => {
-    dispatch(addItem(item))
-    if (isAuthenticated) {
-      updateCart({ items, totalQuantity, totalPrice })
+  const addToCart = async (item) => {
+    try {
+      const res = await axios.post('/cart/add', item)
+      const cart = await res.data
+
+      dispatch(
+        setCart({
+          items: cart.quantity,
+          totalPrice: cart.total,
+          totalQuantity: cart.quantity.length,
+        })
+      )
+    } catch (error) {
+      console.error(error)
     }
   }
 
-  const removeFromCart = (id) => {
-    dispatch(removeItem(id))
-    if (isAuthenticated) {
-      updateCart({ items, totalQuantity, totalPrice })
+  const removeFromCart = async (id) => {
+    try {
+      const res = await axios.delete('/cart/remove', { data: { id: id } })
+      const cart = await res.data
+
+      dispatch(
+        setCart({
+          items: cart.quantity,
+          totalPrice: cart.total,
+          totalQuantity: cart.quantity.length,
+        })
+      )
+    } catch (error) {
+      console.error(error)
     }
   }
 
-  const decrementQuantity = (id) => {
-    dispatch(decrementItemQuantity(id))
-    if (isAuthenticated) {
-      updateCart({ items, totalQuantity, totalPrice })
+  const increment = async (id) => {
+    try {
+      const item = items.find((el) => el.id === id)
+      if (!item) throw new Error('This product is not in the cart')
+      const res = await axios.post('/cart/add', {
+        productId: item.productId,
+        weightInKg: item.weightInKg,
+        quantity: 1,
+      })
+      const cart = await res.data
+
+      dispatch(
+        setCart({
+          items: cart.quantity,
+          totalPrice: cart.total,
+          totalQuantity: cart.quantity.length,
+        })
+      )
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -81,7 +112,7 @@ const useCart = () => {
     totalPrice,
     addToCart,
     removeFromCart,
-    decrementQuantity,
+    increment,
     clear,
     close,
     open,

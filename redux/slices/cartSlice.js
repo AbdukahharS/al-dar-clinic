@@ -82,5 +82,6 @@ export const {
   clearCart,
   openCart,
   closeCart,
+  setCart,
 } = cartSlice.actions
 export default cartSlice.reducer

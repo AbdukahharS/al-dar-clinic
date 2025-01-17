@@ -1,88 +1,57 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { FaCircleInfo, FaRotateRight, FaUser } from 'react-icons/fa6'
 
 import Button from '@/components/Button'
 import axios from 'axios'
-
-const dummyData = [
-  {
-    id: 1,
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    phone: '+1234567890',
-    createdAt: '2025-01-01T10:00:00Z',
-  },
-  {
-    id: 2,
-    name: 'Jane Smith',
-    email: 'jane.smith@example.com',
-    phone: '+1234567891',
-    createdAt: '2025-01-02T11:30:00Z',
-  },
-  {
-    id: 3,
-    name: 'Alice Johnson',
-    email: 'alice.johnson@example.com',
-    phone: '+1234567892',
-    createdAt: '2025-01-03T15:45:00Z',
-  },
-  {
-    id: 4,
-    name: 'Bob Brown',
-    email: 'bob.brown@example.com',
-    phone: '+1234567893',
-    createdAt: '2025-01-04T09:20:00Z',
-  },
-  {
-    id: 5,
-    name: 'Charlie Davis',
-    email: 'charlie.davis@example.com',
-    phone: '+1234567894',
-    createdAt: '2025-01-05T17:10:00Z',
-  },
-]
+import toast from 'react-hot-toast'
 
 const Users = () => {
   const router = useRouter()
   const [data, setData] = useState([])
-  const [sortOrder, setSortOrder] = useState()
+  const [sort, setSort] = useState('asc')
+  const [page, setPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const limit = 10
+  const isInitialRender = useRef(true)
+  const searchParams = useSearchParams()
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get('/users/all')
-      console.log(res)
+      const { data } = await axios.post('/users/filter', {
+        page,
+        limit,
+        sort,
+      })
+
+      setTotal(data.total)
+      setData(data.data)
     } catch (error) {
-      console.log(error)
+      toast.error(
+        error?.response?.data?.errors?.[0]?.message ||
+          error?.response?.data?.message ||
+          error.message ||
+          'Something went wrong. Please refresh the page!'
+      )
     }
   }
 
   useEffect(() => {
-    if (axios.defaults.baseURL) {
-      fetchUsers()
-    }
-  }, [axios.defaults])
+    const storedSort = sessionStorage.getItem('userSort')
+    if (storedSort) setSort(storedSort)
+    setPage(Number(searchParams.get('page')) || 1)
+  }, [searchParams])
 
   useEffect(() => {
-    const storedSortOrder = sessionStorage.getItem('userSort')
-    if (storedSortOrder) {
-      setSortOrder(storedSortOrder)
-      sortData(storedSortOrder)
+    if (isInitialRender.current) {
+      isInitialRender.current = false
+      return
     }
-  }, [])
 
-  const sortData = (order) => {
-    const sortedData = [...dummyData].sort((a, b) => {
-      if (order === 'asc') {
-        return new Date(a.createdAt) - new Date(b.createdAt)
-      } else {
-        return new Date(b.createdAt) - new Date(a.createdAt)
-      }
-    })
-    setData(sortedData)
-    sessionStorage.setItem('userSort', order)
-  }
+    fetchUsers()
+    sessionStorage.setItem('userSort', sort)
+  }, [sort, page])
 
   return (
     <div>
@@ -91,10 +60,9 @@ const Users = () => {
         <div className='flex items-center gap-4'>
           <select
             className='mr-4 p-2 rounded-lg text-primary'
-            value={sortOrder}
+            value={sort}
             onChange={(e) => {
-              setSortOrder(e.target.value)
-              sortData(e.target.value)
+              setSort(e.target.value)
             }}
           >
             <option value='asc'>Ascending</option>
@@ -114,7 +82,7 @@ const Users = () => {
           <thead>
             <tr>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>DP</th>
-              <th className='px-4 py-5 font-medium whitespace-nowrap'>Name</th>
+              <th className='px-4 py-5 font-medium whitespace-nowrap'>ID</th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>Email</th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>Phone</th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
@@ -131,7 +99,7 @@ const Users = () => {
                   </div>
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  {order.name}
+                  {order.id}
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
                   {order.email}
@@ -148,6 +116,32 @@ const Users = () => {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className='flex flex-row items-center justify-between my-7 md:px-4'>
+        <p className='text-gray-400'>
+          Showing{' '}
+          {total === 0
+            ? '0'
+            : `${page * limit - 9} to ${page * limit - 10 + data.length}`}{' '}
+          of {total} results
+        </p>
+        <div className='flex flex-row items-center gap-2'>
+          {Array.from({ length: Math.ceil(total / limit) }, (_, i) => i + 1)
+            .filter((pageNumber) => pageNumber !== page)
+            .map((pageNumber) => (
+              <button
+                key={pageNumber}
+                onClick={() => router.push('/admin/users/?page=' + pageNumber)}
+                className={`w-7 h-7 flex items-center justify-center rounded-full ${
+                  pageNumber === page
+                    ? 'text-white bg-primary'
+                    : 'text-primary border border-primary'
+                } cursor-pointer`}
+              >
+                {pageNumber}
+              </button>
+            ))}
+        </div>
       </div>
     </div>
   )

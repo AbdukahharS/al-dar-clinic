@@ -4,105 +4,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 import Button from '@/components/Button'
-
-const rentalOrders = [
-  {
-    orderId: '1010246',
-    productName: 'Laptop',
-    quantity: 2,
-    status: 'Requested',
-    amount: '$212.50',
-    timestamp: '09:09 AM, 10-10-2024',
-  },
-  {
-    orderId: '1010247',
-    productName: 'Smartphone',
-    quantity: 3,
-    status: 'Cancelled',
-    amount: '$312.50',
-    timestamp: '10:10 AM, 11-11-2024',
-  },
-  {
-    orderId: '1010248',
-    productName: 'Headphones',
-    quantity: 1,
-    status: 'Placed',
-    amount: '$112.50',
-    timestamp: '11:11 AM, 12-12-2024',
-  },
-  {
-    orderId: '1010249',
-    productName: 'Tablet',
-    quantity: 4,
-    status: 'Delivered',
-    amount: '$412.50',
-    timestamp: '12:12 PM, 01-01-2025',
-  },
-  {
-    orderId: '1010250',
-    productName: 'Camera',
-    quantity: 5,
-    status: 'Complete',
-    amount: '$512.50',
-    timestamp: '01:01 PM, 02-02-2025',
-  },
-  {
-    orderId: '1010251',
-    productName: 'Smartwatch',
-    quantity: 6,
-    status: 'Failed',
-    amount: '$612.50',
-    timestamp: '02:02 PM, 03-03-2025',
-  },
-  {
-    orderId: '1010252',
-    productName: 'Gaming Console',
-    quantity: 2,
-    status: 'PickedUp',
-    amount: '$422.50',
-    timestamp: '03:03 PM, 04-04-2025',
-  },
-  {
-    orderId: '1010253',
-    productName: 'Bluetooth Speaker',
-    quantity: 3,
-    status: 'ForPacking',
-    amount: '$322.50',
-    timestamp: '04:04 PM, 05-05-2025',
-  },
-  {
-    orderId: '1010254',
-    productName: 'Keyboard',
-    quantity: 1,
-    status: 'Packed',
-    amount: '$122.50',
-    timestamp: '05:05 PM, 06-06-2025',
-  },
-  {
-    orderId: '1010255',
-    productName: 'Monitor',
-    quantity: 4,
-    status: 'OnDelivery',
-    amount: '$422.50',
-    timestamp: '06:06 PM, 07-07-2025',
-  },
-  {
-    orderId: '1010256',
-    productName: 'Mouse',
-    quantity: 5,
-    status: 'ToReturn',
-    amount: '$522.50',
-    timestamp: '07:07 PM, 08-08-2025',
-  },
-  {
-    orderId: '1010257',
-    productName: 'Router',
-    quantity: 6,
-    status: 'Returned',
-    amount: '$622.50',
-    timestamp: '08:08 PM, 09-09-2025',
-  },
-]
+import toast from 'react-hot-toast'
+import axios from 'axios'
 
 const statusOptions = [
   'Requested',
@@ -120,47 +23,53 @@ const statusOptions = [
 ]
 
 const RentalOrders = () => {
-  const router = useRouter
-  const [data, setData] = useState(rentalOrders)
+  const router = useRouter()
+  const [data, setData] = useState([])
   const [filter, setFilter] = useState('all')
   const [sort, setSort] = useState('asc')
-  const isInitialRender = useRef(true) // Ref to track initial render
+  const [page, setPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const limit = 10
+  const isInitialRender = useRef(true)
+
+  const fetchRentals = async () => {
+    try {
+      const { data } = await axios.post('/rent/filter', {
+        page,
+        limit,
+        status: filter !== 'all' ? filter : undefined,
+        sort,
+      })
+
+      setTotal(data.total)
+      setData(data.data)
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.errors?.[0]?.message ||
+          error?.response?.data?.message ||
+          error.message ||
+          'Something went wrong. Please refresh the page!'
+      )
+    }
+  }
 
   useEffect(() => {
     const storedFilter = sessionStorage.getItem('rentalOrderFilter')
     const storedSort = sessionStorage.getItem('rentalOrderSort')
-
     if (storedFilter) setFilter(storedFilter)
     if (storedSort) setSort(storedSort)
   }, [])
 
   useEffect(() => {
     if (isInitialRender.current) {
-      // Skip the effect on the initial render
       isInitialRender.current = false
       return
     }
 
-    const filteredData = rentalOrders.filter((order) => {
-      if (filter === 'all') {
-        return true
-      } else {
-        return order.status === filter
-      }
-    })
-
-    const sortedData = [...filteredData].sort((a, b) => {
-      if (sort === 'asc') {
-        return new Date(a.timestamp) - new Date(b.timestamp)
-      } else {
-        return new Date(b.timestamp) - new Date(a.timestamp)
-      }
-    })
-
-    setData(sortedData)
+    fetchRentals()
     sessionStorage.setItem('rentalOrderFilter', filter)
     sessionStorage.setItem('rentalOrderSort', sort)
-  }, [filter, sort])
+  }, [filter, sort, page])
 
   return (
     <div>
@@ -223,43 +132,46 @@ const RentalOrders = () => {
             </tr>
           </thead>
           <tbody>
-            {data.map(
-              (order, index) =>
-                index < 6 && (
-                  <tr key={index} className='border'>
-                    <td className='px-3 py-4 whitespace-nowrap text-center'>
-                      {order.orderId}
-                      <p className='text-xs'>{order.timestamp}</p>
-                    </td>
-                    <td className='px-3 py-4 whitespace-nowrap text-center'>
-                      {order.productName}
-                    </td>
-                    <td className='px-3 py-4 text-center whitespace-nowrap'>
-                      {order.quantity}
-                    </td>
-                    <td className='px-3 py-4 text-center whitespace-nowrap'>
-                      <div className='border mx-auto rounded-lg w-fit p-2 px-4 text-gray-500'>
-                        {order.status.replace(/([A-Z])/g, ' $1').trim()}
-                      </div>
-                    </td>
-                    <td className='px-3 py-4 text-center whitespace-nowrap'>
-                      {order.amount}
-                    </td>
-                    <td className='px-3 py-4 text-primary whitespace-nowrap'>
-                      <Link href={`/admin/rentals/${order.orderId}`}>
-                        <FaCircleInfo className='mx-auto text-xl' />
-                      </Link>
-                    </td>
-                  </tr>
-                )
+            {data?.length ? (
+              data.map(
+                (order, index) =>
+                  index < 6 && (
+                    <tr key={index} className='border'>
+                      <td className='px-3 py-4 whitespace-nowrap text-center'>
+                        {order.id}
+                        <p className='text-xs'>{order.timestamp}</p>
+                      </td>
+                      <td className='px-3 py-4 whitespace-nowrap text-center'>
+                        {order.product.name}
+                      </td>
+                      <td className='px-3 py-4 text-center whitespace-nowrap'>
+                        {order.quantity}
+                      </td>
+                      <td className='px-3 py-4 text-center whitespace-nowrap'>
+                        <div className='border mx-auto rounded-lg w-fit p-2 px-4 text-gray-500'>
+                          {order.orderStatus.replace(/([A-Z])/g, ' $1').trim()}
+                        </div>
+                      </td>
+                      <td className='px-3 py-4 text-center whitespace-nowrap'>
+                        {order.quantity}
+                      </td>
+                      <td className='px-3 py-4 text-primary whitespace-nowrap'>
+                        <Link href={`/admin/rentals/${order.id}`}>
+                          <FaCircleInfo className='mx-auto text-xl' />
+                        </Link>
+                      </td>
+                    </tr>
+                  )
+              )
+            ) : (
+              <tr></tr>
             )}
           </tbody>
         </table>
       </div>
       <div className='flex flex-row items-center justify-between mt-7 md:px-4'>
         <p className='text-gray-400'>
-          Showing {data.length == 12 ? '6' : data.length} of{' '}
-          {rentalOrders.length} results
+          Showing {data.length == 12 ? '6' : data.length} of {total} results
         </p>
       </div>
     </div>

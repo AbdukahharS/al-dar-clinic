@@ -62,11 +62,7 @@ const Adresses = () => {
     const onDelete = async (tId) => {
       setLoading(true)
       try {
-        await axios.put(`/address/${id}`, {
-          headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImIzZTkxYjE5LWJiYmYtNGFiMy1hOTVlLTA0OTJjNzQxMjNhOSIsImlhdCI6MTczNjY0NTkzOSwiZXhwIjoxNzM3OTQxOTM5fQ.mqWrY8mwwiyvyTZdKcXMIkAhYaHRyItBFZUET85qAfw`,
-          },
-        })
+        await axios.put(`/address/${id}`)
 
         toast.success('Address is Deleted!')
         setAddresses((prev) => {
@@ -206,6 +202,7 @@ const Adresses = () => {
         setOpen={setOpen}
         setAddresses={setAddresses}
         address={address}
+        setAddress={setAddress}
       />
     </div>
   )
