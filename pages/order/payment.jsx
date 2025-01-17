@@ -27,11 +27,6 @@ const Payment = () => {
     let orderId = null
 
     try {
-      // console.log({
-      //   addressId: searchParams.get('address'),
-      //   quantityIds: items.map((el) => el.id),
-      // })
-
       const res = await axios.post('/order/create', {
         addressId: searchParams.get('address'),
         quantityIds: items.map((el) => el.id),
