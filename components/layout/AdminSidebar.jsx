@@ -21,6 +21,7 @@ import { motion } from 'framer-motion'
 
 import logo from '@/public/icons/final-logo.svg'
 import confirm from '../Confirm'
+import useAuth from '@/hooks/useAuth'
 
 const links = [
   {
@@ -90,6 +91,7 @@ const AdminSidebar = () => {
   const [open, setOpen] = useState()
   const [shouldAnimate, setShouldAnimate] = useState(true)
   const router = useRouter()
+  const { logoutUser } = useAuth()
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 767px)')
@@ -108,8 +110,8 @@ const AdminSidebar = () => {
 
   const handleLogout = () => {
     const redirect = () => {
+      logoutUser()
       router.push('/admin/auth/login')
-      toast.success('You are logged out!')
     }
     confirm('Logout', 'Are you sure you want to log out?', 'Logout', redirect)
   }
