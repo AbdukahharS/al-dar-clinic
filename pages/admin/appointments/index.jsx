@@ -15,7 +15,6 @@ const Appointments = () => {
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const limit = 10
-  const isInitialRender = useRef(true)
 
   const fetchAppointments = async () => {
     try {
@@ -45,11 +44,6 @@ const Appointments = () => {
   }, [])
 
   useEffect(() => {
-    if (isInitialRender.current) {
-      isInitialRender.current = false
-      return
-    }
-
     fetchAppointments()
     sessionStorage.setItem('appointmentFilter', filter)
     sessionStorage.setItem('appointmentSort', sort)

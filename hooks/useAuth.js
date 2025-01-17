@@ -20,42 +20,47 @@ const useAuth = () => {
 
   // Check localStorage for userId and userToken
   const initializeAuth = async () => {
-    if (!isAuthenticated) {
-      const userId =
-        localStorage.getItem('userId') || sessionStorage.getItem('userId')
-      const userToken =
-        localStorage.getItem('userToken') || sessionStorage.getItem('userToken')
+    const userId =
+      localStorage.getItem('userId') || sessionStorage.getItem('userId')
+    const userToken =
+      localStorage.getItem('userToken') || sessionStorage.getItem('userToken')
 
-      if (userId && userToken) {
-        dispatch(startLoading('user'))
-        try {
-          const res = await axios.get(`/users/${userId}`, {
-            headers: {
-              Authorization: userToken,
-            },
-          })
+    if (userId && userToken) {
+      dispatch(startLoading('user'))
+      try {
+        const res = await axios.get(`/users/${userId}`, {
+          headers: {
+            Authorization: userToken,
+          },
+        })
 
-          // Assuming the response contains user data
-          axios.defaults.headers.common.Authorization = userToken
-          dispatch(loginUser(res.data))
-        } catch (error) {
-          console.error('Error fetching user information:', error)
-          dispatch(logout())
-        } finally {
-          dispatch(endLoading('user'))
-        }
+        console.log(3)
+
+        axios.defaults.headers.common.Authorization = userToken
+        dispatch(loginUser(res.data))
+      } catch (error) {
+        console.error('Error fetching user information:', error)
+        dispatch(logout())
+      } finally {
+        dispatch(endLoading('user'))
       }
     }
-    dispatch(endLoading('user'))
   }
 
   useEffect(() => {
-    if (axios.defaults.baseURL === process.env.NEXT_PUBLIC_API_URL) {
+    console.log(axios.defaults.baseURL)
+
+    if (
+      axios.defaults.baseURL === process.env.NEXT_PUBLIC_API_URL &&
+      !isAuthenticated
+    ) {
+      console.log(2)
+
       initializeAuth()
     }
-  }, [])
+  }, [axios.defaults.baseURL, isAuthenticated])
 
-  const login = async (credentials) => {
+  const login = async (credentials, path) => {
     dispatch(startLoading('login'))
     try {
       // API call to authenticate the user
@@ -79,7 +84,7 @@ const useAuth = () => {
 
       // Show success message and redirect
       toast.success('Congrats! You have successfully logged in')
-      router.push('/')
+      router.push(path || '/')
     } catch (error) {
       console.error('Login error:', error)
       toast.error(

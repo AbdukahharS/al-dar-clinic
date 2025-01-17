@@ -28,8 +28,7 @@ const Login = () => {
   } = useForm()
 
   const onSubmit = async (data) => {
-    await login(data)
-    router.push('/admin/dashboard')
+    await login(data, '/admin/dashboard')
   }
 
   // State to toggle password visibility

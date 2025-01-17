@@ -13,6 +13,9 @@ import SideBar from '@/components/SideBar'
 import useAuth from '@/hooks/useAuth'
 import AdminSidebar from '@/components/layout/AdminSidebar'
 
+axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL
+axios.defaults.headers['x-api-key'] = process.env.NEXT_PUBLIC_API_KEY
+
 export default function App({ Component, pageProps }) {
   return (
     <Provider store={store}>
@@ -26,13 +29,6 @@ const Layout = ({ Component, pageProps }) => {
   const path = usePathname()
   const { isAuthenticated, loading } = useAuth()
   const router = useRouter()
-
-  useEffect(() => {
-    if (process.env.NEXT_PUBLIC_API_URL) {
-      axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL
-      axios.defaults.headers['x-api-key'] = process.env.NEXT_PUBLIC_API_KEY
-    }
-  }, [])
 
   const fetchStats = async () => {
     try {
@@ -54,7 +50,7 @@ const Layout = ({ Component, pageProps }) => {
     ) {
       fetchStats()
     }
-  }, [axios.defaults, isAuthenticated])
+  }, [axios.defaults.baseURL, isAuthenticated])
 
   useEffect(() => {
     if (

@@ -14,7 +14,6 @@ const Users = () => {
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const limit = 10
-  const isInitialRender = useRef(true)
   const searchParams = useSearchParams()
 
   const fetchUsers = async () => {
@@ -44,11 +43,6 @@ const Users = () => {
   }, [searchParams])
 
   useEffect(() => {
-    if (isInitialRender.current) {
-      isInitialRender.current = false
-      return
-    }
-
     fetchUsers()
     sessionStorage.setItem('userSort', sort)
   }, [sort, page])

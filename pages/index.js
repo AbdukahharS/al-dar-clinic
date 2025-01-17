@@ -76,17 +76,6 @@ export default function Home() {
       'علاج الألم',
     ],
   }
-  // const team = [
-  //   {
-  //     name: 'Dr. Mohammed',
-  //     desc: 'Founder and CEO of Al - Dar',
-  //     img: Mohammed,
-  //   },
-  //   { name: 'Dr. Alex Elizabeth', desc: 'Al - Dar', img: Alex },
-  //   { name: 'Dr. Nauf AlBendar', desc: 'Al - Dar', img: Nauf },
-  //   { name: 'Dr. Abdul', desc: 'Al - Dar', img: Abdul },
-  //   { name: 'Dr. Varalakshmi Dillibabu', desc: 'Al - Dar', img: Othman },
-  // ]
 
   return (
     <main className='w-full'>
