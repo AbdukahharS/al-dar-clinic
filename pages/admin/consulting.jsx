@@ -20,10 +20,13 @@ const ConsultingServicesManagement = () => {
   }
 
   useEffect(() => {
-    if (axios.defaults.baseURL) {
+    if (
+      axios.defaults.baseURL &&
+      axios.defaults.headers.common['Authorization']
+    ) {
       fetchServices()
     }
-  }, [axios.defaults])
+  }, [axios.defaults.baseURL, axios.defaults.headers.common['Authorization']])
 
   const {
     register,

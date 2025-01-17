@@ -81,10 +81,13 @@ const Dashboard = () => {
   }
 
   useEffect(() => {
-    if (axios.defaults.baseURL) {
+    if (
+      axios.defaults.baseURL &&
+      axios.defaults.headers.common['Authorization']
+    ) {
       fetchStats()
     }
-  }, [axios.defaults])
+  }, [axios.defaults.baseURL, axios.defaults.headers.common['Authorization']])
   return (
     <div>
       <div className='bg-primary text-white px-8 md:px-20 py-8 flex justify-between items-center'>

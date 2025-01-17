@@ -21,10 +21,13 @@ const LocationManagement = () => {
   }
 
   useEffect(() => {
-    if (axios.defaults.baseURL) {
+    if (
+      axios.defaults.baseURL &&
+      axios.defaults.headers.common['Authorization']
+    ) {
       fetchLocations()
     }
-  }, [axios.defaults])
+  }, [axios.defaults.baseURL, axios.defaults.headers.common['Authorization']])
 
   const {
     register,

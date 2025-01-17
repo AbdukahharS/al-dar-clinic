@@ -48,16 +48,13 @@ const useAuth = () => {
   }
 
   useEffect(() => {
-    console.log(axios.defaults.baseURL)
-
     if (
       axios.defaults.baseURL === process.env.NEXT_PUBLIC_API_URL &&
       !isAuthenticated
     ) {
-      console.log(2)
-
       initializeAuth()
     }
+    dispatch(endLoading('user'))
   }, [axios.defaults.baseURL, isAuthenticated])
 
   const login = async (credentials, path) => {

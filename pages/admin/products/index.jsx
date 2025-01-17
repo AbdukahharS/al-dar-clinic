@@ -39,8 +39,10 @@ const Products = () => {
   }
 
   useEffect(() => {
-    fetchProducts()
-  }, [page, filter, sort])
+    if (axios.defaults.headers.common['Authorization']) {
+      fetchProducts()
+    }
+  }, [page, filter, sort, [axios.defaults.headers.common['Authorization']]])
 
   useEffect(() => {
     const storedFilter = sessionStorage.getItem('productFilter')

@@ -30,7 +30,6 @@ const RentalOrders = () => {
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const limit = 10
-  const isInitialRender = useRef(true)
 
   const fetchRentals = async () => {
     try {
@@ -61,15 +60,12 @@ const RentalOrders = () => {
   }, [])
 
   useEffect(() => {
-    if (isInitialRender.current) {
-      isInitialRender.current = false
-      return
+    if (axios.defaults.headers.common['Authorization']) {
+      fetchRentals()
     }
-
-    fetchRentals()
     sessionStorage.setItem('rentalOrderFilter', filter)
     sessionStorage.setItem('rentalOrderSort', sort)
-  }, [filter, sort, page])
+  }, [filter, sort, page, axios.defaults.headers.common['Authorization']])
 
   return (
     <div>

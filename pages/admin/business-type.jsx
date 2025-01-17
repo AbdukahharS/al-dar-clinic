@@ -32,8 +32,10 @@ const BusinessType = () => {
         console.error('Failed to fetch business types:', error)
       }
     }
-    fetchBusinessTypes()
-  }, [])
+    if (axios.defaults.headers.common['Authorization']) {
+      fetchBusinessTypes()
+    }
+  }, [axios.defaults.headers.common['Authorization']])
 
   const handleAdd = async (data) => {
     const formData = new FormData()

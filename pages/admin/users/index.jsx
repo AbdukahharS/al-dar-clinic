@@ -43,9 +43,11 @@ const Users = () => {
   }, [searchParams])
 
   useEffect(() => {
-    fetchUsers()
+    if (axios.defaults.headers.common['Authorization']) {
+      fetchUsers()
+    }
     sessionStorage.setItem('userSort', sort)
-  }, [sort, page])
+  }, [sort, page, axios.defaults.headers.common['Authorization']])
 
   return (
     <div>

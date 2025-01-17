@@ -39,9 +39,11 @@ const CategoryManagement = () => {
       }
     }
 
-    fetchBusinessTypes()
-    fetchCategories()
-  }, [])
+    if (axios.defaults.headers.common['Authorization']) {
+      fetchBusinessTypes()
+      fetchCategories()
+    }
+  }, [axios.defaults.headers.common['Authorization']])
 
   // Add or update a category
   const handleAddOrUpdate = async (data) => {

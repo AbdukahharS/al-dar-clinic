@@ -44,10 +44,12 @@ const Appointments = () => {
   }, [])
 
   useEffect(() => {
-    fetchAppointments()
+    if (axios.defaults.headers.common['Authorization']) {
+      fetchAppointments()
+    }
     sessionStorage.setItem('appointmentFilter', filter)
     sessionStorage.setItem('appointmentSort', sort)
-  }, [filter, sort, page])
+  }, [filter, sort, page, axios.defaults.headers.common['Authorization']])
 
   const handlePageChange = (newPage) => {
     setPage(newPage)
