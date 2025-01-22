@@ -1,10 +1,8 @@
+import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
 import Card from '@/components/Card'
-import b2b from '@/public/images/b2b.webp'
-import b2c from '@/public/images/b2c.webp'
 import Animated from '@/components/Animated'
-import axios from 'axios'
 
 const ProductsHome = () => {
   const [business, setBusiness] = useState([])

@@ -45,19 +45,27 @@ const Layout = ({ Component, pageProps }) => {
     if (
       axios.defaults.baseURL &&
       isAuthenticated &&
+      axios.defaults.headers.common['Authorization'] &&
       path?.startsWith('/admin') &&
       !path?.startsWith('/admin/auth')
     ) {
       fetchStats()
     }
-  }, [axios.defaults.baseURL, isAuthenticated])
+  }, [
+    axios.defaults.baseURL,
+    isAuthenticated,
+    axios.defaults.headers.common['Authorization'],
+  ])
 
   useEffect(() => {
     if (
       !isAuthenticated &&
       path?.startsWith('/admin') &&
       !path?.startsWith('/admin/auth') &&
-      !loading?.user
+      !loading?.user &&
+      !(
+        localStorage.getItem('userToken') || sessionStorage.getItem('userToken')
+      )
     ) {
       router.push('/admin/auth/login')
     }
@@ -65,7 +73,7 @@ const Layout = ({ Component, pageProps }) => {
     if (path === '/admin/auth') router.push('/admin/auth/login')
 
     if (path === '/admin') router.push('/admin/dashboard')
-  }, [path, isAuthenticated])
+  }, [path, isAuthenticated, loading?.user])
 
   return (
     <div className='min-h-screen flex flex-col'>
