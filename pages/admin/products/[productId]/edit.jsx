@@ -1,4 +1,4 @@
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { FaArrowLeft, FaPlus, FaTrash } from 'react-icons/fa6'
 import { useForm, Controller } from 'react-hook-form'
@@ -11,6 +11,7 @@ import Button from '@/components/Button'
 const EditProduct = () => {
   const isInitialRender = useRef(true)
   const router = useRouter()
+  const params = useParams()
   const [categories, setCategories] = useState([])
 
   const {
@@ -20,8 +21,6 @@ const EditProduct = () => {
     setValue,
     formState: { errors },
   } = useForm()
-
-  const productId = 1 // Replace with dynamic ID from route params or props
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -35,9 +34,10 @@ const EditProduct = () => {
     }
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`/products/${productId}`)
+        const response = await axios.get(`/products/${params.productId}`)
         const product = response.data
 
+        // Set the product's field values
         setValue('productName', product.name)
         setValue('productType', product.productType)
         setValue('productCategory', product.category.id)
@@ -55,6 +55,28 @@ const EditProduct = () => {
         )
         setValue('weightInKg', product.weightInKg.join(','))
         setValue('productDescription', product.description)
+
+        if (product.images && product.images.length > 0) {
+          const imageFiles = product.images.map((image) => {
+            return fetch(image.original) // Fetch the image from the URL (if URL is used)
+              .then((res) => res.blob())
+              .then(
+                (blob) =>
+                  new File([blob], image.original.split('/').pop(), {
+                    type: blob.type,
+                  })
+              )
+          })
+
+          Promise.all(imageFiles)
+            .then((files) => {
+              setValue('productImages', files)
+            })
+            .catch((err) => {
+              console.error('Error fetching images:', err)
+              toast.error('Failed to load product images')
+            })
+        }
       } catch (error) {
         console.error('Error fetching product:', error)
         toast.error('Failed to load product details')
@@ -64,13 +86,19 @@ const EditProduct = () => {
     if (
       isInitialRender.current &&
       axios.defaults.baseURL &&
-      axios.defaults.headers.common['Authorization']
+      axios.defaults.headers.common['Authorization'] &&
+      params.productId
     ) {
       fetchProduct()
       fetchCategories()
       isInitialRender.current = false
     }
-  }, [setValue])
+  }, [
+    setValue,
+    axios.defaults.baseURL,
+    axios.defaults.headers.common['Authorization'],
+    params,
+  ])
 
   const validateMultipleFields = (quantity, price, weight) => {
     const hasValidNumbers = (input) => {
@@ -132,7 +160,7 @@ const EditProduct = () => {
     }
 
     try {
-      await axios.put(`/products/${productId}`, formData, {
+      await axios.put(`/products/${params.productId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -422,6 +450,10 @@ const EditProduct = () => {
             <textarea
               {...register('productDescription', {
                 required: 'Product Description is required',
+                validate: (value) =>
+                  value.length >= 10
+                    ? true
+                    : 'Description must be at least 10 characters long',
               })}
               className={`mt-1 block w-full border p-2 ${
                 errors.productDescription ? 'border-red-500' : 'border-gray-300'

@@ -367,6 +367,10 @@ const CreateProduct = () => {
             <textarea
               {...register('productDescription', {
                 required: 'Product Description is required',
+                validate: (value) =>
+                  value.length >= 10
+                    ? true
+                    : 'Description must be at least 10 characters long',
               })}
               className={`mt-1 block w-full border p-2 ${
                 errors.productDescription ? 'border-red-500' : 'border-gray-300'

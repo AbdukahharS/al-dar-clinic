@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState, useRef } from 'react'
 import { FaCircleInfo, FaPen, FaRotateRight, FaTrashCan } from 'react-icons/fa6'
 import axios from 'axios'
@@ -7,13 +7,15 @@ import toast from 'react-hot-toast'
 
 import Button from '@/components/Button'
 import confirm from '@/components/Confirm'
+import useAuth from '@/hooks/useAuth'
 
 const Products = () => {
   const router = useRouter()
+  const { isAuthenticated } = useAuth()
   const [data, setData] = useState([])
   const [filter, setFilter] = useState('all')
   const [sort, setSort] = useState('asc')
-  const [page, setPage] = useState(1)
+  const searchParams = useSearchParams()
   const [total, setTotal] = useState(0)
   const limit = 12
   const isInitialRender = useRef(true) // Ref to track initial render
@@ -21,11 +23,13 @@ const Products = () => {
   const fetchProducts = async () => {
     try {
       const { data } = await axios.post('/products/filter', {
-        page,
+        page: searchParams.get('page') || 1,
         limit,
         productType: filter !== 'all' ? filter.toUpperCase() : undefined,
         sort,
       })
+
+      console.log(data)
 
       setTotal(data.total)
       setData(data.data)
@@ -39,10 +43,10 @@ const Products = () => {
   }
 
   useEffect(() => {
-    if (axios.defaults.headers.common['Authorization']) {
+    if (axios.defaults.headers.common['Authorization'] && isAuthenticated) {
       fetchProducts()
     }
-  }, [page, filter, sort, [axios.defaults.headers.common['Authorization']]])
+  }, [searchParams, filter, sort, isAuthenticated])
 
   useEffect(() => {
     const storedFilter = sessionStorage.getItem('productFilter')
@@ -85,8 +89,8 @@ const Products = () => {
     setPage(newPage)
   }
 
-  const showingFrom = (page - 1) * limit + 1
-  const showingTo = Math.min(page * limit, total)
+  const showingFrom = ((searchParams.get('page') || 1) - 1) * limit + 1
+  const showingTo = Math.min((searchParams.get('page') || 1) * limit, total)
 
   return (
     <div>
@@ -147,7 +151,7 @@ const Products = () => {
           <tbody>
             {data.map((order, index) => (
               <tr key={index} className='border'>
-                <td className='px-3 py-4 whitespace-nowrap text-center'>
+                <td className='px-3 py-4 whitespace-nowrap text-center max-w-xs overflow-hidden'>
                   {order.name}
                 </td>
                 <td className='px-3 py-4 whitespace-nowrap text-center'>
@@ -194,7 +198,9 @@ const Products = () => {
         </p>
         <div className='flex flex-row items-center gap-2'>
           {Array.from({ length: Math.ceil(total / limit) }, (_, i) => i + 1)
-            .filter((pageNumber) => pageNumber !== page)
+            .filter(
+              (pageNumber) => pageNumber !== (searchParams.get('page') || 1)
+            )
             .map((pageNumber) => (
               <button
                 key={pageNumber}
