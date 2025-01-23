@@ -29,8 +29,6 @@ const Products = () => {
         sort,
       })
 
-      console.log(data)
-
       setTotal(data.total)
       setData(data.data)
     } catch (error) {

@@ -126,7 +126,7 @@ const CategoryManagement = () => {
   }
 
   return (
-    <div>
+    <div className='pb-20'>
       <div className='bg-primary text-white px-8 md:px-20 py-8 flex justify-between items-center'>
         <h1 className='text-2xl font-medium'>Category Management</h1>
       </div>
@@ -145,12 +145,7 @@ const CategoryManagement = () => {
           {categories.map((category, index) => (
             <tr key={index} className='border-b'>
               <td className='px-4 py-2'>{category.name}</td>
-              <td className='px-4 py-2'>
-                {
-                  businessTypes?.find((b) => b.id === category.businessType.id)
-                    ?.orderType
-                }
-              </td>
+              <td className='px-4 py-2'>{category.businessType.orderType}</td>
               <td className='px-4 py-2 text-center'>
                 {category.businessType.name}
               </td>

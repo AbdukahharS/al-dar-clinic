@@ -11,6 +11,7 @@ import toast from 'react-hot-toast'
 const CreateProduct = () => {
   const router = useRouter()
   const [categories, setCategories] = useState([])
+  const [type, setType] = useState(null)
 
   const {
     register,
@@ -147,6 +148,7 @@ const CreateProduct = () => {
                 <input
                   type='radio'
                   value='Buy'
+                  onClick={() => setType('BUY')}
                   {...register('productType', {
                     required: 'Product Type is required',
                   })}
@@ -160,6 +162,7 @@ const CreateProduct = () => {
                 <input
                   type='radio'
                   value='Rent'
+                  onClick={() => setType('RENT')}
                   {...register('productType', {
                     required: 'Product Type is required',
                   })}
@@ -193,11 +196,15 @@ const CreateProduct = () => {
               } rounded-md shadow-sm sm:text-sm`}
             >
               <option value=''>Select a category</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
+              {categories
+                .filter((category) =>
+                  !type ? true : category.businessType.orderType === type
+                )
+                .map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
             </select>
             {errors.productCategory && (
               <motion.p

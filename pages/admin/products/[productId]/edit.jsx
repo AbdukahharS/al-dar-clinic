@@ -13,6 +13,7 @@ const EditProduct = () => {
   const router = useRouter()
   const params = useParams()
   const [categories, setCategories] = useState([])
+  const [type, setType] = useState('BUY')
 
   const {
     register,
@@ -40,6 +41,7 @@ const EditProduct = () => {
         // Set the product's field values
         setValue('productName', product.name)
         setValue('productType', product.productType)
+        setType(product.productType)
         setValue('productCategory', product.category.id)
         setValue(
           'stockQuantity',
@@ -222,6 +224,7 @@ const EditProduct = () => {
                 <input
                   type='radio'
                   value='BUY'
+                  onClick={() => setType('BUY')}
                   {...register('productType', {
                     required: 'Product Type is required',
                   })}
@@ -235,6 +238,7 @@ const EditProduct = () => {
                 <input
                   type='radio'
                   value='RENT'
+                  onClick={() => setType('RENT')}
                   {...register('productType', {
                     required: 'Product Type is required',
                   })}
@@ -269,11 +273,15 @@ const EditProduct = () => {
               } rounded-md shadow-sm sm:text-sm`}
             >
               <option value=''>Select a category</option>
-              {categories.map((el) => (
-                <option value={el.id} key={el.id}>
-                  {el.name}
-                </option>
-              ))}
+              {categories
+                .filter((c) =>
+                  !type ? true : c.businessType.orderType === type
+                )
+                .map((el) => (
+                  <option value={el.id} key={el.id}>
+                    {el.name}
+                  </option>
+                ))}
             </select>
             {errors.productCategory && (
               <motion.p
