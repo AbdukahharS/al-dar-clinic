@@ -25,7 +25,12 @@ const useAuth = () => {
     const userToken =
       localStorage.getItem('userToken') || sessionStorage.getItem('userToken')
 
-    if (userId && userToken) {
+    if (
+      userId &&
+      userToken &&
+      userId !== 'undefined' &&
+      userToken !== 'undefined'
+    ) {
       dispatch(startLoading('user'))
       try {
         const res = await axios.get(`/users/${userId}`, {
@@ -33,8 +38,6 @@ const useAuth = () => {
             Authorization: userToken,
           },
         })
-
-        console.log(3)
 
         axios.defaults.headers.common.Authorization = userToken
         dispatch(loginUser(res.data))
@@ -86,6 +89,7 @@ const useAuth = () => {
       console.error('Login error:', error)
       toast.error(
         error?.response?.data?.message ||
+          error.message ||
           'Something went wrong with login. Please, try again!'
       )
     } finally {
@@ -124,6 +128,7 @@ const useAuth = () => {
       console.error('Login with phone error:', error)
       toast.error(
         error?.response?.data?.message ||
+          error.message ||
           'Something went wrong with login. Please, try again!'
       )
     } finally {
@@ -304,6 +309,10 @@ const useAuth = () => {
     }
   }
 
+  const addPFP = (data) => {
+    dispatch(loginUser(data))
+  }
+
   return {
     isAuthenticated,
     user,
@@ -320,6 +329,7 @@ const useAuth = () => {
     forgotPassword,
     loginWithPhone,
     updateUser,
+    addPFP,
   }
 }
 
