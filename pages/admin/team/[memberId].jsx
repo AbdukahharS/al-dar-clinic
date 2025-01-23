@@ -6,10 +6,12 @@ import { motion } from 'framer-motion'
 import axios from 'axios'
 import Button from '@/components/Button'
 import Image from 'next/image'
+import useAuth from '@/hooks/useAuth'
 
 const EditTeamMember = () => {
   const router = useRouter()
   const { memberId } = router.query
+  const { isAuthenticated } = useAuth()
 
   const {
     register,
@@ -27,15 +29,25 @@ const EditTeamMember = () => {
 
         setValue('name', data.name)
         setValue('position', data.position)
+        const imageFile = await fetch(data.image.original) // Fetch the image from the URL (if URL is used)
+          .then((res) => res.blob())
+          .then(
+            (blob) =>
+              new File([blob], data.image.original.split('/').pop(), {
+                type: blob.type,
+              })
+          )
+        console.log(imageFile)
+        setValue('picture', imageFile)
       } catch (error) {
         console.error('Error fetching team member:', error)
       }
     }
 
-    if (memberId) {
+    if (memberId && isAuthenticated) {
       fetchTeamMember()
     }
-  }, [memberId, setValue])
+  }, [memberId, setValue, isAuthenticated])
 
   const onSubmit = async (data) => {
     try {
