@@ -102,7 +102,7 @@ const Book = () => {
       return { ...prev, book: true }
     })
     try {
-      await axios.post(
+      const res = await axios.post(
         '/appointments/create',
         {
           ...data,
@@ -151,7 +151,7 @@ const Book = () => {
               </p>
 
               <div className='flex flex-row items-center justify-center gap-4 md:hidden'>
-                <Link href='/profile/appointments/1'>
+                <Link href={`/profile/appointments/${res.data.data.id}`}>
                   <Button
                     variant='outline'
                     className='text-primary border-primary'
@@ -166,7 +166,7 @@ const Book = () => {
                 </Button>
               </div>
               <div className='hidden flex-row items-center justify-center gap-8 md:flex'>
-                <Link href='/profile/appointments/1'>
+                <Link href={`/profile/appointments/${res.data.data.id}`}>
                   <Button
                     variant='outline'
                     className='text-primary border-primary'

@@ -20,12 +20,12 @@ const TeamCard = ({ item }) => {
   return (
     <Animated className='w-80 h-96 max-w-[calc(100vw-54px)] lg:h-[450px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.15)] rounded-2xl'>
       <Image
-        src={item.image.thumbnail}
+        src={item.image.original}
         alt={item.name}
         loading='lazy'
         height={320}
         width={320}
-        className='shadow-[0px_4px_10px_0px_rgba(0,0,0,0.15)] rounded-2xl h-64 lg:h-[320px]'
+        className='shadow-[0px_4px_10px_0px_rgba(0,0,0,0.15)] bg-white rounded-2xl h-64 lg:h-[320px]'
       />
       <h4 className='font-medium text-2xl text-[#151515] text-center mt-5 mb-4'>
         {item.name}
