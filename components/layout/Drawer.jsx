@@ -61,8 +61,14 @@ export default function Drawer() {
                 className='bg-primary text-white text-6xl !w-28 !h-28 mx-auto z-50 relative'
                 onClick={() => setIsOpen(false)}
               >
-                {user?.profileImage ? (
-                  <Image src={user.profileImage} alt='User profile' fill />
+                {user?.image?.original ? (
+                  <Image
+                    src={user.image.original}
+                    alt='User Profile'
+                    fill
+                    loading='lazy'
+                    className='w-full h-full object-cover rounded-full'
+                  />
                 ) : (
                   <FaUserLarge />
                 )}

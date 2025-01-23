@@ -66,8 +66,14 @@ const SideBar = () => {
       </Button>
       <div className='flex flex-col items-center justify-center gap-4'>
         <div className='relative w-[90px] h-[90px] bg-primary text-white text-5xl flex items-center justify-center rounded-full'>
-          {false ? ( // Check if User have profile picture uploaded
-            <Image src={user.profileImage} alt='User profile' fill />
+          {user?.image?.original ? (
+            <Image
+              src={user.image.original}
+              alt='User Profile'
+              fill
+              loading='lazy'
+              className='w-full h-full object-cover rounded-full'
+            />
           ) : (
             <FaUserLarge />
           )}

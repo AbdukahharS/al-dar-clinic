@@ -52,7 +52,7 @@ const Address = ({ open, setOpen, address, setAddresses, setAddress }) => {
         (s) => s.name.toLocaleUpperCase() === address.state.toLocaleUpperCase()
       )
 
-      setState(sta.isoCode)
+      setState(sta?.isoCode)
 
       const cit = City.getCitiesOfState(count?.isoCode, sta?.isoCode).find(
         (s) => s.name.toLocaleUpperCase() === address.city.toLocaleUpperCase()
@@ -95,8 +95,12 @@ const Address = ({ open, setOpen, address, setAddresses, setAddress }) => {
           {
             ...data,
             country: Country.getCountryByCode(data.country).name,
-            state: State.getStateByCodeAndCountry(data.state, data.country)
-              .name,
+            state: State.getStateByCodeAndCountry(
+              data.state,
+              data.country
+            ).name.toLocaleLowerCase(),
+            street: data.street.toLocaleLowerCase(),
+            city: data.city.toLocaleLowerCase(),
           },
           {
             headers: {
