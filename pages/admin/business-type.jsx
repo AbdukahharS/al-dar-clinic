@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { FaPen, FaTrash, FaX } from 'react-icons/fa6'
-import { useForm } from 'react-hook-form'
+import { FaPen, FaPlus, FaTrash, FaX } from 'react-icons/fa6'
+import { Controller, set, useForm } from 'react-hook-form'
 import { motion } from 'framer-motion'
 import axios from 'axios'
 
@@ -16,7 +16,7 @@ const BusinessType = () => {
     register,
     handleSubmit,
     setValue,
-    getValues,
+    control,
     formState: { errors },
   } = useForm()
 
@@ -72,7 +72,7 @@ const BusinessType = () => {
     )
   }
 
-  const handleEdit = (index) => {
+  const handleEdit = async (index) => {
     if (index === null) {
       setEditIndex(null)
       setValue('productName', null)
@@ -84,6 +84,15 @@ const BusinessType = () => {
     const type = businessTypes[index]
     setValue('productName', type.name)
     setValue('productType', type.orderType)
+    const imageFile = await fetch(type.image.original) // Fetch the image from the URL (if URL is used)
+      .then((res) => res.blob())
+      .then(
+        (blob) =>
+          new File([blob], type.image.original.split('/').pop(), {
+            type: blob.type,
+          })
+      )
+    setValue('picture', [imageFile])
   }
 
   const handleUpdate = async (data) => {
@@ -111,7 +120,7 @@ const BusinessType = () => {
   }
 
   return (
-    <div>
+    <div className='pb-20'>
       <div className='bg-primary text-white px-8 md:px-20 py-8 flex justify-between items-center'>
         <h1 className='text-2xl font-medium'>Business Type</h1>
       </div>
@@ -250,14 +259,67 @@ const BusinessType = () => {
           <label className='block text-lg font-medium text-gray-700'>
             Upload Picture
           </label>
-          <input
-            type='file'
-            {...register('picture', {
-              required: editIndex === null && 'Picture is required',
-            })}
-            className={`mt-1 block w-full border p-2 ${
-              errors.picture ? 'border-red-500' : 'border-gray-300'
-            } rounded-md shadow-s sm:text-sm`}
+          <Controller
+            control={control}
+            name='picture'
+            rules={{
+              required: 'Picture is required',
+            }}
+            render={({ field }) => (
+              <>
+                <div className='mt-2 flex flex-wrap gap-2'>
+                  {field.value &&
+                    Array.from(field.value).map((file, index) => {
+                      if (file instanceof File) {
+                        // Ensure the file is a valid File object
+                        return (
+                          <div
+                            key={index}
+                            className='relative w-20 h-20 border rounded-md overflow-hidden group'
+                          >
+                            <img
+                              src={URL.createObjectURL(file)} // Create URL for the file
+                              alt='Selected'
+                              className='w-full h-full object-cover'
+                            />
+                            <button
+                              type='button'
+                              onClick={() => {
+                                const newFiles = Array.from(field.value).filter(
+                                  (_, i) => i !== index
+                                )
+                                field.onChange(newFiles) // Update the value after removing the file
+                              }}
+                              className='absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity'
+                            >
+                              <FaTrash />
+                            </button>
+                          </div>
+                        )
+                      }
+                      return null // Return nothing if it's not a valid file
+                    })}
+                  <label
+                    htmlFor='picture'
+                    className={`w-20 h-20 rounded-md flex justify-center items-center text-white cursor-pointer text-4xl ${
+                      errors.picture ? 'bg-red-500' : 'bg-primary'
+                    }`}
+                  >
+                    <FaPlus />
+                    <input
+                      type='file'
+                      id='picture'
+                      accept='image/*'
+                      onChange={(e) => {
+                        const newFiles = Array.from(e.target.files)
+                        field.onChange(newFiles)
+                      }}
+                      className={`hidden `}
+                    />
+                  </label>
+                </div>
+              </>
+            )}
           />
           {errors.picture && (
             <motion.p

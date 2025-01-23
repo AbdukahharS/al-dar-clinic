@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import Button from '@/components/Button'
-import { FaPen, FaTrash, FaX } from 'react-icons/fa6'
+import { FaPen, FaPlus, FaTrash, FaX } from 'react-icons/fa6'
 import { motion } from 'framer-motion'
 import confirm from '@/components/Confirm'
 import axios from 'axios'
@@ -16,6 +16,7 @@ const CategoryManagement = () => {
     register,
     handleSubmit,
     setValue,
+    control,
     formState: { errors },
   } = useForm()
 
@@ -93,11 +94,27 @@ const CategoryManagement = () => {
   }
 
   // Edit a category
-  const handleEdit = (index) => {
+  const handleEdit = async (index) => {
+    if (index === null) {
+      setEditIndex(null)
+      setValue('categoryName', null)
+      setValue('businessType', '')
+      setValue('picture', null)
+      return
+    }
     setEditIndex(index)
     const category = categories[index]
     setValue('categoryName', category.name)
-    setValue('businessType', category.businessId)
+    setValue('businessType', category.businessType.id)
+    const imageFile = await fetch(category.image.original) // Fetch the image from the URL (if URL is used)
+      .then((res) => res.blob())
+      .then(
+        (blob) =>
+          new File([blob], category.image.original.split('/').pop(), {
+            type: blob.type,
+          })
+      )
+    setValue('picture', [imageFile])
   }
 
   // Reset form
@@ -118,6 +135,7 @@ const CategoryManagement = () => {
         <thead>
           <tr className='bg-gray-200'>
             <th className='px-4 py-2 text-left'>Category Name</th>
+            <th className='px-4 py-2 text-left'>Type</th>
             <th className='px-4 py-2 text-center'>Business Type</th>
             <th className='px-4 py-2 text-center'>Picture</th>
             <th className='px-4 py-2'>Actions</th>
@@ -127,6 +145,12 @@ const CategoryManagement = () => {
           {categories.map((category, index) => (
             <tr key={index} className='border-b'>
               <td className='px-4 py-2'>{category.name}</td>
+              <td className='px-4 py-2'>
+                {
+                  businessTypes?.find((b) => b.id === category.businessType.id)
+                    ?.orderType
+                }
+              </td>
               <td className='px-4 py-2 text-center'>
                 {category.businessType.name}
               </td>
@@ -144,12 +168,21 @@ const CategoryManagement = () => {
               </td>
               <td className='px-4 py-2'>
                 <div className='flex gap-3 items-center justify-center'>
-                  <button
-                    onClick={() => handleEdit(index)}
-                    className='text-primary hover:underline'
-                  >
-                    <FaPen />
-                  </button>
+                  {editIndex === index ? (
+                    <button
+                      onClick={() => handleEdit(null)}
+                      className='text-red-500 hover:underline mr-2'
+                    >
+                      <FaX />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleEdit(index)}
+                      className='text-primary hover:underline mr-2'
+                    >
+                      <FaPen />
+                    </button>
+                  )}
                   <button
                     onClick={() => handleDelete(index)}
                     className='text-primary hover:underline'
@@ -210,7 +243,7 @@ const CategoryManagement = () => {
             </option>
             {businessTypes.map((type) => (
               <option key={type.id} value={type.id}>
-                {type.name}
+                {type.name} - {type.orderType}
               </option>
             ))}
           </select>
@@ -226,13 +259,79 @@ const CategoryManagement = () => {
         </div>
         <div>
           <label className='block text-lg font-medium text-gray-700'>
-            Picture
+            Upload Picture
           </label>
-          <input
-            type='file'
-            {...register('picture')}
-            className='mt-1 block w-full border p-2 border-gray-300 rounded-md shadow-s sm:text-sm'
+          <Controller
+            control={control}
+            name='picture'
+            rules={{
+              required: 'Picture is required',
+            }}
+            render={({ field }) => (
+              <>
+                <div className='mt-2 flex flex-wrap gap-2'>
+                  {field.value &&
+                    Array.from(field.value).map((file, index) => {
+                      if (file instanceof File) {
+                        // Ensure the file is a valid File object
+                        return (
+                          <div
+                            key={index}
+                            className='relative w-20 h-20 border rounded-md overflow-hidden group'
+                          >
+                            <img
+                              src={URL.createObjectURL(file)} // Create URL for the file
+                              alt='Selected'
+                              className='w-full h-full object-cover'
+                            />
+                            <button
+                              type='button'
+                              onClick={() => {
+                                const newFiles = Array.from(field.value).filter(
+                                  (_, i) => i !== index
+                                )
+                                field.onChange(newFiles) // Update the value after removing the file
+                              }}
+                              className='absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity'
+                            >
+                              <FaTrash />
+                            </button>
+                          </div>
+                        )
+                      }
+                      return null // Return nothing if it's not a valid file
+                    })}
+                  <label
+                    htmlFor='picture'
+                    className={`w-20 h-20 rounded-md flex justify-center items-center text-white cursor-pointer text-4xl ${
+                      errors.picture ? 'bg-red-500' : 'bg-primary'
+                    }`}
+                  >
+                    <FaPlus />
+                    <input
+                      type='file'
+                      id='picture'
+                      accept='image/*'
+                      onChange={(e) => {
+                        const newFiles = Array.from(e.target.files)
+                        field.onChange(newFiles)
+                      }}
+                      className={`hidden `}
+                    />
+                  </label>
+                </div>
+              </>
+            )}
           />
+          {errors.picture && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className='text-red-500 text-sm mt-1'
+            >
+              {errors.picture.message}
+            </motion.p>
+          )}
         </div>
         <Button type='submit' className='!rounded-lg !px-12 mx-auto block'>
           {editIndex !== null ? 'Update' : 'Add'}

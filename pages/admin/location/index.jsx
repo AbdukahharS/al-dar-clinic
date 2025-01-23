@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import Button from '@/components/Button'
 import confirm from '@/components/Confirm'
 import axios from 'axios'
+import toast from 'react-hot-toast'
 
 const LocationManagement = () => {
   const [locations, setLocations] = useState([])
@@ -45,6 +46,11 @@ const LocationManagement = () => {
       setLocations([...locations, res.data.data])
     } catch (error) {
       console.log(error)
+      toast.error(
+        error?.response?.data?.errors?.[0]?.message ||
+          error?.response?.data?.message ||
+          'Something went wrong. Please try again!'
+      )
     }
     setValue('locationName', null)
   }
@@ -156,6 +162,10 @@ const LocationManagement = () => {
             type='text'
             {...register('locationName', {
               required: 'Location Name is required',
+              validate: (value) =>
+                value.length < 3
+                  ? 'Location Name must be at least 3 characters'
+                  : true,
             })}
             className={`mt-1 block w-full border p-2 ${
               errors.locationName ? 'border-red-500' : 'border-gray-300'
