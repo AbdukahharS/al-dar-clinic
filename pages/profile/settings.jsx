@@ -7,9 +7,10 @@ import Button from '@/components/Button'
 import Animated from '@/components/Animated'
 import useAuth from '@/hooks/useAuth'
 import { useForm } from 'react-hook-form'
+import axios from 'axios'
 
 const Settings = () => {
-  const { loading, user, updateUser } = useAuth()
+  const { loading, user, updateUser, addPFP } = useAuth()
   const { register, handleSubmit, reset } = useForm()
 
   // Check if the form has any changes
@@ -53,6 +54,21 @@ const Settings = () => {
     await updateUser(updates)
   }
 
+  const handleProfilePicture = async (e) => {
+    try {
+      const formData = new FormData()
+      formData.append('file', e.target.files[0])
+      const res = await axios.post('/users/upload', formData)
+      addPFP(res.data)
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message ||
+          error.message ||
+          'Something went wrong'
+      )
+    }
+  }
+
   return (
     <div>
       <Header pageTitle='Profile Settings' />
@@ -60,18 +76,36 @@ const Settings = () => {
         <>
           <div className='flex flex-row items-center gap-7'>
             <div className='relative w-[90px] h-[90px] bg-primary text-white text-5xl flex items-center justify-center rounded-full'>
-              {false ? ( // Check if User has profile picture uploaded
-                <Image src={user.profileImage} alt='User profile' fill />
+              {user?.image?.original ? (
+                <Image
+                  src={user.image.original}
+                  alt='User Profile'
+                  fill
+                  loading='lazy'
+                  className='w-full h-full object-cover rounded-full'
+                />
               ) : (
                 <FaUserLarge />
               )}
-              <Button
-                variant='ghost'
-                size='iconSM'
-                className='absolute bg-primary border border-white rounded-full text-sm right-0 bottom-0'
-              >
-                <FaUpload />
-              </Button>
+
+              <label htmlFor='PFP'>
+                <Button
+                  variant='ghost'
+                  size='iconSM'
+                  className='absolute bg-primary border border-white rounded-full text-sm right-0 bottom-0'
+                  onClick={() => document.getElementById('PFP')?.click()}
+                >
+                  <FaUpload />
+                </Button>
+                <input
+                  type='file'
+                  accept='image/*'
+                  id='PFP'
+                  name='PFP'
+                  className='hidden'
+                  onChange={handleProfilePicture}
+                />
+              </label>
             </div>
             <h2 className='text-gray-700 font-semibold'>{user.name}</h2>
           </div>

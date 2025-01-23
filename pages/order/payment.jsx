@@ -14,6 +14,7 @@ import axios from 'axios'
 
 const Payment = () => {
   const [chosenMethod, setChosenMethod] = useState()
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
   const { items, totalPrice } = useCart()
@@ -23,15 +24,19 @@ const Payment = () => {
     name: 'Cash on Delivery',
   })
 
-  const handleConfirm = async (e) => {
+  const handleConfirm = async () => {
     let orderId = null
+    setLoading(true)
 
     try {
+      console.log({
+        addressId: searchParams.get('address'),
+        quantityIds: items.map((el) => el.id),
+      })
       const res = await axios.post('/order/create', {
         addressId: searchParams.get('address'),
         quantityIds: items.map((el) => el.id),
       })
-      console.log(res)
       orderId = res.data.id
 
       toast.custom(
@@ -98,8 +103,11 @@ const Payment = () => {
         { duration: Infinity }
       )
     } catch (error) {
-      toast.error(error.response.data.message)
+      toast.error(error.response.data.message || error.message) ||
+        'Something went wrong'
       console.error(error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -229,7 +237,9 @@ const Payment = () => {
             Back to Checkout
           </Button>
         </Link>
-        <Button onClick={handleConfirm}>Confirm Order</Button>
+        <Button onClick={handleConfirm}>
+          {loading ? 'Confirming...' : 'Confirm Order'}
+        </Button>
       </Animated>
     </div>
   )
