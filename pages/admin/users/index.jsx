@@ -6,6 +6,7 @@ import { FaCircleInfo, FaRotateRight, FaUser } from 'react-icons/fa6'
 import Button from '@/components/Button'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import Image from 'next/image'
 
 const Users = () => {
   const router = useRouter()
@@ -77,7 +78,8 @@ const Users = () => {
         <table className='min-w-full table-auto text-gray-700'>
           <thead>
             <tr>
-              <th className='px-4 py-5 font-medium whitespace-nowrap'>DP</th>
+              <th className='px-4 py-5 font-medium whitespace-nowrap'>No</th>
+              {/* <th className='px-4 py-5 font-medium whitespace-nowrap'>DP</th> */}
               <th className='px-4 py-5 font-medium whitespace-nowrap'>ID</th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>Email</th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>Phone</th>
@@ -89,11 +91,25 @@ const Users = () => {
           <tbody>
             {data.map((order, index) => (
               <tr key={index} className='border'>
-                <td className='px-3 py-4 whitespace-nowrap'>
-                  <div className='flex items-center justify-center w-10 h-10 mx-auto bg-primary text-white rounded-full text-xl'>
-                    <FaUser />
-                  </div>
+                <td className='px-3 py-4 text-center whitespace-nowrap'>
+                  {index + 1}
                 </td>
+                {/* <td className='px-3 py-4 whitespace-nowrap'>
+                  {order.image?.thumbnail ? (
+                    <Image
+                      src={order.image.thumbnail}
+                      title={order.name}
+                      loading='lazy'
+                      width={40}
+                      height={40}
+                      className='w-10 h-10 rounded-full object-cover'
+                    />
+                  ) : (
+                    <div className='flex items-center justify-center w-10 h-10 mx-auto bg-primary text-white rounded-full text-xl'>
+                      <FaUser />
+                    </div>
+                  )}
+                </td> */}
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
                   {order.id}
                 </td>

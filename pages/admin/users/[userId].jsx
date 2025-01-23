@@ -3,15 +3,17 @@ import { useParams, useRouter } from 'next/navigation'
 import { FaArrowLeft } from 'react-icons/fa6'
 
 import Button from '@/components/Button'
-import dp from '@/public/images/man.jpg'
 import Animated from '@/components/Animated'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+import toast from 'react-hot-toast'
+import useAuth from '@/hooks/useAuth'
 
 const User = () => {
   const router = useRouter()
   const params = useParams()
   const [user, setUser] = useState({})
+  const { isAuthenticated } = useAuth()
 
   const fetchUser = async () => {
     try {
@@ -28,12 +30,10 @@ const User = () => {
   }
 
   useEffect(() => {
-    if (params?.userId && axios.defaults.baseURL) {
+    if (params?.userId && axios.defaults.baseURL && isAuthenticated) {
       fetchUser()
     }
-  }, [params, axios.defaults.baseURL])
-
-  console.log(user)
+  }, [params, axios.defaults.baseURL, isAuthenticated])
 
   return (
     <div>
@@ -45,18 +45,22 @@ const User = () => {
       </div>
       {user.id && (
         <div className='px-8 xl:px-20 py-7 md:py-14'>
-          {/* <Animated
-            animationType='fadeIn'
-            className='rounded-full overflow-hidden w-[185px] h-[185px] relative'
-          >
-            <Image
-              src={dp}
-              alt='User DP'
-              fill
-              loading='lazy'
-              className='object-cover'
-            />
-          </Animated> */}
+          {user.image?.original ? (
+            <Animated
+              animationType='fadeIn'
+              className='rounded-full overflow-hidden w-[185px] h-[185px] relative'
+            >
+              <Image
+                src={user.image?.original}
+                alt='User DP'
+                fill
+                loading='lazy'
+                className='object-cover'
+              />
+            </Animated>
+          ) : (
+            ''
+          )}
           <Animated className='mt-8'>
             <table className='table-auto w-full max-w-[512px]'>
               <tbody>
