@@ -3,16 +3,19 @@ import Link from 'next/link'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import Header from '@/components/layout/Header'
+import useAuth from '@/hooks/useAuth'
 
 const Appointments = () => {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const limit = 10
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [appointments, setAppointments] = useState([])
+  const { isAuthenticated } = useAuth()
 
   const fetchAppointments = async () => {
     try {
@@ -32,17 +35,15 @@ const Appointments = () => {
   }
 
   useEffect(() => {
-    fetchAppointments()
-  }, [page])
+    if (isAuthenticated) {
+      fetchAppointments()
+    }
+  }, [page, isAuthenticated])
 
   useEffect(() => {
     const queryPage = parseInt(searchParams.get('page'), 10) || 1
     setPage(queryPage)
   }, [searchParams])
-
-  const handlePageChange = (newPage) => {
-    setPage(newPage)
-  }
 
   const showingFrom = (page - 1) * limit + 1
   const showingTo = Math.min(page * limit, total)
@@ -104,7 +105,9 @@ const Appointments = () => {
             .map((pageNumber) => (
               <button
                 key={pageNumber}
-                onClick={() => handlePageChange(pageNumber)}
+                onClick={() =>
+                  router.push('/profile/appointments?page=' + pageNumber)
+                }
                 className={`w-7 h-7 flex items-center justify-center rounded-full ${
                   pageNumber === page
                     ? 'text-white bg-primary'

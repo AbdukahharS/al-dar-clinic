@@ -15,12 +15,16 @@ import { useParams } from 'next/navigation'
 const orderStatuses = [
   'Requested',
   'Placed',
+  'PickedUp',
   'ForPacking',
   'Packed',
-  'PickedUp',
   'OnDelivery',
   'Delivered',
   'Complete',
+  'Cancelled',
+  'ToReturn',
+  'Returned',
+  'Failed',
 ]
 
 const OrderDetails = () => {
@@ -278,26 +282,26 @@ const OrderDetails = () => {
                 <Link href='/profile/rental/receipt'>
                   <Button size='sm'>Download Receipt</Button>
                 </Link>
-                <Button
+                {/* <Button
                   size='sm'
                   variant='outline'
                   className='border-red-500 text-red-500'
                   onClick={handleCancel}
                 >
                   Cancel Order
-                </Button>
+                </Button> */}
               </Animated>
               <Animated className='flex-row items-center justify-end gap-6 hidden md:flex'>
                 <Link href='/profile/rental/receipt'>
                   <Button>Download Receipt</Button>
                 </Link>
-                <Button
+                {/* <Button
                   onClick={handleCancel}
                   variant='outline'
                   className='border-red-500 text-red-500'
                 >
                   Cancel Order
-                </Button>
+                </Button> */}
               </Animated>
             </div>
           </div>

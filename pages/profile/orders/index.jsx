@@ -67,7 +67,7 @@ const Orders = () => {
                     <p className='text-xs'>{order.timestamp}</p>
                   </td>
                   <td className='px-3 py-4 text-center whitespace-nowrap'>
-                    {order.products.length}
+                    {order.quantity?.length}
                   </td>
                   <td className='px-3 py-4 text-center whitespace-nowrap'>
                     <div className='border mx-auto rounded-lg w-fit p-2 px-4 text-gray-500'>

@@ -2,14 +2,15 @@ import { FaWallet, FaUser, FaClock, FaLocationDot } from 'react-icons/fa6'
 
 import Header from '@/components/layout/Header'
 import { useEffect, useState } from 'react'
-import { useRouter, useParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import useAuth from '@/hooks/useAuth'
 
 const Appointments = () => {
-  const router = useRouter()
   const params = useParams()
   const [appointment, setAppointment] = useState({})
+  const { isAuthenticated } = useAuth()
 
   useEffect(() => {
     const fetchAppointment = async () => {
@@ -21,10 +22,11 @@ const Appointments = () => {
         toast.error('Something went wrong')
       }
     }
-    if (params?.appointmentId && axios.defaults.baseURL) {
+
+    if (params?.appointmentId && axios.defaults.baseURL && isAuthenticated) {
       fetchAppointment()
     }
-  }, [params, axios.defaults.baseURL])
+  }, [params, axios.defaults.baseURL, isAuthenticated])
 
   return (
     <div>
