@@ -7,6 +7,7 @@ import toast from 'react-hot-toast'
 
 import Animated from '@/components/Animated'
 import Button from '@/components/Button'
+import useAuth from '@/hooks/useAuth'
 
 const orderStatuses = [
   'Requested',
@@ -28,11 +29,14 @@ const OrderDetails = () => {
   const params = useParams()
   const [order, setOrder] = useState({})
   const [currentStatus, setCurrentStatus] = useState('')
+  const { isAuthenticated } = useAuth()
 
   const fetchOrder = async () => {
     try {
-      const res = await axios.get(`/orders/${params.orderId}`)
+      const res = await axios.get(`/order/${params.orderId}`)
       setOrder(res.data)
+      console.log(res.data)
+
       setCurrentStatus(res.data.orderStatus)
     } catch (error) {
       toast.error(error.message || 'Something went wrong')
@@ -40,10 +44,10 @@ const OrderDetails = () => {
   }
 
   useEffect(() => {
-    if (params?.orderId) {
+    if (params?.orderId && isAuthenticated) {
       fetchOrder()
     }
-  }, [params])
+  }, [params, isAuthenticated])
 
   return (
     <div>
@@ -113,7 +117,7 @@ const OrderDetails = () => {
                     <tr>
                       <td className='font-semibold px-4 py-2'>Order Date:</td>
                       <td className='px-4 py-2'>
-                        {new Date(order).toLocaleString()}
+                        {new Date(order.createdAt).toLocaleString()}
                       </td>
                     </tr>
                     <tr>
@@ -169,36 +173,39 @@ const OrderDetails = () => {
                   </h3>
                 </div>
                 <div className='px-[11.5px] py-7 pt-5 md:px-6'>
-                  <div
-                    className={`w-full flex flex-row gap-4 items-stretch p-5 pt-6 `}
-                  >
-                    <Image
-                      src={order.product?.images[0]?.thumbnail}
-                      alt={order.product?.name}
-                      width={88}
-                      height={88}
-                      loading='lazy'
-                      className='bg-white rounded-2xl shadow-[0px_5px_20px_0px_rgba(0,0,0,0.08)]'
-                    />
-                    <div className='flex-1 flex flex-row items-stretch'>
-                      <div className='flex-1 flex flex-col justify-between'>
-                        <div className='flex-1 flex flex-col justify-start'>
-                          <span className='text-[10px] font-medium'>
-                            {order.weightInKg} KG
-                          </span>
-                          <p className='text-lg'>{order.product?.name}</p>
+                  {order.quantity.map((el, i) => (
+                    <div
+                      key={i}
+                      className={`w-full flex flex-row gap-4 items-stretch p-5 pt-6 `}
+                    >
+                      <Image
+                        src={el.product.images[0].thumbnail}
+                        alt={el.product.name}
+                        width={58}
+                        height={58}
+                        loading='lazy'
+                        className='bg-white rounded-2xl shadow-[0px_5px_20px_0px_rgba(0,0,0,0.08)]'
+                      />
+                      <div className='flex-1 flex flex-row items-stretch'>
+                        <div className='flex-1 flex flex-col justify-between'>
+                          <div className='flex-1 flex flex-col justify-start'>
+                            <span className='text-[10px] font-medium'>
+                              {el.product.productType}
+                            </span>
+                            <p className='text-lg'>{el.product.name}</p>
+                          </div>
+                          {/* <p className='text-[10px]'>
+                            Quantity: {el.product.quantity}
+                          </p> */}
                         </div>
-                        <p className='text-[10px]'>
-                          Quantity: {order.quantity}
-                        </p>
-                      </div>
-                      <div className='flex flex-col justify-end'>
-                        <p className='text-xs font-medium'>
-                          Dhs {order.product?.rentPrice[order.weightInKg]}
-                        </p>
+                        {/* <div className='flex flex-col justify-end'>
+                          <p className='text-xs font-medium'>
+                            Dhs {el.product.price}
+                          </p>
+                        </div> */}
                       </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
                 <div className='border-t border-gray-600 py-2 px-4 flex flex-row items-center justify-between mx-[11.5px] mb-4 md:mx-6'>
                   <p className='font-semibold text-gray-700'>Total</p>

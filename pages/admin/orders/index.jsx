@@ -1,56 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { FaCircleInfo, FaRotateRight } from 'react-icons/fa6'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import Button from '@/components/Button'
 import toast from 'react-hot-toast'
 import axios from 'axios'
-
-const orders = [
-  {
-    orderId: '1010246',
-    products: '2 Product',
-    status: 'Requested',
-    amount: '$212.50',
-    timestamp: '09:09 AM, 10-10-2024',
-  },
-  {
-    orderId: '1010247',
-    products: '3 Product',
-    status: 'Cancelled',
-    amount: '$312.50',
-    timestamp: '10:10 AM, 11-11-2024',
-  },
-  {
-    orderId: '1010248',
-    products: '1 Product',
-    status: 'Placed',
-    amount: '$112.50',
-    timestamp: '11:11 AM, 12-12-2024',
-  },
-  {
-    orderId: '1010249',
-    products: '4 Product',
-    status: 'Delivered',
-    amount: '$412.50',
-    timestamp: '12:12 PM, 01-01-2025',
-  },
-  {
-    orderId: '1010250',
-    products: '5 Product',
-    status: 'Complete',
-    amount: '$512.50',
-    timestamp: '01:01 PM, 02-02-2025',
-  },
-  {
-    orderId: '1010251',
-    products: '6 Product',
-    status: 'Failed',
-    amount: '$612.50',
-    timestamp: '02:02 PM, 03-03-2025',
-  },
-]
+import useAuth from '@/hooks/useAuth'
 
 const statusOptions = [
   'Requested',
@@ -61,10 +17,10 @@ const statusOptions = [
   'OnDelivery',
   'Delivered',
   'Complete',
+  'Cancelled',
   'ToReturn',
   'Returned',
   'Failed',
-  'Cancelled',
 ]
 
 const Orders = () => {
@@ -72,15 +28,17 @@ const Orders = () => {
   const [data, setData] = useState([])
   const [filter, setFilter] = useState('all')
   const [sort, setSort] = useState('asc')
-  const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const limit = 10
-  const isInitialRender = useRef(true)
+  const { isAuthenticated } = useAuth()
+  const searchParams = useSearchParams()
 
   const fetchOrders = async () => {
     try {
+      console.log(1)
+
       const { data } = await axios.post('/order/filter', {
-        page,
+        page: Number(searchParams.get('page')) || 1,
         limit,
         status: filter !== 'all' ? filter : undefined,
         sort,
@@ -106,15 +64,12 @@ const Orders = () => {
   }, [])
 
   useEffect(() => {
-    if (isInitialRender.current) {
-      isInitialRender.current = false
-      return
+    if (isAuthenticated) {
+      fetchOrders()
     }
-
-    fetchOrders()
     sessionStorage.setItem('orderFilter', filter)
     sessionStorage.setItem('orderSort', sort)
-  }, [filter, sort, page])
+  }, [filter, sort, isAuthenticated])
 
   return (
     <div>
@@ -177,22 +132,22 @@ const Orders = () => {
             {data.map((order, index) => (
               <tr key={index} className='border'>
                 <td className='px-3 py-4 whitespace-nowrap text-center'>
-                  {order.orderId}
+                  {order.id}
                   <p className='text-xs'>{order.timestamp}</p>
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  {order.products}
+                  {order.quantity?.length}
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
                   <div className='border mx-auto rounded-lg w-fit p-2 px-4 text-gray-500'>
-                    {order.status.replace(/([A-Z])/g, ' $1').trim()}
+                    {order.orderStatus.replace(/([A-Z])/g, ' $1').trim()}
                   </div>
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  {order.amount}
+                  {order.total}
                 </td>
                 <td className='px-3 py-4 text-primary whitespace-nowrap'>
-                  <Link href={`/admin/orders/${order.orderId}`}>
+                  <Link href={`/admin/orders/${order.id}`}>
                     <FaCircleInfo className='mx-auto text-xl' />
                   </Link>
                 </td>
@@ -206,18 +161,23 @@ const Orders = () => {
           Showing{' '}
           {total === 0
             ? '0'
-            : `${page * limit - 9} to ${page * limit - 10 + data.length}`}{' '}
+            : `${Number(searchParams.get('page')) || 1 * limit - 9} to ${
+                Number(searchParams.get('page')) || 1 * limit - 10 + data.length
+              }`}{' '}
           of {total} results
         </p>
         <div className='flex flex-row items-center gap-2'>
           {Array.from({ length: Math.ceil(total / limit) }, (_, i) => i + 1)
-            .filter((pageNumber) => pageNumber !== page)
+            .filter(
+              (pageNumber) =>
+                pageNumber !== Number(searchParams.get('page')) || 1
+            )
             .map((pageNumber) => (
               <button
                 key={pageNumber}
                 onClick={() => router.push('/admin/orders/?page=' + pageNumber)}
                 className={`w-7 h-7 flex items-center justify-center rounded-full ${
-                  pageNumber === page
+                  pageNumber === Number(searchParams.get('page')) || 1
                     ? 'text-white bg-primary'
                     : 'text-primary border border-primary'
                 } cursor-pointer`}
