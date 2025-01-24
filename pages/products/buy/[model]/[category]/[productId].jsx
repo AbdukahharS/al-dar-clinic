@@ -8,6 +8,7 @@ import ProductCarousel from '@/components/carousels/ProductCarousel'
 import Animated from '@/components/Animated'
 import useCart from '@/hooks/useCart'
 import axios from 'axios'
+import toast from 'react-hot-toast'
 
 const ProductPage = () => {
   const [loading, setLoading] = useState(true)
@@ -19,14 +20,25 @@ const ProductPage = () => {
   const params = useParams()
   const router = useRouter()
 
+  console.log(product)
+
   useEffect(() => {
     const fetchProduct = async () => {
       setLoading(true)
       try {
         const res = await axios.get('/products/' + params.productId)
         setProduct(res.data)
+        const onStock = res.data.weightInKg.find((w) => res.data.stock[w] > 0)
+        if (!onStock) {
+          toast.error('Product is out of stock')
+        }
       } catch (error) {
         console.error(error)
+        toast.error(
+          error?.response?.data?.message ||
+            error.message ||
+            'Something went wrong'
+        )
       } finally {
         setLoading(false)
       }
@@ -44,8 +56,8 @@ const ProductPage = () => {
     params,
   ])
 
-  const handleAddToCard = () => {
-    addToCart({
+  const handleAddToCard = async () => {
+    await addToCart({
       productId: product.id,
       quantity: quantity,
       weightInKg: type,
@@ -93,19 +105,21 @@ const ProductPage = () => {
 
                 <div className='flex flex-row gap-2 items-center'>
                   <span>Weight:</span>
-                  {product.weightInKg?.map((weight, i) => (
-                    <span
-                      key={i}
-                      className={`text-xs inline-block py-[6px] px-3 cursor-pointer rounded-full ${
-                        type === weight
-                          ? 'bg-primary text-white'
-                          : 'bg-gray-200 text-black'
-                      }`}
-                      onClick={() => setType(weight)}
-                    >
-                      {weight} KG
-                    </span>
-                  ))}
+                  {product.weightInKg
+                    ?.filter((w) => product.stock[w] > 0)
+                    .map((weight, i) => (
+                      <span
+                        key={i}
+                        className={`text-xs inline-block py-[6px] px-3 cursor-pointer rounded-full ${
+                          type === weight
+                            ? 'bg-primary text-white'
+                            : 'bg-gray-200 text-black'
+                        }`}
+                        onClick={() => setType(weight)}
+                      >
+                        {weight} KG
+                      </span>
+                    ))}
                 </div>
                 <div className='flex flex-row gap-2 items-center mt-5'>
                   <span>Quantity:</span>

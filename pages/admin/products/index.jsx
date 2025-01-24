@@ -130,6 +130,7 @@ const Products = () => {
         <table className='min-w-full table-auto text-gray-700'>
           <thead>
             <tr>
+              <th className='px-4 py-5 font-medium whitespace-nowrap'>No</th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
                 Product Name
               </th>
@@ -149,6 +150,9 @@ const Products = () => {
           <tbody>
             {data.map((order, index) => (
               <tr key={index} className='border'>
+                <td className='px-3 py-4 whitespace-nowrap text-center'>
+                  {((searchParams.get('page') || 1) - 1) * limit + index + 1}
+                </td>
                 <td className='px-3 py-4 whitespace-nowrap text-center max-w-xs overflow-hidden'>
                   {order.name}
                 </td>
@@ -160,12 +164,12 @@ const Products = () => {
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
                   {Object.entries(order.stock)
-                    .map(([key, value]) => `${key}KG: ${value}`)
+                    .map(([key, value]) => `${key}kg: ${value}`)
                     .join(', ')}
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
                   {Object.entries(order.buyPrice)
-                    .map(([key, value]) => `${key}KG: ${value}`)
+                    .map(([key, value]) => `${key}kg: ${value}`)
                     .join(', ')}
                 </td>
                 <td className='px-3 py-4 text-primary whitespace-nowrap'>

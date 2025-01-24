@@ -10,6 +10,7 @@ import Button from '@/components/Button'
 
 const EditProduct = () => {
   const isInitialRender = useRef(true)
+  const [defaultCategory, setDefaultCategory] = useState(null)
   const router = useRouter()
   const params = useParams()
   const [categories, setCategories] = useState([])
@@ -42,7 +43,8 @@ const EditProduct = () => {
         setValue('productName', product.name)
         setValue('productType', product.productType)
         setType(product.productType)
-        setValue('productCategory', product.category.id)
+        // setValue('productCategory', product.category.id)
+        setDefaultCategory(product.category.id)
         setValue(
           'stockQuantity',
           Object.entries(product.stock)
@@ -171,7 +173,11 @@ const EditProduct = () => {
       router.push('/admin/products')
     } catch (error) {
       console.error('Error updating product:', error)
-      toast.error('Failed to update product')
+      toast.error(
+        error?.response?.data?.errors?.[0].message ||
+          error.message ||
+          'Failed to update product'
+      )
     }
   }
 
@@ -260,39 +266,44 @@ const EditProduct = () => {
           </div>
 
           {/* Product Category */}
-          <div>
-            <label className='block text-lg font-medium text-gray-700'>
-              Product Category
-            </label>
-            <select
-              {...register('productCategory', {
-                required: 'Product Category is required',
-              })}
-              className={`mt-1 block w-full border p-2 ${
-                errors.productCategory ? 'border-red-500' : 'border-gray-300'
-              } rounded-md shadow-sm sm:text-sm`}
-            >
-              <option value=''>Select a category</option>
-              {categories
-                .filter((c) =>
-                  !type ? true : c.businessType.orderType === type
-                )
-                .map((el) => (
-                  <option value={el.id} key={el.id}>
-                    {el.name}
-                  </option>
-                ))}
-            </select>
-            {errors.productCategory && (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className='text-red-500 text-sm mt-1'
+          {defaultCategory ? (
+            <div>
+              <label className='block text-lg font-medium text-gray-700'>
+                Product Category
+              </label>
+              <select
+                {...register('productCategory', {
+                  required: 'Product Category is required',
+                })}
+                defaultValue={defaultCategory}
+                className={`mt-1 block w-full border p-2 ${
+                  errors.productCategory ? 'border-red-500' : 'border-gray-300'
+                } rounded-md shadow-sm sm:text-sm`}
               >
-                {errors.productCategory.message}
-              </motion.p>
-            )}
-          </div>
+                <option value=''>Select a category</option>
+                {categories
+                  .filter((c) =>
+                    !type ? true : c.businessType.orderType === type
+                  )
+                  .map((el) => (
+                    <option value={el.id} key={el.id}>
+                      {el.name}
+                    </option>
+                  ))}
+              </select>
+              {errors.productCategory && (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className='text-red-500 text-sm mt-1'
+                >
+                  {errors.productCategory.message}
+                </motion.p>
+              )}
+            </div>
+          ) : (
+            ''
+          )}
 
           {/* Product Images */}
           <div>

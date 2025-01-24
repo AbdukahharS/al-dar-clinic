@@ -155,6 +155,10 @@ const ConsultingServicesManagement = () => {
             type='text'
             {...register('serviceName', {
               required: 'Service Name is required',
+              validate: (value) =>
+                value.trim().length >= 3
+                  ? true
+                  : 'Name must be at least 3 characters',
             })}
             className={`mt-1 block w-full border p-2 ${
               errors.serviceName ? 'border-red-500' : 'border-gray-300'

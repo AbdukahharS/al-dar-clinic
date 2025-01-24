@@ -42,7 +42,7 @@ const Rental = () => {
   }, [page])
 
   return (
-    <div className='md:w-[calc(100%+(100vw-1280px)/2)]'>
+    <div>
       <Header pageTitle='Rental History' />
       <div className='overflow-x-auto'>
         <table className='min-w-full table-auto text-gray-700'>

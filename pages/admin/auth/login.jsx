@@ -20,7 +20,6 @@ const poppins = Poppins({
 
 const Login = () => {
   const { login, loading } = useAuth()
-  const router = useRouter()
   const {
     register,
     handleSubmit,

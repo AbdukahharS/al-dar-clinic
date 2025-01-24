@@ -1,36 +1,18 @@
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import { FaCircleXmark, FaExclamation } from 'react-icons/fa6'
+import { useParams, useRouter } from 'next/navigation'
+import axios from 'axios'
+import { usePDF } from 'react-to-pdf'
 
 import Header from '@/components/layout/Header'
 import Animated from '@/components/Animated'
-import dumbbell from '@/public/images/products/dumbbell.webp'
-import sponge from '@/public/images/products/sponge.webp'
 import Button from '@/components/Button'
-import { useParams, useRouter } from 'next/navigation'
-import axios from 'axios'
-
-const cartItems = [
-  {
-    id: 1,
-    name: 'Dumbbell 6Kgs',
-    img: dumbbell,
-    price: 100,
-    category: 'PHYSIOTHERAPY TOOLS',
-    quantity: 1,
-  },
-  {
-    category: 'PHYSIOTHERAPY TOOLS',
-    id: 2,
-    name: 'Sponge Dumbbell',
-    img: sponge,
-    price: 250,
-    quantity: 1,
-  },
-]
+import Receipt from '@/components/Receipt'
+import useAuth from '@/hooks/useAuth'
 
 const orderStatuses = [
   'Requested',
@@ -48,10 +30,12 @@ const orderStatuses = [
 ]
 
 const OrderDetails = () => {
+  const { toPDF, targetRef } = usePDF({ filename: 'receipt.pdf' })
   const params = useParams()
   const [order, setOrder] = useState({})
   const [currentStatus, setCurrentStatus] = useState('')
   const router = useRouter()
+  const { user, isAuthenticated } = useAuth()
 
   const fetchOrder = async () => {
     try {
@@ -66,10 +50,10 @@ const OrderDetails = () => {
   }
 
   useEffect(() => {
-    if (params?.orderId && axios.defaults.baseURL) {
+    if (params?.orderId && axios.defaults.baseURL && isAuthenticated) {
       fetchOrder()
     }
-  }, [params, axios.defaults.baseURL])
+  }, [params, axios.defaults.baseURL, isAuthenticated])
   const handleCancel = (id) => {
     const cancelOrder = async () => {
       try {
@@ -146,6 +130,7 @@ const OrderDetails = () => {
       <Header pageTitle='Order Details' />
       {order.id ? (
         <>
+          <Receipt order={order} refName={targetRef} user={user} />
           <div className='text-center'>
             <p className='text-xl font-medium mb-3'>Thank you</p>
             <p>Your order status is as follows</p>
@@ -301,9 +286,9 @@ const OrderDetails = () => {
                 </div>
               </Animated>
               <Animated className='flex flex-row items-center justify-between md:justify-end md:gap-6 md:hidden'>
-                <Link href='/profile/orders/receipt'>
-                  <Button size='sm'>Download Receipt</Button>
-                </Link>
+                <Button size='sm' onClick={() => toPDF()}>
+                  Download Receipt
+                </Button>
                 {order.canCancelOrder ? (
                   <Button
                     size='sm'
@@ -318,9 +303,7 @@ const OrderDetails = () => {
                 )}
               </Animated>
               <Animated className='flex-row items-center justify-end gap-6 hidden md:flex'>
-                <Link href='/profile/orders/receipt'>
-                  <Button>Download Receipt</Button>
-                </Link>
+                <Button onClick={() => toPDF()}>Download Receipt</Button>
                 {order.canCancelOrder ? (
                   <Button
                     onClick={handleCancel}

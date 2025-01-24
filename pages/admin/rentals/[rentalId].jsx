@@ -7,6 +7,7 @@ import toast from 'react-hot-toast'
 
 import Animated from '@/components/Animated'
 import Button from '@/components/Button'
+import useAuth from '@/hooks/useAuth'
 
 const orderStatuses = [
   'Requested',
@@ -29,11 +30,11 @@ const RentalOrderDetails = () => {
   const [currentStatus, setCurrentStatus] = useState('')
   const [newStatus, setNewStatus] = useState('')
   const [order, setOrder] = useState({})
+  const { isAuthenticated } = useAuth()
 
   const fetchOrder = async () => {
     try {
       const res = await axios.get(`/rent/${rentalId}`)
-      console.log(res.data)
 
       setOrder(res.data)
       setCurrentStatus(res.data.orderStatus)
@@ -44,10 +45,10 @@ const RentalOrderDetails = () => {
   }
 
   useEffect(() => {
-    if (rentalId) {
+    if (rentalId && isAuthenticated) {
       fetchOrder()
     }
-  }, [rentalId])
+  }, [rentalId, isAuthenticated])
 
   const handleStatusChange = (e) => {
     setNewStatus(e.target.value)

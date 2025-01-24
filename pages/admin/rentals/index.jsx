@@ -107,6 +107,7 @@ const RentalOrders = () => {
         <table className='min-w-full table-auto text-gray-700'>
           <thead>
             <tr>
+              <th className='px-4 py-5 font-medium whitespace-nowrap'>No</th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
                 Order ID
               </th>
@@ -129,46 +130,67 @@ const RentalOrders = () => {
           </thead>
           <tbody>
             {data?.length ? (
-              data.map(
-                (order, index) =>
-                  index < 6 && (
-                    <tr key={index} className='border'>
-                      <td className='px-3 py-4 whitespace-nowrap text-center'>
-                        {order.id}
-                        <p className='text-xs'>{order.timestamp}</p>
-                      </td>
-                      <td className='px-3 py-4 whitespace-nowrap text-center'>
-                        {order.product.name}
-                      </td>
-                      <td className='px-3 py-4 text-center whitespace-nowrap'>
-                        {order.quantity}
-                      </td>
-                      <td className='px-3 py-4 text-center whitespace-nowrap'>
-                        <div className='border mx-auto rounded-lg w-fit p-2 px-4 text-gray-500'>
-                          {order.orderStatus.replace(/([A-Z])/g, ' $1').trim()}
-                        </div>
-                      </td>
-                      <td className='px-3 py-4 text-center whitespace-nowrap'>
-                        {order.quantity}
-                      </td>
-                      <td className='px-3 py-4 text-primary whitespace-nowrap'>
-                        <Link href={`/admin/rentals/${order.id}`}>
-                          <FaCircleInfo className='mx-auto text-xl' />
-                        </Link>
-                      </td>
-                    </tr>
-                  )
-              )
+              data.map((order, index) => (
+                <tr key={index} className='border'>
+                  <td className='px-3 py-4 text-center whitespace-nowrap'>
+                    {(page - 1) * limit + index + 1}
+                  </td>
+                  <td className='px-3 py-4 whitespace-nowrap text-center'>
+                    {order.id}
+                    <p className='text-xs'>{order.timestamp}</p>
+                  </td>
+                  <td className='px-3 py-4 whitespace-nowrap text-center max-w-xs overflow-hidden overflow-ellipsis'>
+                    {order.product.name}
+                  </td>
+                  <td className='px-3 py-4 text-center whitespace-nowrap'>
+                    {order.quantity}
+                  </td>
+                  <td className='px-3 py-4 text-center whitespace-nowrap'>
+                    <div className='border mx-auto rounded-lg w-fit p-2 px-4 text-gray-500'>
+                      {order.orderStatus.replace(/([A-Z])/g, ' $1').trim()}
+                    </div>
+                  </td>
+                  <td className='px-3 py-4 text-center whitespace-nowrap'>
+                    {order.quantity}
+                  </td>
+                  <td className='px-3 py-4 text-primary whitespace-nowrap'>
+                    <Link href={`/admin/rentals/${order.id}`}>
+                      <FaCircleInfo className='mx-auto text-xl' />
+                    </Link>
+                  </td>
+                </tr>
+              ))
             ) : (
               <tr></tr>
             )}
           </tbody>
         </table>
       </div>
-      <div className='flex flex-row items-center justify-between mt-7 md:px-4'>
+      <div className='flex flex-row items-center justify-between my-7 md:px-4'>
         <p className='text-gray-400'>
-          Showing {data.length == 12 ? '6' : data.length} of {total} results
+          Showing{' '}
+          {total === 0
+            ? '0'
+            : `${page * limit - 9} to ${page * limit - 10 + data.length}`}{' '}
+          of {total} results
         </p>
+        <div className='flex flex-row items-center gap-2'>
+          {Array.from({ length: Math.ceil(total / limit) }, (_, i) => i + 1)
+            .filter((pageNumber) => pageNumber !== page)
+            .map((pageNumber) => (
+              <button
+                key={pageNumber}
+                onClick={() => setPage(pageNumber)}
+                className={`w-7 h-7 flex items-center justify-center rounded-full ${
+                  pageNumber === page
+                    ? 'text-white bg-primary'
+                    : 'text-primary border border-primary'
+                } cursor-pointer`}
+              >
+                {pageNumber}
+              </button>
+            ))}
+        </div>
       </div>
     </div>
   )

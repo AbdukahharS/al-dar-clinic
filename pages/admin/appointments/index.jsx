@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState, useRef } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { FaCircleInfo, FaRotateRight } from 'react-icons/fa6'
 import axios from 'axios'
 import toast from 'react-hot-toast'
@@ -9,6 +9,7 @@ import Button from '@/components/Button'
 
 const Appointments = () => {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [data, setData] = useState([])
   const [filter, setFilter] = useState('all')
   const [sort, setSort] = useState('asc')
@@ -41,7 +42,8 @@ const Appointments = () => {
     const storedSort = sessionStorage.getItem('appointmentSort')
     if (storedFilter) setFilter(storedFilter)
     if (storedSort) setSort(storedSort)
-  }, [])
+    setPage(Number(searchParams.get('page')) || 1)
+  }, [searchParams])
 
   useEffect(() => {
     if (axios.defaults.headers.common['Authorization']) {
@@ -52,7 +54,7 @@ const Appointments = () => {
   }, [filter, sort, page, axios.defaults.headers.common['Authorization']])
 
   const handlePageChange = (newPage) => {
-    setPage(newPage)
+    router.push('/admin/appointments/?page=' + newPage)
   }
 
   const showingFrom = (page - 1) * limit + 1
@@ -93,6 +95,7 @@ const Appointments = () => {
         <table className='min-w-full table-auto text-gray-700'>
           <thead>
             <tr>
+              <th className='px-4 py-5 font-medium whitespace-nowrap'>No</th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
                 Patient Name
               </th>
@@ -109,6 +112,9 @@ const Appointments = () => {
           <tbody>
             {data.map((order, index) => (
               <tr key={index} className='border'>
+                <td className='px-3 py-4 text-center whitespace-nowrap'>
+                  {(page - 1) * limit + index + 1}
+                </td>
                 <td className='px-3 py-4 whitespace-nowrap text-center'>
                   {order.fullname}
                 </td>

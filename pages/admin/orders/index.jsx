@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FaCircleInfo, FaRotateRight } from 'react-icons/fa6'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -28,6 +28,7 @@ const Orders = () => {
   const [data, setData] = useState([])
   const [filter, setFilter] = useState('all')
   const [sort, setSort] = useState('asc')
+  const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const limit = 10
   const { isAuthenticated } = useAuth()
@@ -35,10 +36,8 @@ const Orders = () => {
 
   const fetchOrders = async () => {
     try {
-      console.log(1)
-
       const { data } = await axios.post('/order/filter', {
-        page: Number(searchParams.get('page')) || 1,
+        page,
         limit,
         status: filter !== 'all' ? filter : undefined,
         sort,
@@ -61,7 +60,8 @@ const Orders = () => {
     const storedSort = sessionStorage.getItem('orderSort')
     if (storedFilter) setFilter(storedFilter)
     if (storedSort) setSort(storedSort)
-  }, [])
+    setPage(Number(searchParams.get('page')) || 1)
+  }, [searchParams])
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -69,7 +69,7 @@ const Orders = () => {
     }
     sessionStorage.setItem('orderFilter', filter)
     sessionStorage.setItem('orderSort', sort)
-  }, [filter, sort, isAuthenticated])
+  }, [filter, sort, page, isAuthenticated])
 
   return (
     <div>
@@ -111,6 +111,7 @@ const Orders = () => {
         <table className='min-w-full table-auto text-gray-700'>
           <thead>
             <tr>
+              <th className='px-4 py-5 font-medium whitespace-nowrap'>No</th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
                 Order ID
               </th>
@@ -131,6 +132,9 @@ const Orders = () => {
           <tbody>
             {data.map((order, index) => (
               <tr key={index} className='border'>
+                <td className='px-3 py-4 text-center whitespace-nowrap'>
+                  {(page - 1) * 10 + index + 1}
+                </td>
                 <td className='px-3 py-4 whitespace-nowrap text-center'>
                   {order.id}
                   <p className='text-xs'>{order.timestamp}</p>
@@ -161,23 +165,18 @@ const Orders = () => {
           Showing{' '}
           {total === 0
             ? '0'
-            : `${Number(searchParams.get('page')) || 1 * limit - 9} to ${
-                Number(searchParams.get('page')) || 1 * limit - 10 + data.length
-              }`}{' '}
+            : `${page * limit - 9} to ${page * limit - 10 + data.length}`}{' '}
           of {total} results
         </p>
         <div className='flex flex-row items-center gap-2'>
           {Array.from({ length: Math.ceil(total / limit) }, (_, i) => i + 1)
-            .filter(
-              (pageNumber) =>
-                pageNumber !== Number(searchParams.get('page')) || 1
-            )
+            .filter((pageNumber) => pageNumber !== page)
             .map((pageNumber) => (
               <button
                 key={pageNumber}
                 onClick={() => router.push('/admin/orders/?page=' + pageNumber)}
                 className={`w-7 h-7 flex items-center justify-center rounded-full ${
-                  pageNumber === Number(searchParams.get('page')) || 1
+                  pageNumber === page
                     ? 'text-white bg-primary'
                     : 'text-primary border border-primary'
                 } cursor-pointer`}

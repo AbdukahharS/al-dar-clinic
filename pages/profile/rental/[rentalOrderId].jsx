@@ -4,13 +4,15 @@ import Image from 'next/image'
 import toast from 'react-hot-toast'
 import { motion } from 'framer-motion'
 import { FaCircleXmark, FaExclamation } from 'react-icons/fa6'
-
-import Header from '@/components/layout/Header'
-import Animated from '@/components/Animated'
-import dumbbell from '@/public/images/products/dumbbell.webp'
-import Button from '@/components/Button'
+import { usePDF } from 'react-to-pdf'
 import axios from 'axios'
 import { useParams } from 'next/navigation'
+
+import Receipt from '@/components/RentalReceipt'
+import Header from '@/components/layout/Header'
+import Animated from '@/components/Animated'
+import Button from '@/components/Button'
+import useAuth from '@/hooks/useAuth'
 
 const orderStatuses = [
   'Requested',
@@ -28,9 +30,11 @@ const orderStatuses = [
 ]
 
 const OrderDetails = () => {
+  const { toPDF, targetRef } = usePDF({ filename: 'receipt.pdf' })
   const [currentStatus, setCurrentStatus] = useState()
   const [order, setOrder] = useState({})
   const params = useParams()
+  const { user, isAuthenticated } = useAuth()
 
   const fetchOrder = async () => {
     try {
@@ -45,73 +49,17 @@ const OrderDetails = () => {
   }
 
   useEffect(() => {
-    if (params?.rentalOrderId && axios.defaults.baseURL) {
+    if (params?.rentalOrderId && axios.defaults.baseURL && isAuthenticated) {
       fetchOrder()
     }
-  }, [params, axios.defaults.baseURL])
+  }, [params, axios.defaults.baseURL, isAuthenticated])
 
-  const handleCancel = () => {
-    toast.custom(
-      (t) => (
-        <motion.div
-          initial={{ zIndex: -20, opacity: 0 }}
-          animate={
-            t.visible
-              ? { zIndex: 100, opacity: 1 }
-              : { zIndex: -20, opacity: 0 }
-          }
-          transition={{ duration: 0.3 }}
-          className='absolute -top-4 -left-4 w-screen !h-screen bg-black/60 flex items-center justify-center p-5'
-        >
-          <motion.div
-            initial={{ y: 15 }}
-            animate={t.visible ? { y: 0 } : { y: 15 }}
-            className='w-fit xl:w-full max-w-2xl mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
-          >
-            <Button
-              size='icon'
-              variant='ghost'
-              onClick={() => toast.dismiss(t.id)}
-              className='ml-auto'
-            >
-              <FaCircleXmark className='text-primary text-2xl md:text-4xl mx-auto' />
-            </Button>
-            <div className='border-8 border-yellow-500 rounded-full w-fit mx-auto'>
-              <FaExclamation className='text-yellow-500 text-[100px] md:text-[136px] lg:text-[180px] xl:text-[218px]' />
-            </div>
-            <p className='text-xl font-medium md:text-2xl xl:text-4xl text-center mt-12 md:mt-18 tracking-wide'>
-              Are you sure?
-            </p>
-            <p className='text-center my-4 lg:my-8'>
-              You want to cancel your order?
-            </p>
-            <div className='flex flex-row items-center justify-center gap-4 md:hidden'>
-              <Button size='sm'>Yes, Cancel it!</Button>
-              <Button
-                size='sm'
-                variant='secondary'
-                onClick={() => toast.dismiss(t.id)}
-              >
-                No, Don&apos;t Cancel
-              </Button>
-            </div>
-            <div className='hidden flex-row items-center justify-center gap-8 md:flex'>
-              <Button>Yes, Cancel it!</Button>
-              <Button variant='secondary' onClick={() => toast.dismiss(t.id)}>
-                No, Don&apos;t Cancel
-              </Button>
-            </div>
-          </motion.div>
-        </motion.div>
-      ),
-      { duration: Infinity }
-    )
-  }
   return (
     <div className='text-gray-700 md:rounded-2xl md:bg-white md:shadow-[0px_4px_20px_0px_rgba(0,0,0,0.08)] md:px-6 md:pb-10'>
       <Header pageTitle='Rental Order Details' />
       {order.id && (
         <>
+          <Receipt order={order} refName={targetRef} user={user} />
           <div className='text-center'>
             <p className='text-xl font-medium mb-3'>Thank you</p>
             <p>Your order status is as follows</p>
@@ -280,7 +228,9 @@ const OrderDetails = () => {
               </Animated>
               <Animated className='flex flex-row items-center justify-between md:justify-end md:gap-6 md:hidden'>
                 <Link href='/profile/rental/receipt'>
-                  <Button size='sm'>Download Receipt</Button>
+                  <Button size='sm' onClick={() => toPDF()}>
+                    Download Receipt
+                  </Button>
                 </Link>
                 {/* <Button
                   size='sm'
@@ -292,9 +242,7 @@ const OrderDetails = () => {
                 </Button> */}
               </Animated>
               <Animated className='flex-row items-center justify-end gap-6 hidden md:flex'>
-                <Link href='/profile/rental/receipt'>
-                  <Button>Download Receipt</Button>
-                </Link>
+                <Button onClick={() => toPDF()}>Download Receipt</Button>
                 {/* <Button
                   onClick={handleCancel}
                   variant='outline'
@@ -312,3 +260,61 @@ const OrderDetails = () => {
 }
 
 export default OrderDetails
+
+// const handleCancel = () => {
+//   toast.custom(
+//     (t) => (
+//       <motion.div
+//         initial={{ zIndex: -20, opacity: 0 }}
+//         animate={
+//           t.visible
+//             ? { zIndex: 100, opacity: 1 }
+//             : { zIndex: -20, opacity: 0 }
+//         }
+//         transition={{ duration: 0.3 }}
+//         className='absolute -top-4 -left-4 w-screen !h-screen bg-black/60 flex items-center justify-center p-5'
+//       >
+//         <motion.div
+//           initial={{ y: 15 }}
+//           animate={t.visible ? { y: 0 } : { y: 15 }}
+//           className='w-fit xl:w-full max-w-2xl mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
+//         >
+//           <Button
+//             size='icon'
+//             variant='ghost'
+//             onClick={() => toast.dismiss(t.id)}
+//             className='ml-auto'
+//           >
+//             <FaCircleXmark className='text-primary text-2xl md:text-4xl mx-auto' />
+//           </Button>
+//           <div className='border-8 border-yellow-500 rounded-full w-fit mx-auto'>
+//             <FaExclamation className='text-yellow-500 text-[100px] md:text-[136px] lg:text-[180px] xl:text-[218px]' />
+//           </div>
+//           <p className='text-xl font-medium md:text-2xl xl:text-4xl text-center mt-12 md:mt-18 tracking-wide'>
+//             Are you sure?
+//           </p>
+//           <p className='text-center my-4 lg:my-8'>
+//             You want to cancel your order?
+//           </p>
+//           <div className='flex flex-row items-center justify-center gap-4 md:hidden'>
+//             <Button size='sm'>Yes, Cancel it!</Button>
+//             <Button
+//               size='sm'
+//               variant='secondary'
+//               onClick={() => toast.dismiss(t.id)}
+//             >
+//               No, Don&apos;t Cancel
+//             </Button>
+//           </div>
+//           <div className='hidden flex-row items-center justify-center gap-8 md:flex'>
+//             <Button>Yes, Cancel it!</Button>
+//             <Button variant='secondary' onClick={() => toast.dismiss(t.id)}>
+//               No, Don&apos;t Cancel
+//             </Button>
+//           </div>
+//         </motion.div>
+//       </motion.div>
+//     ),
+//     { duration: Infinity }
+//   )
+// }

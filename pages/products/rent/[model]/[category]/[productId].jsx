@@ -22,6 +22,10 @@ const ProductPage = () => {
       setLoading(true)
       try {
         const res = await axios.get(`/products/${params.productId}`)
+        const onStock = res.data.weightInKg.find((w) => res.data.stock[w] > 0)
+        if (!onStock) {
+          toast.error('Product is out of stock')
+        }
         setProduct(res.data)
       } catch (error) {
         console.error('Error fetching product:', error)
@@ -79,19 +83,21 @@ const ProductPage = () => {
                 <div className='h-[1px] w-full bg-gray-300 my-9'></div>
                 <div className='flex flex-row gap-2 items-center'>
                   <span>Weight:</span>
-                  {product.weightInKg?.map((weight, i) => (
-                    <span
-                      key={i}
-                      className={`text-xs inline-block py-[6px] px-3 cursor-pointer rounded-full ${
-                        type === weight
-                          ? 'bg-primary text-white'
-                          : 'bg-gray-200 text-black'
-                      }`}
-                      onClick={() => setType(weight)}
-                    >
-                      {weight} KG
-                    </span>
-                  ))}
+                  {product.weightInKg
+                    ?.filter((w) => product.stock[w] > 0)
+                    .map((weight, i) => (
+                      <span
+                        key={i}
+                        className={`text-xs inline-block py-[6px] px-3 cursor-pointer rounded-full ${
+                          type === weight
+                            ? 'bg-primary text-white'
+                            : 'bg-gray-200 text-black'
+                        }`}
+                        onClick={() => setType(weight)}
+                      >
+                        {weight} KG
+                      </span>
+                    ))}
                 </div>
 
                 <div className='flex flex-row gap-2 items-center mt-5'>

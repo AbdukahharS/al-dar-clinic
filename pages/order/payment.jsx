@@ -17,7 +17,7 @@ const Payment = () => {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { items, totalPrice } = useCart()
+  const { items, totalPrice, clear } = useCart()
 
   const methods = Array(2).fill({
     img: cod,
@@ -29,15 +29,12 @@ const Payment = () => {
     setLoading(true)
 
     try {
-      console.log({
-        addressId: searchParams.get('address'),
-        quantityIds: items.map((el) => el.id),
-      })
       const res = await axios.post('/order/create', {
         addressId: searchParams.get('address'),
         quantityIds: items.map((el) => el.id),
       })
       orderId = res.data.id
+      clear()
 
       toast.custom(
         (t) => (
@@ -103,8 +100,11 @@ const Payment = () => {
         { duration: Infinity }
       )
     } catch (error) {
-      toast.error(error.response.data.message || error.message) ||
-        'Something went wrong'
+      toast.error(
+        'Delivery is not provided for this address' ||
+          error.response.data.message ||
+          error.message
+      ) || 'Something went wrong'
       console.error(error)
     } finally {
       setLoading(false)

@@ -240,6 +240,10 @@ const BusinessType = () => {
             type='text'
             {...register('productName', {
               required: 'Business Type Name is required',
+              validate: (value) =>
+                value.trim().length >= 3
+                  ? true
+                  : 'Name must be at least 3 characters',
             })}
             className={`mt-1 block w-full border p-2 ${
               errors.productName ? 'border-red-500' : 'border-gray-300'

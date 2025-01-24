@@ -57,6 +57,7 @@ const TeamManagement = () => {
         <table className='min-w-full table-auto text-gray-700'>
           <thead>
             <tr>
+              <th className='px-4 py-5 font-medium whitespace-nowrap'>No</th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>Name</th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
                 Position
@@ -72,6 +73,9 @@ const TeamManagement = () => {
           <tbody>
             {data.map((member, index) => (
               <tr key={index} className='border'>
+                <td className='px-3 py-4 whitespace-nowrap text-center'>
+                  {index + 1}
+                </td>
                 <td className='px-3 py-4 whitespace-nowrap text-center'>
                   {member.name}
                 </td>

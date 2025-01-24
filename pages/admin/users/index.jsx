@@ -92,7 +92,7 @@ const Users = () => {
             {data.map((order, index) => (
               <tr key={index} className='border'>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  {index + 1}
+                  {(page - 1) * 10 + index + 1}
                 </td>
                 {/* <td className='px-3 py-4 whitespace-nowrap'>
                   {order.image?.thumbnail ? (

@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import confirm from '@/components/Confirm'
 import axios from 'axios'
 import Image from 'next/image'
+import toast from 'react-hot-toast'
 
 const CategoryManagement = () => {
   const [categories, setCategories] = useState([])
@@ -70,6 +71,12 @@ const CategoryManagement = () => {
       }
       resetForm()
     } catch (error) {
+      toast.error(
+        error.response?.data?.errors?.[0]?.message ||
+          error.response?.data?.message ||
+          error.message ||
+          'An error occurred'
+      )
       console.error('Failed to save category:', error)
     }
   }
@@ -206,6 +213,10 @@ const CategoryManagement = () => {
             type='text'
             {...register('categoryName', {
               required: 'Category Name is required',
+              validate: (value) =>
+                value.trim().length >= 3
+                  ? true
+                  : 'Name must be at least 3 characters',
             })}
             className={`mt-1 block w-full border p-2 ${
               errors.categoryName ? 'border-red-500' : 'border-gray-300'
