@@ -55,6 +55,7 @@ const Layout = ({ Component, pageProps }) => {
     axios.defaults.baseURL,
     isAuthenticated,
     axios.defaults.headers.common['Authorization'],
+    path,
   ])
 
   useEffect(() => {
