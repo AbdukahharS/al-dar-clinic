@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { FaCircleXmark } from 'react-icons/fa6'
 import { useForm, Controller } from 'react-hook-form'
-import { Country, State, City } from 'country-state-city'
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input'
 import axios from 'axios'
 import toast from 'react-hot-toast'
@@ -13,14 +12,8 @@ import Animated from './Animated'
 
 const Address = ({ open, setOpen, address, setAddresses, setAddress }) => {
   const [loading, setLoading] = useState(false)
-  const countries = Country.getAllCountries()
-  const [country, setCountry] = useState(countries[0].isoCode)
-  const [states, setStates] = useState(
-    State.getStatesOfCountry(countries[0].isoCode)
-  )
-  const [state, setState] = useState(
-    State.getStatesOfCountry(countries[0].isoCode)[0].isoCode
-  )
+  const countries = ['Iran', 'Iraq']
+  const [country, setCountry] = useState(countries[0])
 
   const {
     register,
@@ -31,59 +24,39 @@ const Address = ({ open, setOpen, address, setAddresses, setAddress }) => {
   } = useForm()
 
   useEffect(() => {
-    if (country) {
-      setStates(State.getStatesOfCountry(country))
-      setState(State.getStatesOfCountry(country)[0]?.isoCode)
-    } else {
-      setStates(State.getStatesOfCountry(countries[0].isoCode))
-      setState(State.getStatesOfCountry(countries[0].isoCode)[0]?.isoCode)
-    }
-  }, [country, countries])
-
-  useEffect(() => {
     if (address?.id && open) {
       const count = countries.find(
-        (c) =>
-          c.name.toLocaleUpperCase() === address.country.toLocaleUpperCase()
+        (c) => c.toLocaleUpperCase() === address.country.toLocaleUpperCase()
       )
-      setCountry(count?.isoCode)
-
-      const sta = State.getStatesOfCountry(count.isoCode).find(
-        (s) => s.name.toLocaleUpperCase() === address.state.toLocaleUpperCase()
-      )
-
-      setState(sta?.isoCode)
-
-      const cit = City.getCitiesOfState(count?.isoCode, sta?.isoCode).find(
-        (s) => s.name.toLocaleUpperCase() === address.city.toLocaleUpperCase()
-      )
+      setCountry(count || countries[0])
 
       reset({
         fullname: address.fullname || '',
         email: address.email || '',
         phone: address.phone || '',
-        country: count?.isoCode || countries[0].isoCode,
-        state: sta?.isoCode || states[0]?.isoCode,
-        city:
-          cit?.name ||
-          City.getCitiesOfState(count?.isoCode, sta?.isoCode)[0]?.name,
+        country: count || countries[0],
+        state: address.state || '',
+        city: address.city || '',
         postalCode: address.postalCode || '',
         street: address.street,
       })
     }
-  }, [address, reset, countries, states])
+  }, [open])
 
   const close = () => {
-    setOpen(false)
-    setAddress(null)
     reset({
       fullname: '',
       email: '',
       phone: '',
+      country: countries[0],
+      state: '',
+      city: '',
       postalCode: '',
       street: '',
     })
-    setCountry(countries[0].isoCode)
+    setOpen(false)
+    setAddress(null)
+    setCountry(countries[0])
   }
 
   const onSubmit = async (data) => {
@@ -94,13 +67,10 @@ const Address = ({ open, setOpen, address, setAddresses, setAddress }) => {
           `/address/update/${address.id}`,
           {
             ...data,
-            country: Country.getCountryByCode(data.country).name,
-            state: State.getStateByCodeAndCountry(
-              data.state,
-              data.country
-            ).name.toLocaleLowerCase(),
-            street: data.street.toLocaleLowerCase(),
-            city: data.city.toLocaleLowerCase(),
+            country: data.country,
+            state: data.state,
+            street: data.street,
+            city: data.city,
           },
           {
             headers: {
@@ -122,9 +92,8 @@ const Address = ({ open, setOpen, address, setAddresses, setAddress }) => {
           '/address/create',
           {
             ...data,
-            country: Country.getCountryByCode(data.country).name,
-            state: State.getStateByCodeAndCountry(data.state, data.country)
-              .name,
+            country: data.country,
+            state: data.state,
           },
           {
             headers: {
@@ -286,8 +255,8 @@ const Address = ({ open, setOpen, address, setAddresses, setAddress }) => {
                 onChange={(e) => setCountry(e.target.value)}
               >
                 {countries.map((el) => (
-                  <option key={el.isoCode} value={el.isoCode}>
-                    {el.name}
+                  <option key={el} value={el}>
+                    {el}
                   </option>
                 ))}
               </select>
@@ -308,20 +277,16 @@ const Address = ({ open, setOpen, address, setAddresses, setAddress }) => {
               >
                 State<span className='text-primary'>*</span>
               </label>
-              <select
-                name='state'
+              <input
+                type='text'
                 id='state'
-                className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 border-gray-300 focus:ring-primary`}
-                {...register('state', { required: 'Select a state' })}
-                value={state}
-                onChange={(e) => setState(e.target.value)}
-              >
-                {states?.map((el) => (
-                  <option key={el.isoCode} value={el.isoCode}>
-                    {el.name}
-                  </option>
-                ))}
-              </select>
+                {...register('state', {
+                  required: 'State is required',
+                })}
+                className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
+                  errors.state ? 'border-red-500' : 'border-gray-300'
+                }`}
+              />
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: errors.state ? 1 : 0 }}
@@ -338,18 +303,16 @@ const Address = ({ open, setOpen, address, setAddresses, setAddress }) => {
               >
                 City<span className='text-primary'>*</span>
               </label>
-              <select
-                name='city'
+              <input
+                type='text'
                 id='city'
-                className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 border-gray-300 focus:ring-primary`}
-                {...register('city', { required: 'Select a city' })}
-              >
-                {City.getCitiesOfState(country, state).map((el) => (
-                  <option key={state + el.name} value={el.isoCode}>
-                    {el.name}
-                  </option>
-                ))}
-              </select>
+                {...register('city', {
+                  required: 'City is required',
+                })}
+                className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
+                  errors.city ? 'border-red-500' : 'border-gray-300'
+                }`}
+              />
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: errors.city ? 1 : 0 }}
