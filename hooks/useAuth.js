@@ -79,6 +79,7 @@ const useAuth = () => {
         sessionStorage.setItem('userToken', token)
       }
 
+      axios.defaults.headers.common.Authorization = token
       // Update Redux store with user information
       dispatch(loginUser(res.data))
 
@@ -271,12 +272,12 @@ const useAuth = () => {
     return didSucced
   }
 
-  const resetPassword = async (data) => {
+  const resetPassword = async (data, link) => {
     dispatch(startLoading('resetPassword'))
     try {
       const res = await axios.post('/auth/reset-password', { ...data })
       toast.success(res.data.message)
-      router.push('/auth/login')
+      router.push(link === 'admin' ? '/admin/auth/login' : '/auth/login')
     } catch (err) {
       console.error(err)
       toast.error(err?.response?.data?.message || 'Error')

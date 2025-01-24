@@ -98,9 +98,6 @@ const useCart = () => {
 
   const clear = () => {
     dispatch(clearCart())
-    if (isAuthenticated) {
-      updateCart({ items: [], totalQuantity: 0, totalPrice: 0 })
-    }
   }
 
   const open = () => dispatch(openCart())
