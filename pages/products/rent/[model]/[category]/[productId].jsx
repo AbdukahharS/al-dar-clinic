@@ -7,6 +7,7 @@ import Button from '@/components/Button'
 import ProductCarousel from '@/components/carousels/ProductCarousel'
 import Animated from '@/components/Animated'
 import axios from 'axios'
+import toast from 'react-hot-toast'
 
 const ProductPage = () => {
   const [loading, setLoading] = useState(true)
