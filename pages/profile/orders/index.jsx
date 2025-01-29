@@ -2,14 +2,15 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { FaCircleInfo } from 'react-icons/fa6'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import Header from '@/components/layout/Header'
+import toast from 'react-hot-toast'
+import { useSearchParams } from 'next/navigation'
 
 const Orders = () => {
-  const router = useRouter()
   const [data, setData] = useState([])
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
+  const searchParams = useSearchParams()
   const limit = 10
 
   const fetchOrders = async () => {
@@ -19,9 +20,16 @@ const Orders = () => {
         limit,
       })
 
+      console.log(data.data)
+
       setTotal(data.total)
       setData(data.data)
     } catch (error) {
+      toast.error(
+        error?.response?.data?.message ||
+          error.message ||
+          'Something went wrong!'
+      )
       console.error(
         error?.response?.data?.message ||
           error.message ||
@@ -33,6 +41,10 @@ const Orders = () => {
   useEffect(() => {
     fetchOrders()
   }, [page])
+
+  useEffect(() => {
+    setPage(Number(searchParams.get('page')) || 1)
+  }, [searchParams])
 
   return (
     <div>
@@ -106,22 +118,21 @@ const Orders = () => {
           of {total} results
         </p>
         <div className='flex flex-row items-center gap-2'>
-          {Array.from(
-            { length: Math.ceil(total / limit) },
-            (_, i) => i + 1
-          ).map((pageNumber) => (
-            <button
-              key={pageNumber}
-              onClick={() => setPage(pageNumber)}
-              className={`w-7 h-7 flex items-center justify-center rounded-full ${
-                pageNumber === page
-                  ? 'text-white bg-primary'
-                  : 'text-primary border border-primary'
-              } cursor-pointer`}
-            >
-              {pageNumber}
-            </button>
-          ))}
+          {Array.from({ length: Math.ceil(total / limit) }, (_, i) => i + 1)
+            .filter((pageNumber) => pageNumber !== page)
+            .map((pageNumber) => (
+              <button
+                key={pageNumber}
+                onClick={() => router.push('/admin/users/?page=' + pageNumber)}
+                className={`w-7 h-7 flex items-center justify-center rounded-full ${
+                  pageNumber === page
+                    ? 'text-white bg-primary'
+                    : 'text-primary border border-primary'
+                } cursor-pointer`}
+              >
+                {pageNumber}
+              </button>
+            ))}
         </div>
       </div>
     </div>
