@@ -40,15 +40,27 @@ const RentalOrderDetails = () => {
       setCurrentStatus(res.data.orderStatus)
       setNewStatus(res.data.orderStatus)
     } catch (error) {
-      toast.error(error.message || 'Something went wrong')
+      toast.error(
+        error.response?.data.message || error.message || 'Something went wrong'
+      )
+      console.log(error)
+      
     }
   }
 
   useEffect(() => {
-    if (rentalId && isAuthenticated) {
+    if (
+      rentalId &&
+      isAuthenticated &&
+      axios.defaults.headers.common['Authorization']
+    ) {
       fetchOrder()
     }
-  }, [rentalId, isAuthenticated])
+  }, [
+    rentalId,
+    isAuthenticated,
+    axios.defaults.headers.common['Authorization'],
+  ])
 
   const handleStatusChange = (e) => {
     setNewStatus(e.target.value)
