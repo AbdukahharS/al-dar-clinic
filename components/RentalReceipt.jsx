@@ -14,7 +14,7 @@ const Line = () => (
   </div>
 )
 
-const Receipt = ({ order, refName, user }) => {
+const Receipt = ({ order, refName }) => {
   return (
     <div
       className=' w-full absolute bg-white py-10 md:py-16 px-4 -z-50 top-0 left-0'
@@ -92,7 +92,7 @@ const Receipt = ({ order, refName, user }) => {
         <Line />
         <div className='flex flex-row items-center justify-between text-2xl'>
           <b>Customer:</b>
-          <p>{user.name}</p>
+          <p>{order.address.fullname}</p>
         </div>
 
         <div className='flex flex-row items-center justify-between text-2xl'>
