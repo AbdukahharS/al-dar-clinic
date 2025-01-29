@@ -65,7 +65,7 @@ const VerifyPhone = () => {
                   <OtpInput
                     value={otp}
                     onChange={setOtp}
-                    numInputs={4}
+                    numInputs={6}
                     containerStyle={{ justifyContent: 'space-between' }}
                     renderInput={(props) => (
                       <input
