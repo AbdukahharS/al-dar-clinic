@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { motion } from 'framer-motion'
-import Link from 'next/link'
 import Image from 'next/image'
 import { FaCircleXmark, FaExclamation } from 'react-icons/fa6'
 import { useParams, useRouter } from 'next/navigation'
@@ -13,6 +12,7 @@ import Animated from '@/components/Animated'
 import Button from '@/components/Button'
 import Receipt from '@/components/Receipt'
 import useAuth from '@/hooks/useAuth'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 const orderStatuses = [
   'Requested',
@@ -34,10 +34,12 @@ const OrderDetails = () => {
   const params = useParams()
   const [order, setOrder] = useState({})
   const [currentStatus, setCurrentStatus] = useState('')
+  const [loading, setLoading] = useState(true)
   const router = useRouter()
   const { user, isAuthenticated } = useAuth()
 
   const fetchOrder = async () => {
+    setLoading(true)
     try {
       const res = await axios.get(`/order/${params.orderId}`)
       setOrder(res.data)
@@ -46,6 +48,8 @@ const OrderDetails = () => {
       setCurrentStatus(res.data.orderStatus)
     } catch (error) {
       toast.error(error.message || 'Something went wrong')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -54,13 +58,16 @@ const OrderDetails = () => {
       fetchOrder()
     }
   }, [params, axios.defaults.baseURL, isAuthenticated])
-  const handleCancel = (id) => {
-    const cancelOrder = async () => {
+
+  const handleCancel = () => {
+    const cancelOrder = async (id) => {
       try {
         await axios.put(`/order/cancel/${order.id}`)
         toast.success('Order has been cancelled successfully')
         router.push('/profile/orders')
       } catch (error) {
+        console.log(error)
+
         toast.error(error.message || 'Something went wrong')
       } finally {
         toast.dismiss(id)
@@ -289,7 +296,9 @@ const OrderDetails = () => {
                 <Button size='sm' onClick={() => toPDF()}>
                   Download Receipt
                 </Button>
-                {order.canCancelOrder ? (
+                {!order.canCancelOrder || currentStatus === 'Cancelled' ? (
+                  ''
+                ) : (
                   <Button
                     size='sm'
                     variant='outline'
@@ -298,13 +307,13 @@ const OrderDetails = () => {
                   >
                     Cancel Order
                   </Button>
-                ) : (
-                  ''
                 )}
               </Animated>
               <Animated className='flex-row items-center justify-end gap-6 hidden md:flex'>
                 <Button onClick={() => toPDF()}>Download Receipt</Button>
-                {order.canCancelOrder ? (
+                {!order.canCancelOrder || currentStatus === 'Cancelled' ? (
+                  ''
+                ) : (
                   <Button
                     onClick={handleCancel}
                     variant='outline'
@@ -312,13 +321,15 @@ const OrderDetails = () => {
                   >
                     Cancel Order
                   </Button>
-                ) : (
-                  ''
                 )}
               </Animated>
             </div>
           </div>
         </>
+      ) : loading ? (
+        <div className='py-10 flex items-center justify-center'>
+          <AiOutlineLoading3Quarters className='animate-spin h-10 w-10' />
+        </div>
       ) : (
         ''
       )}
