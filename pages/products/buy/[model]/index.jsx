@@ -1,16 +1,19 @@
 'use client'
 
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 import Card from '@/components/Card'
 import Animated from '@/components/Animated'
-import { useEffect, useState } from 'react'
-import axios from 'axios'
+import Button from '@/components/Button'
+import { FaArrowLeft } from 'react-icons/fa6'
 
 const Model = () => {
   const params = useParams()
   const [categories, setCategories] = useState([])
   const [business, setBusiness] = useState({})
+  const router = useRouter()
 
   const fetchCategories = async () => {
     try {
@@ -48,34 +51,20 @@ const Model = () => {
     params,
   ])
 
-  // const categories = [
-  //   {
-  //     name: 'Physiotherapy Tools',
-  //     img: tools,
-  //     link: `/products/buy/${params?.model}/tools`,
-  //   },
-  //   {
-  //     name: 'Physiotherapy Equipment',
-  //     img: equipments,
-  //     link: `/products/buy/${params?.model}/equipments`,
-  //   },
-  //   {
-  //     name: 'Physiotherapy Devices',
-  //     img: devices,
-  //     link: `/products/buy/${params?.model}/devices`,
-  //   },
-  //   {
-  //     name: 'Accessories',
-  //     img: accessories,
-  //     link: `/products/buy/${params?.model}/accessories`,
-  //   },
-  // ]
   return (
     <div className='flex-1'>
       <Animated
         animationType='fadeInLeft'
         className='flex flex-row items-center gap-12 w-full max-w-7xl mx-auto px-7 mt-12 md:mt-16'
       >
+        <Button
+          onClick={() => router.back()}
+          variant='outline'
+          size='iconSM'
+          className='border-black'
+        >
+          <FaArrowLeft className=' text-black' />
+        </Button>
         <h2 className='font-medium text-2xl md:text-4xl'>
           BUY {business?.name}
         </h2>

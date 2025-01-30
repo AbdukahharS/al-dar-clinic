@@ -1,16 +1,20 @@
 'use client'
 
+import axios from 'axios'
 import { useParams } from 'next/navigation'
+import { FaArrowLeft } from 'react-icons/fa6'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 
 import Card from '@/components/Card'
 import Animated from '@/components/Animated'
-import { useEffect, useState } from 'react'
-import axios from 'axios'
+import Button from '@/components/Button'
 
 const Model = () => {
   const params = useParams()
   const [categories, setCategories] = useState([])
   const [business, setBusiness] = useState({})
+  const router = useRouter()
 
   const fetchCategories = async () => {
     try {
@@ -54,6 +58,14 @@ const Model = () => {
         animationType='fadeInLeft'
         className='flex flex-row items-center gap-12 w-full max-w-7xl mx-auto px-7 mt-12 md:mt-16'
       >
+        <Button
+          onClick={() => router.back()}
+          variant='outline'
+          size='iconSM'
+          className='border-black'
+        >
+          <FaArrowLeft className=' text-black' />
+        </Button>
         <h2 className='font-medium text-2xl md:text-4xl'>
           Rent {business?.name}
         </h2>
