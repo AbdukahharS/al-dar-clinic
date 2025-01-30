@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
@@ -11,7 +12,7 @@ import {
   startLoading,
   endLoading,
 } from '../redux/slices/authSlice'
-import { useEffect } from 'react'
+import { clearCart } from '../redux/slices/cartSlice'
 
 const useAuth = () => {
   const router = useRouter()
@@ -139,6 +140,7 @@ const useAuth = () => {
 
   const logoutUser = () => {
     dispatch(logout())
+    dispatch(clearCart())
     localStorage.removeItem('userId')
     localStorage.removeItem('userToken')
     sessionStorage.removeItem('userId')
