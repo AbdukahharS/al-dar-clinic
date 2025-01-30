@@ -61,6 +61,8 @@ const OrderDetails = () => {
 
   const handleCancel = () => {
     const cancelOrder = async (id) => {
+      if (loading) return
+      setLoading(true)
       try {
         await axios.put(`/order/cancel/${order.id}`)
         toast.success('Order has been cancelled successfully')
@@ -71,6 +73,7 @@ const OrderDetails = () => {
         toast.error(error.message || 'Something went wrong')
       } finally {
         toast.dismiss(id)
+        setLoading(false)
       }
     }
     toast.custom(
@@ -109,7 +112,7 @@ const OrderDetails = () => {
             </p>
             <div className='flex flex-row items-center justify-center gap-4 md:hidden'>
               <Button size='sm' onClick={() => cancelOrder(t.id)}>
-                Yes, Cancel it!
+                {loading ? 'Cancelling...' : 'Yes, Cancel it!'}
               </Button>
               <Button
                 size='sm'
@@ -120,7 +123,9 @@ const OrderDetails = () => {
               </Button>
             </div>
             <div className='hidden flex-row items-center justify-center gap-8 md:flex'>
-              <Button onClick={() => cancelOrder(t.id)}>Yes, Cancel it!</Button>
+              <Button onClick={() => cancelOrder(t.id)}>
+                {loading ? 'Cancelling...' : 'Yes, Cancel it!'}
+              </Button>
               <Button variant='secondary' onClick={() => toast.dismiss(t.id)}>
                 No, Don&apos;t Cancel
               </Button>
