@@ -115,7 +115,9 @@ const Rental = () => {
             .map((pageNumber) => (
               <button
                 key={pageNumber}
-                onClick={() => router.push('/admin/users/?page=' + pageNumber)}
+                onClick={() =>
+                  router.push('/profile/rental/?page=' + pageNumber)
+                }
                 className={`w-7 h-7 flex items-center justify-center rounded-full ${
                   pageNumber === page
                     ? 'text-white bg-primary'

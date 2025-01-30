@@ -4,14 +4,15 @@ import { FaCircleInfo } from 'react-icons/fa6'
 import Link from 'next/link'
 import Header from '@/components/layout/Header'
 import toast from 'react-hot-toast'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 const Orders = () => {
   const [data, setData] = useState([])
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const searchParams = useSearchParams()
-  const limit = 10
+  const router = useRouter()
+  const limit = 8
 
   const fetchOrders = async () => {
     try {
@@ -98,9 +99,7 @@ const Orders = () => {
               ))
             ) : (
               <tr>
-                <td colSpan='5' className='text-center py-4'>
-                  No orders found.
-                </td>
+                <td colSpan='5' className='text-center py-4'></td>
               </tr>
             )}
           </tbody>
@@ -123,7 +122,9 @@ const Orders = () => {
             .map((pageNumber) => (
               <button
                 key={pageNumber}
-                onClick={() => router.push('/admin/users/?page=' + pageNumber)}
+                onClick={() =>
+                  router.push('/profile/orders/?page=' + pageNumber)
+                }
                 className={`w-7 h-7 flex items-center justify-center rounded-full ${
                   pageNumber === page
                     ? 'text-white bg-primary'
