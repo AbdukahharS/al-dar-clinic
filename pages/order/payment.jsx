@@ -13,20 +13,22 @@ import useCart from '@/hooks/useCart'
 import axios from 'axios'
 
 const Payment = () => {
-  const [chosenMethod, setChosenMethod] = useState()
+  const [chosenMethod, setChosenMethod] = useState(null)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
   const { items, totalPrice, clear } = useCart()
 
-  const methods = Array(2).fill({
-    img: cod,
-    name: 'Cash on Delivery',
-  })
-
-
+  const methods = [
+    {
+      img: cod,
+      name: 'Cash on Delivery',
+    },
+  ]
 
   const handleConfirm = async () => {
+    if (chosenMethod === null)
+      return toast.error('Please choose a payment method')
     let orderId = null
     setLoading(true)
 
@@ -176,8 +178,8 @@ const Payment = () => {
               {methods.map((el, i) => (
                 <div
                   key={i}
-                  className={`w-full py-4 px-5 cursor-pointer flex flex-row items-center gap-5 md:gap-8 text-xl md:text-2xl font-medium ${
-                    chosenMethod === i && 'bg-blue-300/20 rounded-xl'
+                  className={`w-full py-4 px-5 cursor-pointer flex flex-row items-center gap-5 md:gap-8 text-xl md:text-2xl font-medium border border-blue-300 rounded-xl ${
+                    chosenMethod === i && 'bg-blue-300/20'
                   }`}
                   onClick={() => setChosenMethod(i)}
                 >

@@ -119,13 +119,13 @@ const Checkout = () => {
                 </button>
               </div>
             </div>
-            <div className='px-[11.5px] py-7 md:px-6 flex flex-col md:flex-row md:flex-wrap'>
+            <div className='px-[11.5px] py-7 md:px-6 flex flex-col md:flex-row md:flex-wrap gap-4'>
               {addresses.map((el, i) => (
                 <div
                   key={i}
-                  className={`w-1/2 py-4 px-5 ${
+                  className={`w-[calc(50%-8px)] py-4 px-5 border rounded-xl cursor-pointer ${
                     chosenAddress?.id === el.id &&
-                    'border border-primary bg-primary/10 rounded-xl'
+                    ' border-primary bg-primary/10'
                   }`}
                   onClick={() => setChosenAddress(el)}
                 >
@@ -187,13 +187,13 @@ const Checkout = () => {
                 </button>
               </div>
             </div>
-            <div className='px-[11.5px] py-7 md:px-6 flex flex-col md:flex-row md:flex-wrap'>
+            <div className='px-[11.5px] py-7 md:px-6 flex flex-col md:flex-row md:flex-wrap gap-4'>
               {addresses.map((el, i) => (
                 <div
                   key={i}
-                  className={`w-1/2 py-4 px-5 ${
+                  className={`w-[calc(50%-8px)] py-4 px-5 border rounded-xl cursor-pointer ${
                     chosenBilling?.id === el.id &&
-                    'border border-primary bg-primary/10 rounded-xl'
+                    'border-primary bg-primary/10'
                   }`}
                   onClick={() => setChosenBilling(el)}
                 >
@@ -257,9 +257,11 @@ const Checkout = () => {
         <Button variant='outline' className='border-primary text-primary'>
           Back to Cart
         </Button>
-        <Link href={'/order/payment?address=' + chosenAddress?.id}>
-          <Button>Save and Pay</Button>
-        </Link>
+        {chosenAddress?.id && (
+          <Link href={'/order/payment?address=' + chosenAddress?.id}>
+            <Button>Save and Pay</Button>
+          </Link>
+        )}
       </Animated>
       <Address
         open={open}
