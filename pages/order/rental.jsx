@@ -122,9 +122,11 @@ const Rental = () => {
                     Order details
                   </Button>
                 </Link>
-                <Button size='sm' onClick={() => toast.dismiss(t.id)}>
-                  Continue
-                </Button>
+                <Link href='/products'>
+                  <Button size='sm' onClick={() => toast.dismiss(t.id)}>
+                    Continue
+                  </Button>
+                </Link>
               </div>
               <div className='hidden flex-row items-center justify-center gap-8 md:flex'>
                 <Link href={`/profile/rental/${res.data.id}`}>
@@ -136,7 +138,9 @@ const Rental = () => {
                     Order details
                   </Button>
                 </Link>
-                <Button onClick={() => toast.dismiss(t.id)}>Continue</Button>
+                <Link href='/products'>
+                  <Button onClick={() => toast.dismiss(t.id)}>Continue</Button>
+                </Link>
               </div>
             </motion.div>
           </motion.div>
