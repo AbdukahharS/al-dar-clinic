@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 
 import { FaArrowLeft } from 'react-icons/fa6'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import ProductCard from '@/components/ProductCard'
 import Button from '@/components/Button'
 import Animated from '@/components/Animated'
@@ -15,8 +16,10 @@ const Category = () => {
 
   const [category, setCategory] = useState({})
   const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(true)
 
   const fetchProducts = async () => {
+    setLoading(true)
     try {
       const res = await axios.post('/products/category', {
         categoryId: params.category,
@@ -25,6 +28,8 @@ const Category = () => {
       setProducts(res.data)
     } catch (error) {
       console.error(error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -72,24 +77,33 @@ const Category = () => {
         </h2>
         <div className='bg-primary hidden md:block h-[1px] md:flex-1'></div>
       </Animated>
-      <div className='flex flex-col md:flex-row md:flex-wrap gap-20 justify-center items-center w-full max-w-7xl mx-auto px-7 mt-16 mb-28'>
-        {products
-          .filter((el) => el.productType === 'RENT')
-          .map((el, i) => (
-            <ProductCard
-              key={i}
-              product={{
-                id: el.id,
-                name: el.name,
-                img: el.images[0].original,
-                price: `${el.rentPrice[Object.keys(el.rentPrice)[0]]}/day`,
-                link: `/products/${el.productType.toLocaleLowerCase()}/${
-                  params?.model
-                }/${params?.category}/${el.id}`,
-              }}
-            />
-          ))}
-      </div>
+      {loading ? (
+        <AiOutlineLoading3Quarters className='animate-spin h-20 w-20 mx-auto my-20' />
+      ) : (
+        <div className='flex flex-col md:flex-row md:flex-wrap gap-20 justify-center items-center w-full max-w-7xl mx-auto px-7 mt-16 mb-28'>
+          {products
+            .filter((el) => el.productType === 'RENT')
+            .map((el, i) => (
+              <ProductCard
+                key={i}
+                product={{
+                  id: el.id,
+                  name: el.name,
+                  img: el.images[0].original,
+                  price: `${el.rentPrice[Object.keys(el.rentPrice)[0]]}/day`,
+                  link: `/products/${el.productType.toLocaleLowerCase()}/${
+                    params?.model
+                  }/${params?.category}/${el.id}`,
+                }}
+              />
+            ))}
+          {!products.length && (
+            <h1 className='text-center text-4xl font-semibold my-20'>
+              This category has no products!
+            </h1>
+          )}
+        </div>
+      )}
     </div>
   )
 }
