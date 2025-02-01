@@ -503,17 +503,10 @@ const Book = () => {
             </select>
           </Animated>
           <Animated className='relative w-full mb-4'>
-            <label
-              htmlFor='message'
-              className={`absolute left-4 top-2 transition-all duration-200 ease-in-out ${
-                message && 'hidden'
-              }`}
-            >
-              Message (<span className='text-primary'>Optional</span>)
-            </label>
             <textarea
               name='message'
               id='message'
+              placeholder='Message (Optional)'
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 border-gray-300 focus:ring-primary'
