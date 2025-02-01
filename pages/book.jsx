@@ -161,7 +161,13 @@ const Book = () => {
                     Appointment details
                   </Button>
                 </Link>
-                <Button size='sm' onClick={() => toast.dismiss(t.id)}>
+                <Button
+                  size='sm'
+                  onClick={() => {
+                    reset()
+                    toast.dismiss(t.id)
+                  }}
+                >
                   Continue
                 </Button>
               </div>
@@ -175,7 +181,14 @@ const Book = () => {
                     Appointment details
                   </Button>
                 </Link>
-                <Button onClick={() => toast.dismiss(t.id)}>Continue</Button>
+                <Button
+                  onClick={() => {
+                    reset()
+                    toast.dismiss(t.id)
+                  }}
+                >
+                  Continue
+                </Button>
               </div>
             </motion.div>
           </motion.div>
