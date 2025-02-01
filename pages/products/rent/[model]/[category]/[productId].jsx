@@ -44,6 +44,17 @@ const ProductPage = () => {
     router.push(`/order/rental?id=${params.productId}&w=${type}&q=${quantity}`)
   }
 
+  const increment = () => {
+    if (quantity < product.stock[type]) {
+      setQuantity((prev) => prev + 1)
+    }
+  }
+  const decrement = () => {
+    if (quantity > 0) {
+      setQuantity((prev) => prev - 1)
+    }
+  }
+
   return (
     <div className='flex-1 bg-gradient-to-b from-[#f8f8f8] from-0% to-white to-100%'>
       <div className='w-full max-w-7xl mx-auto px-7 py-11 md:py-12'>
@@ -111,14 +122,18 @@ const ProductPage = () => {
                           : 'text-white bg-black'
                       }`}
                       disable={quantity === 0 ? 'true' : 'false'}
-                      onClick={() => setQuantity(quantity - 1)}
+                      onClick={decrement}
                     >
                       -
                     </button>
                     <span className='text-black'>{quantity}</span>
                     <button
-                      className={`text-xs inline-block py-[6px] px-3 cursor-pointer rounded-full bg-black text-white`}
-                      onClick={() => setQuantity(quantity + 1)}
+                      className={`text-xs inline-block py-[6px] px-3 cursor-pointer rounded-full ${
+                        quantity < product.stock[type]
+                          ? 'text-white bg-black'
+                          : 'bg-gray-400 text-gray-200'
+                      }`}
+                      onClick={increment}
                     >
                       +
                     </button>
