@@ -524,7 +524,7 @@ const Book = () => {
               onChange={(e) => setMessage(e.target.value)}
               className='w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 border-gray-300 focus:ring-primary'
               rows={5}
-              {...register('mesage')}
+              {...register('message')}
             ></textarea>
           </Animated>
           <Animated className='flex flex-row items-center gap-[25px]'>
