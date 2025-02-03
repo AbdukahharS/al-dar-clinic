@@ -118,6 +118,7 @@ const useAuth = () => {
         sessionStorage.setItem('userToken', token)
       }
 
+      axios.defaults.headers.common.Authorization = token
       // Update Redux store with user information
       dispatch(loginUser(res.data))
 
@@ -141,6 +142,7 @@ const useAuth = () => {
   const logoutUser = () => {
     dispatch(logout())
     dispatch(clearCart())
+    axios.defaults.headers.common.Authorization = ''
     localStorage.removeItem('userId')
     localStorage.removeItem('userToken')
     sessionStorage.removeItem('userId')
@@ -185,6 +187,7 @@ const useAuth = () => {
         otp: data.code,
       })
       dispatch(verify(res.data))
+      axios.defaults.headers.common.Authorization = res.data.token
       localStorage.setItem('userToken', res.data.token)
       localStorage.setItem('userId', res.data.id)
       toast.success('You have logged in successfully!')
@@ -205,6 +208,7 @@ const useAuth = () => {
         otp: data.otp,
       })
       dispatch(verify(res.data))
+      axios.defaults.headers.common.Authorization = res.data.token
       localStorage.setItem('userToken', res.data.token)
       localStorage.setItem('userId', res.data.id)
       toast.success('You have logged in successfully!')

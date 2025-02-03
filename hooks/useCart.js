@@ -14,7 +14,7 @@ const useCart = () => {
   const { items, totalQuantity, totalPrice, cartState } = useSelector(
     (state) => state.cart
   )
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, user } = useAuth()
 
   const fetchCart = async () => {
     try {
@@ -34,10 +34,10 @@ const useCart = () => {
   }
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && user.id) {
       fetchCart()
     }
-  }, [isAuthenticated])
+  }, [isAuthenticated, user])
 
   const addToCart = async (item) => {
     try {
