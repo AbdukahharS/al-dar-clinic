@@ -55,7 +55,7 @@ const OrderDetails = () => {
         <Button onClick={() => router.back()} variant='ghost' size='icon'>
           <FaArrowLeft className='text-2xl' />
         </Button>
-        <h1 className='text-2xl font-medium'>Product Details</h1>
+        <h1 className='text-2xl font-medium'>Order Details</h1>
       </div>
       {order?.id ? (
         <div className='px-8 xl:px-20 py-7 md:py-14'>
