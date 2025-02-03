@@ -8,6 +8,7 @@ import toast from 'react-hot-toast'
 import Animated from '@/components/Animated'
 import Button from '@/components/Button'
 import useAuth from '@/hooks/useAuth'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 const orderStatuses = [
   'Requested',
@@ -27,11 +28,13 @@ const orderStatuses = [
 const OrderDetails = () => {
   const router = useRouter()
   const params = useParams()
+  const [loading, setLoading] = useState(false)
   const [order, setOrder] = useState({})
   const [currentStatus, setCurrentStatus] = useState('')
   const { isAuthenticated } = useAuth()
 
   const fetchOrder = async () => {
+    setLoading(true)
     try {
       const res = await axios.get(`/order/${params.orderId}`)
       setOrder(res.data)
@@ -40,6 +43,8 @@ const OrderDetails = () => {
       setCurrentStatus(res.data.orderStatus)
     } catch (error) {
       toast.error(error.message || 'Something went wrong')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -57,7 +62,9 @@ const OrderDetails = () => {
         </Button>
         <h1 className='text-2xl font-medium'>Order Details</h1>
       </div>
-      {order?.id ? (
+      {loading ? (
+        <AiOutlineLoading3Quarters className='animate-spin h-20 w-20 mx-auto mt-40 text-primary' />
+      ) : order?.id ? (
         <div className='px-8 xl:px-20 py-7 md:py-14'>
           <div className='text-center'>
             <p className='text-xl font-medium mb-3'>Thank you</p>
