@@ -186,8 +186,8 @@ const useAuth = () => {
         email: user.email,
         otp: data.code,
       })
-      dispatch(verify(res.data))
       axios.defaults.headers.common.Authorization = res.data.token
+      dispatch(verify(res.data))
       localStorage.setItem('userToken', res.data.token)
       localStorage.setItem('userId', res.data.id)
       toast.success('You have logged in successfully!')
@@ -207,8 +207,8 @@ const useAuth = () => {
         phone: user.phone,
         otp: data.otp,
       })
-      dispatch(verify(res.data))
       axios.defaults.headers.common.Authorization = res.data.token
+      dispatch(verify(res.data))
       localStorage.setItem('userToken', res.data.token)
       localStorage.setItem('userId', res.data.id)
       toast.success('You have logged in successfully!')

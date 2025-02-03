@@ -34,10 +34,16 @@ const useCart = () => {
   }
 
   useEffect(() => {
-    if (isAuthenticated && user.id) {
+    const token =
+      localStorage.getItem('userToken') || sessionStorage.getItem('userToken')
+
+    if (
+      isAuthenticated &&
+      axios.defaults.headers.common['Authorization'] === token
+    ) {
       fetchCart()
     }
-  }, [isAuthenticated, user])
+  }, [isAuthenticated, axios.defaults.headers.common['Authorization']])
 
   const addToCart = async (item) => {
     try {
