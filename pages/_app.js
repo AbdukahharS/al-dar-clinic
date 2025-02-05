@@ -83,18 +83,18 @@ const Layout = ({ Component, pageProps }) => {
         {path?.startsWith('/profile') ? (
           !loading.user &&
           isAuthenticated && (
-            <div className='w-full max-w-7xl mx-auto py-10 px-7 md:pt-16 flex flex-col md:flex-row md:items-start gap-8 md:gap-16'>
+            <div className='w-full lg:max-w-7xl mx-auto py-10 px-7 md:pt-16 flex flex-col md:flex-row md:items-start gap-8 md:gap-16'>
               <SideBar />
-              <div className='flex-1'>
+              <div className='w-full md:w-[calc(100%-288px-64px)]'>
                 <Component {...pageProps} />
               </div>
             </div>
           )
         ) : path?.startsWith('/admin') && !path?.startsWith('/admin/auth') ? (
           !loading?.user && (
-            <div className='w-full flex flex-col md:flex-row'>
+            <div className='flex flex-col md:flex-row w-[100vw]'>
               <AdminSidebar />
-              <div className='flex-1'>
+              <div className='w-full md:w-[calc(100vw-288px)]'>
                 <Component {...pageProps} />
               </div>
             </div>
