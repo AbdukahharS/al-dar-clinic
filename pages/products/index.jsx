@@ -17,13 +17,10 @@ const ProductsHome = () => {
   }
 
   useEffect(() => {
-    if (
-      axios.defaults.baseURL &&
-      axios.defaults.headers.common['Authorization']
-    ) {
+    if (axios.defaults.baseURL) {
       fetchBusinesses()
     }
-  }, [axios.defaults.baseURL, axios.defaults.headers.common['Authorization']])
+  }, [axios.defaults.baseURL])
   return (
     <div className='flex-1'>
       <Animated
