@@ -31,7 +31,7 @@ const ProductCard = ({ product }) => {
           </motion.div>
           <div className='mt-5 mb-2 px-1'>
             <p className='text-lg'>{product.name}</p>
-            <p className='font-bold text-xl'>Dhs {product.price}</p>
+            <p className='font-bold text-xl'>$ {product.price}</p>
           </div>
         </motion.div>
       </Link>

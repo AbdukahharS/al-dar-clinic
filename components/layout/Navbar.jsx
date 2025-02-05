@@ -64,9 +64,7 @@ const Navbar = () => {
             Products
           </AnimatedLink>
           <Link href={isAuthenticated ? '/book' : '/auth'}>
-            <Button variant='outline' className='!text-primary !border-primary'>
-              Book now
-            </Button>
+            <Button variant='primary'>Book now</Button>
           </Link>
           {isAuthenticated && !loading?.user && (
             <>

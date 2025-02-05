@@ -87,7 +87,7 @@ const Footer = () => {
         <p className='py-10'>
           <FaRegCopyright className='inline' />
           <span className='ml-2 text-sm align-middle'>
-            2024 Al-Dar Rehabilitation Center.
+            {new Date().getFullYear()} Al-Dar Rehabilitation Center.
           </span>
         </p>
       </div>

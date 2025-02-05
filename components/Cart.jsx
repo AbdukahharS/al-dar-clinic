@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { FaCartShopping, FaCircleXmark, FaPlus } from 'react-icons/fa6'
+import { FaCartShopping, FaCircleXmark, FaMinus, FaPlus } from 'react-icons/fa6'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 
@@ -15,6 +14,7 @@ const Cart = () => {
     totalQuantity,
     removeFromCart,
     increment,
+    decrement,
     cartState,
     close,
     open,
@@ -61,7 +61,7 @@ const Cart = () => {
         <motion.div
           initial={{ y: 15 }}
           animate={cartState ? { y: 0 } : { y: 15 }}
-          className='w-[100%] sm:max-w-sm bg-white flex flex-col'
+          className='w-[100%] sm:max-w-sm bg-white flex flex-col max-h-screen overflow-y-auto'
         >
           <div className='p-6 pt-12 flex flex-row items-center justify-between border-b border-black'>
             <h2 className='text-2xl font-medium text-primary'>Shopping Cart</h2>
@@ -96,13 +96,12 @@ const Cart = () => {
                           <p className='text-lg'>{el.product.name}</p>
                         </div>
                         <div className='rounded-full bg-gray-200/70 h-fit p-1 w-fit flex gap-2 flex-row items-center'>
-                          {/* <button
-                            className={`text-[10px] inline-block p-[3px] cursor-pointer rounded-full text-white bg-black`}
-                            disable={true ? 'true' : 'false'}
-                            onClick={() => decrementQuantity(el.id)}
+                          <button
+                            className={`text-[10px] inline-block p-[3px] cursor-pointer rounded-full bg-black text-white`}
+                            onClick={() => decrement(el.id)}
                           >
                             <FaMinus />
-                          </button> */}
+                          </button>
                           <span className='text-black text-xs'>
                             {el.quantity}
                           </span>
@@ -124,7 +123,7 @@ const Cart = () => {
                           Remove
                         </button>
                         <p className='text-xs font-medium'>
-                          Dhs {el.product.buyPrice[el.weightInKg]}
+                          $ {el.product.buyPrice[el.weightInKg]}
                         </p>
                       </div>
                     </div>
@@ -134,7 +133,7 @@ const Cart = () => {
               <div className='pt-3 px-4 border-t pb-8'>
                 <div className='flex flex-row items-center justify-between text-gray-700 font-semibold mb-3'>
                   <p>Total</p>
-                  <p>Dhs {totalPrice}</p>
+                  <p>$ {totalPrice}</p>
                 </div>
                 <Link href='/order/checkout'>
                   <Button className='w-full' onClick={close}>
