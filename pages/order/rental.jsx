@@ -204,14 +204,14 @@ const Rental = () => {
               {addresses.map((el, i) => (
                 <div
                   key={i}
-                  className={`w-[calc(50%-8px)] py-4 px-5 cursor-pointer border rounded-xl ${
+                  className={`w-full md:w-[calc(50%-8px)] py-4 px-5 cursor-pointer border rounded-xl ${
                     address?.id === el.id && ' border-primary bg-primary/10 '
                   }`}
                   onClick={() => setAddress(el)}
                 >
                   <p>{el.fullname}</p>
                   <p>{el.number}</p>
-                  <p>{el.email}</p>
+                  <p className='truncate whitespace-nowrap'>{el.email}</p>
                   <p>{el.city},</p>
                   <p>{el.state},</p>
                   <p>{el.country},</p>

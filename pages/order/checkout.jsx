@@ -123,7 +123,7 @@ const Checkout = () => {
               {addresses.map((el, i) => (
                 <div
                   key={i}
-                  className={`w-[calc(50%-8px)] py-4 px-5 border rounded-xl cursor-pointer ${
+                  className={`w-ful md:w-[calc(50%-8px)] py-4 px-5 border rounded-xl cursor-pointer ${
                     chosenAddress?.id === el.id &&
                     ' border-primary bg-primary/10'
                   }`}
@@ -131,7 +131,7 @@ const Checkout = () => {
                 >
                   <p>{el.fullname}</p>
                   <p>{el.number}</p>
-                  <p>{el.email}</p>
+                  <p className='truncate whitespace-nowrap'>{el.email}</p>
                   <p>{el.city},</p>
                   <p>{el.state},</p>
                   <p>{el.country},</p>
@@ -191,7 +191,7 @@ const Checkout = () => {
               {addresses.map((el, i) => (
                 <div
                   key={i}
-                  className={`w-[calc(50%-8px)] py-4 px-5 border rounded-xl cursor-pointer ${
+                  className={`w-full md:w-[calc(50%-8px)] py-4 px-5 border rounded-xl cursor-pointer ${
                     chosenBilling?.id === el.id &&
                     'border-primary bg-primary/10'
                   }`}
@@ -199,7 +199,7 @@ const Checkout = () => {
                 >
                   <p>{el.fullname}</p>
                   <p>{el.number}</p>
-                  <p>{el.email}</p>
+                  <p className='truncate whitespace-nowrap'>{el.email}</p>
                   <p>{el.city},</p>
                   <p>{el.state},</p>
                   <p>{el.country},</p>
@@ -240,7 +240,7 @@ const Checkout = () => {
                   </div>
                   <div className='flex flex-col justify-end'>
                     <p className='text-xs font-medium'>
-                      Dhs {el.product.buyPrice[el.weightInKg]}
+                      $ {el.product.buyPrice[el.weightInKg]}
                     </p>
                   </div>
                 </div>
@@ -249,7 +249,7 @@ const Checkout = () => {
           </div>
           <div className='border-t border-gray-600 py-2 px-4 flex flex-row items-center justify-between mx-[11.5px] mb-4 md:mx-6'>
             <p className='font-semibold text-gray-700'>Total</p>
-            <p className='font-semibold text-gray-700'>Dhs {totalPrice}</p>
+            <p className='font-semibold text-gray-700'>$ {totalPrice}</p>
           </div>
         </div>
       </div>

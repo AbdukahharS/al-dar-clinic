@@ -226,7 +226,7 @@ const Payment = () => {
                   </div>
                   <div className='flex flex-col justify-end'>
                     <p className='text-xs font-medium'>
-                      Dhs {el.product.buyPrice[el.weightInKg]}
+                      $ {el.product.buyPrice[el.weightInKg]}
                     </p>
                   </div>
                 </div>
@@ -235,7 +235,7 @@ const Payment = () => {
           </div>
           <div className='border-t border-gray-600 py-2 px-4 flex flex-row items-center justify-between mx-[11.5px] mb-4 md:mx-6'>
             <p className='font-semibold text-gray-700'>Total</p>
-            <p className='font-semibold text-gray-700'>Dhs {totalPrice}</p>
+            <p className='font-semibold text-gray-700'>$ {totalPrice}</p>
           </div>
         </Animated>
       </div>
