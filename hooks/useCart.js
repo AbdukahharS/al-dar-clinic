@@ -8,6 +8,7 @@ import {
   setCart,
 } from '@/redux/slices/cartSlice'
 import useAuth from './useAuth'
+import toast from 'react-hot-toast'
 
 const useCart = () => {
   const dispatch = useDispatch()
@@ -58,6 +59,7 @@ const useCart = () => {
         })
       )
     } catch (error) {
+      toast.error(error.response?.data?.message || error.message)
       console.error(error)
     }
   }
@@ -92,12 +94,45 @@ const useCart = () => {
 
       dispatch(
         setCart({
-          items: cart.quantity,
+          items: items.map((el) =>
+            el.id === id ? { ...el, quantity: el.quantity + 1 } : el
+          ),
           totalPrice: cart.total,
           totalQuantity: cart.quantity.length,
         })
       )
     } catch (error) {
+      toast.error(error.response?.data?.message || error.message)
+      console.error(error)
+    }
+  }
+
+  const decrement = async (id) => {
+    try {
+      const item = items.find((el) => el.id === id)
+      if (!item) throw new Error('This product is not in the cart')
+      if (item.quantity === 1) {
+        await removeFromCart(id)
+        return
+      } else {
+        await axios.delete('/cart/remove', { data: { id: id } })
+        const res = await axios.post('/cart/add', {
+          ...item,
+          quantity: item.quantity - 1,
+        })
+
+        const cart = await res.data
+
+        dispatch(
+          setCart({
+            items: cart.quantity,
+            totalPrice: cart.total,
+            totalQuantity: cart.quantity.length,
+          })
+        )
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message)
       console.error(error)
     }
   }
@@ -118,6 +153,7 @@ const useCart = () => {
     increment,
     clear,
     close,
+    decrement,
     open,
     cartState,
   }
