@@ -43,19 +43,11 @@ const Category = () => {
   }
 
   useEffect(() => {
-    if (
-      axios.defaults.baseURL &&
-      axios.defaults.headers.common['Authorization'] &&
-      params?.category
-    ) {
+    if (axios.defaults.baseURL && params?.category) {
       fetchProducts()
       fetchCategory()
     }
-  }, [
-    axios.defaults.baseURL,
-    axios.defaults.headers.common['Authorization'],
-    params,
-  ])
+  }, [axios.defaults.baseURL, params])
 
   return (
     <div className='flex-1 bg-gradient-to-b from-[#f8f8f8] from-0% to-white to-100% pt-12 md:pt-16'>
