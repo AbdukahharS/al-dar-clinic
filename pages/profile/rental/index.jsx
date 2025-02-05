@@ -44,7 +44,7 @@ const Rental = () => {
   return (
     <div>
       <Header pageTitle='Rental History' />
-      <div className='overflow-x-auto'>
+      <div className='overflow-x-auto max-w-full'>
         <table className='min-w-full table-auto text-gray-700'>
           <thead>
             <tr>
@@ -86,7 +86,7 @@ const Rental = () => {
                     </div>
                   </td>
                   <td className='px-3 py-4 text-center whitespace-nowrap'>
-                    {order.product.rentPrice[order.weightInKg]}
+                    $ {order.product.rentPrice[order.weightInKg]}
                   </td>
                   <td className='px-3 py-4 text-primary whitespace-nowrap'>
                     <Link href={`/profile/rental/${order.id}`}>
