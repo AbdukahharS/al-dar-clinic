@@ -56,7 +56,10 @@ const OrderDetails = () => {
 
   return (
     <div>
-      <div className='bg-primary text-white px-8 md:px-20 py-8 flex items-center'>
+      <div className='h-[104px]'></div>
+
+      {/* Fixed header */}
+      <div className='bg-primary text-white px-8 md:px-20 py-8 flex items-center fixed top-[155px] md:top-0 w-full md:w-[calc(100%-288px)] z-10 right-0'>
         <Button onClick={() => router.back()} variant='ghost' size='icon'>
           <FaArrowLeft className='text-2xl' />
         </Button>
@@ -207,7 +210,7 @@ const OrderDetails = () => {
                         </div>
                         {/* <div className='flex flex-col justify-end'>
                           <p className='text-xs font-medium'>
-                            Dhs {el.product.price}
+                            $ {el.product.price}
                           </p>
                         </div> */}
                       </div>
@@ -216,9 +219,7 @@ const OrderDetails = () => {
                 </div>
                 <div className='border-t border-gray-600 py-2 px-4 flex flex-row items-center justify-between mx-[11.5px] mb-4 md:mx-6'>
                   <p className='font-semibold text-gray-700'>Total</p>
-                  <p className='font-semibold text-gray-700'>
-                    Dhs {order.total}
-                  </p>
+                  <p className='font-semibold text-gray-700'>$ {order.total}</p>
                 </div>
               </Animated>
             </div>

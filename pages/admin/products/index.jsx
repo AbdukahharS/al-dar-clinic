@@ -91,8 +91,11 @@ const Products = () => {
   const showingTo = Math.min((searchParams.get('page') || 1) * limit, total)
 
   return (
-    <div>
-      <div className='bg-primary text-white px-8 md:px-20 py-8 flex justify-between items-center'>
+    <>
+      <div className='h-[104px]'></div>
+
+      {/* Fixed header */}
+      <div className='bg-primary text-white px-8 md:px-20 py-8 flex justify-between items-center fixed top-[155px] md:top-0 w-full md:w-[calc(100%-288px)] z-10 right-0'>
         <h1 className='text-2xl font-medium'>Product Management</h1>
         <div className='flex items-center gap-4'>
           <Button
@@ -126,8 +129,8 @@ const Products = () => {
           </select>
         </div>
       </div>
-      <div className='overflow-x-auto'>
-        <table className='min-w-full table-auto text-gray-700'>
+      <div className='w-full overflow-x-auto max-w-[100vw-288px]'>
+        <table className='table-auto text-gray-700  overflow-x-auto max-w-[100vw-288px] w-full'>
           <thead>
             <tr>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>No</th>
@@ -153,7 +156,7 @@ const Products = () => {
                 <td className='px-3 py-4 whitespace-nowrap text-center'>
                   {((searchParams.get('page') || 1) - 1) * limit + index + 1}
                 </td>
-                <td className='px-3 py-4 whitespace-nowrap text-center max-w-xs overflow-hidden'>
+                <td className='px-3 py-4 whitespace-nowrap text-center max-w-64 overflow-hidden truncate'>
                   {order.name}
                 </td>
                 <td className='px-3 py-4 whitespace-nowrap text-center'>
@@ -167,9 +170,9 @@ const Products = () => {
                     .map(([key, value]) => `${key}kg: ${value}`)
                     .join(', ')}
                 </td>
-                <td className='px-3 py-4 text-center whitespace-nowrap'>
+                <td className='px-3 py-4 text-center whitespace-nowrap overflow-hidden max-w-64 truncate'>
                   {Object.entries(order.buyPrice)
-                    .map(([key, value]) => `${key}kg: ${value}`)
+                    .map(([key, value]) => `${key}kg: $ ${value}`)
                     .join(', ')}
                 </td>
                 <td className='px-3 py-4 text-primary whitespace-nowrap'>
@@ -218,7 +221,7 @@ const Products = () => {
             ))}
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

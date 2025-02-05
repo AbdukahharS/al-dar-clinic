@@ -134,7 +134,11 @@ const CategoryManagement = () => {
 
   return (
     <div className='pb-20'>
-      <div className='bg-primary text-white px-8 md:px-20 py-8 flex justify-between items-center'>
+      {/* Placeholder to prevent layout shift */}
+      <div className='h-[96px]'></div>
+
+      {/* Fixed header */}
+      <div className='bg-primary text-white px-8 md:px-20 py-8 flex justify-between items-center fixed top-[155px] md:top-0 w-full md:w-[calc(100%-288px)] z-10 right-0'>
         <h1 className='text-2xl font-medium'>Category Management</h1>
       </div>
 

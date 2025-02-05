@@ -69,7 +69,10 @@ const RentalOrders = () => {
 
   return (
     <div>
-      <div className='bg-primary text-white px-8 md:px-20 py-8 flex justify-between items-center'>
+      <div className='h-[104px]'></div>
+
+      {/* Fixed header */}
+      <div className='bg-primary text-white px-8 md:px-20 py-8 flex justify-between items-center fixed top-[155px] md:top-0 w-full md:w-[calc(100%-288px)] z-10 right-0'>
         <h1 className='text-2xl font-medium'>Manage Rental Orders</h1>
         <div className='flex items-center gap-4'>
           <Button

@@ -62,7 +62,10 @@ const Appointments = () => {
 
   return (
     <div>
-      <div className='bg-primary text-white px-8 md:px-20 py-8 flex justify-between items-center'>
+      <div className='h-[104px]'></div>
+
+      {/* Fixed header */}
+      <div className='bg-primary text-white px-8 md:px-20 py-8 flex justify-between items-center fixed top-[155px] md:top-0 w-full md:w-[calc(100%-288px)] z-10 right-0'>
         <h1 className='text-2xl font-medium'>Appointment Management</h1>
         <div className='flex items-center gap-4'>
           <Button
@@ -125,7 +128,7 @@ const Appointments = () => {
                   {order.email}
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  {new Date(order.date).toLocaleString()}
+                  {new Date(order.date).toLocaleDateString()}
                 </td>
                 <td className='px-3 py-4 text-primary whitespace-nowrap'>
                   <Link href={`/admin/appointments/${order.id}`}>

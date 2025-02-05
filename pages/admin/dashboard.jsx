@@ -110,7 +110,10 @@ const Dashboard = () => {
   ])
   return (
     <div>
-      <div className='bg-primary text-white px-8 md:px-20 py-8 flex justify-between items-center'>
+      <div className='h-[96px]'></div>
+
+      {/* Fixed header */}
+      <div className='bg-primary text-white px-8 md:px-20 py-8 flex justify-between items-center fixed top-[155px] md:top-0 w-full md:w-[calc(100%-288px)] z-10 right-0'>
         <h1 className='text-2xl font-medium'>Dashboard</h1>
         <Button
           className='bg-white !text-primary rounded-lg flex items-center flex-row gap-2'
