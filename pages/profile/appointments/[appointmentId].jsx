@@ -34,42 +34,56 @@ const Appointments = () => {
       {appointment?.id && (
         <div className='flex flex-col md:flex-row gap-5 z-10 relative'>
           <div className='w-full md:w-[calc(50%-10px)]'>
-            <div className='border rounded-lg bg-white'>
+            <div className='border rounded-lg bg-white w-full'>
               <div className='flex items-center flex-row p-4 font-semibold gap-3 border-b'>
                 <FaUser className='text-primary text-xl' />
                 Patient Information
               </div>
-              <table className='table-auto w-full border-collapse'>
+              <table className='w-full border-collapse table-fixed'>
                 <tbody>
                   <tr className='border-b'>
-                    <td className='font-bold px-4 pt-3 pb-1'>NAME:</td>
-                    <td className='px-4 pt-3 pb-1'>{appointment.fullname}</td>
+                    <td className='font-bold px-4 pt-3 pb-1 w-[120px]'>
+                      NAME:
+                    </td>
+                    <td className='px-4 pt-3 pb-1 break-words'>
+                      {appointment.fullname}
+                    </td>
                   </tr>
                   <tr className='border-b'>
-                    <td className='font-bold px-4 py-1'>EMAIL:</td>
-                    <td className='px-4 py-1'>{appointment.email}</td>
+                    <td className='font-bold px-4 py-1 w-[120px]'>EMAIL:</td>
+                    <td className='px-4 py-1 break-words'>
+                      {appointment.email}
+                    </td>
                   </tr>
                   <tr className='border-b'>
-                    <td className='font-bold px-4 py-1'>PHONE:</td>
-                    <td className='px-4 py-1'>{appointment.phone}</td>
+                    <td className='font-bold px-4 py-1 w-[120px]'>PHONE:</td>
+                    <td className='px-4 py-1 break-words'>
+                      {appointment.phone}
+                    </td>
                   </tr>
                   <tr className='border-b'>
-                    <td className='font-bold px-4 py-1'>GENDER:</td>
-                    <td className='px-4 py-1'>{appointment.gender}</td>
+                    <td className='font-bold px-4 py-1 w-[120px]'>GENDER:</td>
+                    <td className='px-4 py-1 break-words'>
+                      {appointment.gender}
+                    </td>
                   </tr>
                   <tr className='border-b'>
-                    <td className='font-bold px-4 py-1'>TYPE:</td>
-                    <td className='px-4 py-1'>
+                    <td className='font-bold px-4 py-1 w-[120px]'>TYPE:</td>
+                    <td className='px-4 py-1 break-words'>
                       {appointment.serviceType?.name}
                     </td>
                   </tr>
                   <tr className='border-b'>
-                    <td className='font-bold px-4 py-1'>MESSAGE:</td>
-                    <td className='px-4 py-1'>{appointment.message}</td>
+                    <td className='font-bold px-4 py-1 w-[120px]'>MESSAGE:</td>
+                    <td className='px-4 py-1 break-words'>
+                      {appointment.message}
+                    </td>
                   </tr>
                   <tr className='border-b'>
-                    <td className='font-bold px-4 pt-1 pb-3'>AGE:</td>
-                    <td className='px-4 pt-1 pb-3'>{appointment.age}</td>
+                    <td className='font-bold px-4 pt-1 pb-3 w-[120px]'>AGE:</td>
+                    <td className='px-4 pt-1 pb-3 break-words'>
+                      {appointment.age}
+                    </td>
                   </tr>
                 </tbody>
               </table>

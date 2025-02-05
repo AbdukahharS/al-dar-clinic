@@ -213,7 +213,7 @@ const OrderDetails = () => {
                       </div>
                       <div className='flex flex-col justify-end'>
                         <p className='text-xs font-medium'>
-                          Dhs {order.product.rentPrice[order.weightInKg]}
+                          $ {order.product.rentPrice[order.weightInKg]}
                         </p>
                       </div>
                     </div>
@@ -221,17 +221,13 @@ const OrderDetails = () => {
                 </div>
                 <div className='border-t border-gray-600 py-2 px-4 flex flex-row items-center justify-between mx-[11.5px] mb-4 md:mx-6'>
                   <p className='font-semibold text-gray-700'>Total</p>
-                  <p className='font-semibold text-gray-700'>
-                    Dhs {order.total}
-                  </p>
+                  <p className='font-semibold text-gray-700'>$ {order.total}</p>
                 </div>
               </Animated>
               <Animated className='flex flex-row items-center justify-between md:justify-end md:gap-6 md:hidden'>
-                <Link href='/profile/rental/receipt'>
-                  <Button size='sm' onClick={() => toPDF()}>
-                    Download Receipt
-                  </Button>
-                </Link>
+                <Button size='sm' onClick={() => toPDF()}>
+                  Download Receipt
+                </Button>
                 {/* <Button
                   size='sm'
                   variant='outline'
