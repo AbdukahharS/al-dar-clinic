@@ -38,7 +38,7 @@ const About = () => {
   const [isOmanOpen, setIsOmanOpen] = useState(false)
   const [isIraqOpen, setIsIraqOpen] = useState(false)
 
-  const tags = ['Counseling', 'Spine', 'Geriatric', 'Pain', 'Neutro', 'Physio']
+  const tags = ['Counseling', 'Spine', 'Geriatric', 'Pain', 'Neuro', 'Physio']
 
   return (
     <div className='py-10'>

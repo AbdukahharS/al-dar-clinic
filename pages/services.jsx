@@ -12,7 +12,7 @@ import rehabilitative from '@/public/images/rehabilitative.webp'
 import consultation from '@/public/images/consultation.webp'
 import Animated from '@/components/Animated'
 
-const tags = ['Counseling', 'Spine', 'Geriatric', 'Pain', 'Neutro', 'Physio']
+const tags = ['Counseling', 'Spine', 'Geriatric', 'Pain', 'Neuro', 'Physio']
 
 const services = {
   inPation: [
