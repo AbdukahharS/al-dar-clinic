@@ -8,12 +8,14 @@ import ProductCarousel from '@/components/carousels/ProductCarousel'
 import Animated from '@/components/Animated'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import useAuth from '@/hooks/useAuth'
 
 const ProductPage = () => {
   const [loading, setLoading] = useState(true)
   const [product, setProduct] = useState(null)
   const [quantity, setQuantity] = useState(0)
   const [type, setType] = useState(null)
+  const { isAuthenticated } = useAuth()
 
   const params = useParams()
   const router = useRouter()
@@ -35,10 +37,10 @@ const ProductPage = () => {
       }
     }
 
-    if (params?.productId && axios.defaults.headers.common['Authorization']) {
+    if (params?.productId) {
       fetchProduct()
     }
-  }, [params, axios.defaults.headers.common['Authorization']])
+  }, [params])
 
   const handleAddToCard = () => {
     router.push(`/order/rental?id=${params.productId}&w=${type}&q=${quantity}`)
@@ -85,7 +87,7 @@ const ProductPage = () => {
                 </div>
                 <div>
                   <p className='text-2xl'>
-                    Dhs{' '}
+                    ${' '}
                     {type
                       ? product.buyPrice[type]
                       : product.buyPrice[Object.keys(product.buyPrice)[0]]}
@@ -139,15 +141,20 @@ const ProductPage = () => {
                     </button>
                   </div>
                 </div>
-                <Button
-                  className={`mt-6 ${
-                    quantity === 0 &&
-                    '!bg-gray-400 text-gray-200 cursor-not-allowed'
-                  }`}
-                  onClick={quantity === 0 ? () => {} : handleAddToCard}
-                >
-                  Rent Now
-                </Button>
+
+                {isAuthenticated ? (
+                  <Button
+                    className={`mt-6 ${
+                      quantity === 0 &&
+                      '!bg-gray-400 text-gray-200 cursor-not-allowed'
+                    }`}
+                    onClick={quantity === 0 ? () => {} : handleAddToCard}
+                  >
+                    Rent Now
+                  </Button>
+                ) : (
+                  ''
+                )}
               </Animated>
             </div>
             <Animated className='border border-[#BDBDBD] rounded-3xl mt-16'>
