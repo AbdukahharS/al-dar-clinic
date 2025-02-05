@@ -66,7 +66,7 @@ export default function Home() {
   }, [axios.defaults.baseURL])
 
   const tags = {
-    en: ['Counseling', 'Spine', 'Geriatric', 'Pain', 'Neutro', 'Physio'],
+    en: ['Counseling', 'Spine', 'Geriatric', 'Pain', 'Neuro', 'Physio'],
     ar: [
       'الاستشارات الطبية',
       'العمود الفقري',
