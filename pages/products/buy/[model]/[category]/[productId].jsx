@@ -9,18 +9,28 @@ import Animated from '@/components/Animated'
 import useCart from '@/hooks/useCart'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import useAuth from '@/hooks/useAuth'
 
 const ProductPage = () => {
   const [loading, setLoading] = useState(true)
   const [product, setProduct] = useState({})
   const [type, setType] = useState(null)
   const [quantity, setQuantity] = useState(0)
-  const { addToCart, open } = useCart()
+  const [cartQuantity, setCartQuantity] = useState(0)
+  const { addToCart, open, items } = useCart()
+  const { isAuthenticated } = useAuth()
 
   const params = useParams()
   const router = useRouter()
 
-  console.log(product)
+  useEffect(() => {
+    const itemInCart = items.find(
+      (item) => item.productId === product.id && item.weightInKg === type
+    )
+    if (itemInCart) {
+      setCartQuantity(itemInCart.quantity)
+    }
+  }, [items, product, type])
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -43,18 +53,10 @@ const ProductPage = () => {
         setLoading(false)
       }
     }
-    if (
-      params?.productId &&
-      axios.defaults.baseURL &&
-      axios.defaults.headers.common['Authorization']
-    ) {
+    if (params?.productId && axios.defaults.baseURL) {
       fetchProduct()
     }
-  }, [
-    axios.defaults.baseURL,
-    axios.defaults.headers.common['Authorization'],
-    params,
-  ])
+  }, [axios.defaults.baseURL, params])
 
   const handleAddToCard = async () => {
     await addToCart({
@@ -66,7 +68,7 @@ const ProductPage = () => {
   }
 
   const increment = () => {
-    if (quantity < product.stock[type]) {
+    if (quantity + cartQuantity < product.stock[type]) {
       setQuantity((prev) => prev + 1)
     }
   }
@@ -106,7 +108,7 @@ const ProductPage = () => {
                 </div>
                 <div>
                   <p className='text-2xl'>
-                    Dhs{' '}
+                    ${' '}
                     {type
                       ? product.buyPrice[type]
                       : product.buyPrice[Object.keys(product.buyPrice)[0]]}
@@ -149,7 +151,7 @@ const ProductPage = () => {
                     <span className='text-black'>{quantity}</span>
                     <button
                       className={`text-xs inline-block py-[6px] px-3 cursor-pointer rounded-full ${
-                        quantity < product.stock[type]
+                        quantity + cartQuantity < product.stock[type]
                           ? 'text-white bg-black'
                           : 'bg-gray-400 text-gray-200'
                       }`}
@@ -159,15 +161,19 @@ const ProductPage = () => {
                     </button>
                   </div>
                 </div>
-                <Button
-                  className={`mt-6 ${
-                    (!type || quantity === 0) &&
-                    '!bg-gray-400 text-gray-200 cursor-not-allowed'
-                  }`}
-                  onClick={handleAddToCard}
-                >
-                  Add to Cart
-                </Button>
+                {isAuthenticated ? (
+                  <Button
+                    className={`mt-6 ${
+                      (!type || quantity === 0) &&
+                      '!bg-gray-400 text-gray-200 cursor-not-allowed'
+                    }`}
+                    onClick={handleAddToCard}
+                  >
+                    Add to Cart
+                  </Button>
+                ) : (
+                  ''
+                )}
               </Animated>
             </div>
             <Animated className='border border-[#BDBDBD] rounded-3xl mt-16'>

@@ -42,19 +42,11 @@ const Model = () => {
   }
 
   useEffect(() => {
-    if (
-      axios.defaults.baseURL &&
-      axios.defaults.headers.common['Authorization'] &&
-      params.model
-    ) {
+    if (axios.defaults.baseURL && params.model) {
       fetchCategories()
       fetchBusiness()
     }
-  }, [
-    axios.defaults.baseURL,
-    axios.defaults.headers.common['Authorization'],
-    params,
-  ])
+  }, [axios.defaults.baseURL, params])
 
   return (
     <div className='flex-1'>
