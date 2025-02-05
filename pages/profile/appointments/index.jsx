@@ -81,7 +81,7 @@ const Appointments = () => {
                   {appointment.email}
                 </td>
                 <td className='px-4 py-6 text-center whitespace-nowrap'>
-                  {new Date(appointment.date).toLocaleString()}
+                  {new Date(appointment.date).toLocaleDateString()}
                 </td>
                 <td className='px-4 py-6 text-primary whitespace-nowrap'>
                   <Link href={`/profile/appointments/${appointment.id}`}>

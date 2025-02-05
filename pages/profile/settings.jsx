@@ -13,6 +13,8 @@ const Settings = () => {
   const { loading, user, updateUser, addPFP } = useAuth()
   const { register, handleSubmit, reset } = useForm()
 
+  console.log(user)
+
   // Check if the form has any changes
   useEffect(() => {
     if (user) {
@@ -147,6 +149,7 @@ const Settings = () => {
                 <input
                   type='text'
                   id='email'
+                  disabled={user.isEmailVerified}
                   defaultValue={user.email}
                   placeholder='Enter Email...'
                   {...register('email')}
@@ -160,6 +163,7 @@ const Settings = () => {
                 <input
                   type='text'
                   id='phone'
+                  disabled={user.isPhoneVerified}
                   defaultValue={user.phone}
                   placeholder='Enter Phone Number...'
                   {...register('phone')}
