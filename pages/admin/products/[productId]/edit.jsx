@@ -1,5 +1,5 @@
 import { useParams, useRouter } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FaArrowLeft, FaPlus, FaTrash } from 'react-icons/fa6'
 import { useForm, Controller } from 'react-hook-form'
 import { motion } from 'framer-motion'
@@ -9,7 +9,6 @@ import toast from 'react-hot-toast'
 import Button from '@/components/Button'
 
 const EditProduct = () => {
-  const isInitialRender = useRef(true)
   const [defaultCategory, setDefaultCategory] = useState(null)
   const router = useRouter()
   const params = useParams()
@@ -23,8 +22,6 @@ const EditProduct = () => {
     setValue,
     formState: { errors },
   } = useForm()
-
-  console.log(defaultCategory)
 
   useEffect(() => {
     const fetchCategories = async () => {
