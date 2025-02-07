@@ -97,19 +97,21 @@ const Rental = () => {
               animate={t.visible ? { y: 0 } : { y: 15 }}
               className='w-fit xl:w-full max-w-2xl md:mx-auto bg-white rounded-2xl p-3 pb-12 md:p-8 md:pb-20'
             >
-              <Button
-                size='icon'
-                variant='ghost'
-                onClick={() => toast.dismiss(t.id)}
-                className='ml-auto'
-              >
-                <FaCircleXmark className='text-primary text-4xl' />
-              </Button>
+              <Link href='/products'>
+                <Button
+                  size='icon'
+                  variant='ghost'
+                  onClick={() => toast.dismiss(t.id)}
+                  className='ml-auto'
+                >
+                  <FaCircleXmark className='text-primary text-4xl' />
+                </Button>
+              </Link>
               <div>
                 <FaCircleCheck className='text-primary text-[100px] md:text-[136px] lg:text-[180px] xl:text-[218px] mx-auto' />
               </div>
               <p className='text-xl font-medium md:text-2xl xl:text-4xl text-center py-12 md:mt-18 tracking-wide'>
-                Your order requst has been received
+                Your order request has been received
               </p>
               <div className='flex flex-row items-center justify-center gap-4 md:hidden'>
                 <Link href={`/profile/rental/${res.data.id}`}>
