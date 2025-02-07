@@ -79,7 +79,7 @@ const Layout = ({ Component, pageProps }) => {
   return (
     <div className='min-h-screen flex flex-col'>
       {path?.startsWith('/admin') ? null : <Navbar />}
-      <div className='overflow-hidden flex-1 bg-gradient-to-b from-[#f9f9f9] from-0% to-white to-20%'>
+      <div className='overflow-hidden flex-1 bg-gradient-to-b max-w-[100vw] from-[#f9f9f9] from-0% to-white to-20%'>
         {path?.startsWith('/profile') ? (
           !loading.user &&
           isAuthenticated && (
@@ -94,7 +94,7 @@ const Layout = ({ Component, pageProps }) => {
           !loading?.user && (
             <div className='flex flex-col md:flex-row w-[100vw]'>
               <AdminSidebar />
-              <div className='w-full md:w-[calc(100vw-288px)]'>
+              <div className='flex-1 md:max-w-[calc(100vw-288px-12px)]'>
                 <Component {...pageProps} />
               </div>
             </div>
