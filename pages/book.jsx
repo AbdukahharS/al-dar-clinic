@@ -138,7 +138,10 @@ const Book = () => {
               <Button
                 size='icon'
                 variant='ghost'
-                onClick={() => toast.dismiss(t.id)}
+                onClick={() => {
+                  reset()
+                  toast.dismiss(t.id)
+                }}
                 className='ml-auto'
               >
                 <FaCircleXmark className='text-primary text-4xl' />
