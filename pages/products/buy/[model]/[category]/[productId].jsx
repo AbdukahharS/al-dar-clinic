@@ -59,6 +59,11 @@ const ProductPage = () => {
   }, [axios.defaults.baseURL, params])
 
   const handleAddToCard = async () => {
+    if (!isAuthenticated) {
+      toast('Please log in')
+      router.push('/auth/login')
+      return
+    }
     await addToCart({
       productId: product.id,
       quantity: quantity,
@@ -161,19 +166,15 @@ const ProductPage = () => {
                     </button>
                   </div>
                 </div>
-                {isAuthenticated ? (
-                  <Button
-                    className={`mt-6 ${
-                      (!type || quantity === 0) &&
-                      '!bg-gray-400 text-gray-200 cursor-not-allowed'
-                    }`}
-                    onClick={handleAddToCard}
-                  >
-                    Add to Cart
-                  </Button>
-                ) : (
-                  ''
-                )}
+                <Button
+                  className={`mt-6 ${
+                    (!type || quantity === 0) &&
+                    '!bg-gray-400 text-gray-200 cursor-not-allowed'
+                  }`}
+                  onClick={handleAddToCard}
+                >
+                  Add to Cart
+                </Button>
               </Animated>
             </div>
             <Animated className='border border-[#BDBDBD] rounded-3xl mt-16'>

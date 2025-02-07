@@ -43,6 +43,11 @@ const ProductPage = () => {
   }, [params])
 
   const handleAddToCard = () => {
+    if (!isAuthenticated) {
+      toast('Please log in')
+      router.push('/auth/login')
+      return
+    }
     router.push(`/order/rental?id=${params.productId}&w=${type}&q=${quantity}`)
   }
 
@@ -142,19 +147,15 @@ const ProductPage = () => {
                   </div>
                 </div>
 
-                {isAuthenticated ? (
-                  <Button
-                    className={`mt-6 ${
-                      quantity === 0 &&
-                      '!bg-gray-400 text-gray-200 cursor-not-allowed'
-                    }`}
-                    onClick={quantity === 0 ? () => {} : handleAddToCard}
-                  >
-                    Rent Now
-                  </Button>
-                ) : (
-                  ''
-                )}
+                <Button
+                  className={`mt-6 ${
+                    quantity === 0 &&
+                    '!bg-gray-400 text-gray-200 cursor-not-allowed'
+                  }`}
+                  onClick={quantity === 0 ? () => {} : handleAddToCard}
+                >
+                  Rent Now
+                </Button>
               </Animated>
             </div>
             <Animated className='border border-[#BDBDBD] rounded-3xl mt-16'>
