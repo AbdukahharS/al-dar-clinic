@@ -16,7 +16,7 @@ const Line = () => (
 
 const Receipt = ({ order, refName }) => {
   return (
-    <div className='absolute -z-50 -top-full left-0 min-w-[1024px]'>
+    <div className='absolute -z-50 -top-full -left-[5000px] min-w-[1024px]'>
       <div className=' w-full bg-white py-10 md:py-16 px-4' ref={refName}>
         <div
           className={`max-w-xl mx-auto text-black ${roboto.className}`}
