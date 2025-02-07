@@ -94,7 +94,7 @@ const Layout = ({ Component, pageProps }) => {
           !loading?.user && (
             <div className='flex flex-col md:flex-row w-[100vw]'>
               <AdminSidebar />
-              <div className='flex-1 md:max-w-[calc(100vw-288px-12px)]'>
+              <div className='flex-1 md:max-w-[calc(100vw-288px-12px)] pb-8'>
                 <Component {...pageProps} />
               </div>
             </div>
