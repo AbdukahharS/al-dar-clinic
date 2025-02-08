@@ -58,10 +58,20 @@ const ProductPage = () => {
     }
   }, [axios.defaults.baseURL, params])
 
+  useEffect(() => {
+    if (type) {
+      setQuantity(0)
+    }
+  }, [type])
+
   const handleAddToCard = async () => {
     if (!isAuthenticated) {
       toast('Please log in')
       router.push('/auth/login')
+      return
+    }
+    if (quantity === 0) {
+      toast('Quantity should be more than 0!')
       return
     }
     await addToCart({
@@ -122,7 +132,7 @@ const ProductPage = () => {
                 <div className='h-[1px] w-full bg-gray-300 my-9'></div>
 
                 <div className='flex flex-row gap-2 items-center'>
-                  <span>Weight:</span>
+                  <span>Variants:</span>
                   {product.weightInKg
                     ?.filter((w) => product.stock[w] > 0)
                     .map((weight, i) => (
@@ -135,7 +145,7 @@ const ProductPage = () => {
                         }`}
                         onClick={() => setType(weight)}
                       >
-                        {weight} KG
+                        {weight}
                       </span>
                     ))}
                 </div>
