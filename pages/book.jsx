@@ -344,9 +344,6 @@ const Book = () => {
                 required: 'Date is required',
                 validate: (value) => {
                   if (!value) return 'Date is required'
-                  const selectedDate = new Date(value)
-                  const day = selectedDate.getDay()
-                  if (day === 0 || day === 6) return 'Weekends are not allowed'
                   return true
                 },
               }}
