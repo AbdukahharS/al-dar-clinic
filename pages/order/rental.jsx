@@ -110,8 +110,11 @@ const Rental = () => {
               <div>
                 <FaCircleCheck className='text-primary text-[100px] md:text-[136px] lg:text-[180px] xl:text-[218px] mx-auto' />
               </div>
-              <p className='text-xl font-medium md:text-2xl xl:text-4xl text-center py-12 md:mt-18 tracking-wide'>
+              <p className='text-xl font-medium md:text-2xl xl:text-4xl text-center pt-12 pb-8 md:mt-18 tracking-wide'>
                 Your order request has been received
+              </p>
+              <p className='md:text-xl xl:text-2xl text-center pb-12'>
+                Payment for rental orders will be collected at the front desk
               </p>
               <div className='flex flex-row items-center justify-center gap-4 md:hidden'>
                 <Link href={`/profile/rental/${res.data.id}`}>
@@ -241,10 +244,6 @@ const Rental = () => {
                   required: 'Starting date is required',
                   validate: (value) => {
                     if (!value) return 'Date is required'
-                    const selectedDate = new Date(value)
-                    const day = selectedDate.getDay()
-                    if (day === 0 || day === 6)
-                      return 'Weekends are not allowed'
                     return true
                   },
                 }}
@@ -284,10 +283,6 @@ const Rental = () => {
                   required: 'Date is required',
                   validate: (value) => {
                     if (!value) return 'Date is required'
-                    const selectedDate = new Date(value)
-                    const day = selectedDate.getDay()
-                    if (day === 0 || day === 6)
-                      return 'Weekends are not allowed'
                     return true
                   },
                 }}
