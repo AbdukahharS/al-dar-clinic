@@ -61,7 +61,7 @@ const services = {
           education, medication, and transition to ventilator independence.{' '}
           <br />
           <br />
-          The interdisciplinary team at Emirates Rehabilitation & Homecare works
+          The interdisciplinary team at Rehabilitation & Homecare works
           collaboratively to provide comprehensive care and support.
         </>
       ),
