@@ -114,9 +114,9 @@ const EditProduct = () => {
     if (!hasValidNumbers(price)) {
       return 'Each value in Price must be a valid number.'
     }
-    if (!hasValidNumbers(weight)) {
-      return 'Each value in Weight must be a valid number.'
-    }
+    // if (!hasValidNumbers(weight)) {
+    //   return 'Each value in Weight must be a valid number.'
+    // }
 
     const qCount = quantity.split(',').length
     const pCount = price.split(',').length
@@ -391,7 +391,7 @@ const EditProduct = () => {
           {/* Weight Quantity */}
           <div>
             <label className='block text-lg font-medium text-gray-700'>
-              Weight in KG
+              Variants (Comma-seperated)
             </label>
             <input
               type='text'
