@@ -155,11 +155,11 @@ const About = () => {
             <div className='h-[1px] bg-primary w-full'></div>
             <p className='mt-4 text-sm'>
               <FaPhoneVolume className='mr-2 text-base inline' />
-              00971567761277
+              00971 56 776 1277
             </p>
             <p className='mt-4 text-sm'>
               <FaRegEnvelope className='mr-2 text-base inline' />
-              aldarclinic@outlook.com
+              info@aldarinternational.com
             </p>
           </Animated>
         </div>
@@ -211,7 +211,7 @@ const About = () => {
             </p>
             <p className='mt-4 text-sm'>
               <FaRegEnvelope className='mr-2 text-base inline' />
-              aldarclinic@outlook.com
+              info@aldarinternational.com
             </p>
           </Animated>
         </div>
@@ -259,11 +259,11 @@ const About = () => {
             <div className='h-[1px] bg-primary w-full'></div>
             <p className='mt-4 text-sm'>
               <FaPhoneVolume className='mr-2 text-base inline' />
-              00964 7757766919
+              00964 775 776 6919
             </p>
             <p className='mt-4 text-sm'>
               <FaRegEnvelope className='mr-2 text-base inline' />
-              aldarclinic@outlook.com
+              info@aldarinternational.com
             </p>
           </Animated>
         </div>
