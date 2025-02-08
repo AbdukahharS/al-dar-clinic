@@ -59,7 +59,7 @@ const ProductDetails = () => {
             <div className='h-[1px] w-full bg-gray-300 my-9'></div>
 
             <div className='flex flex-row gap-2 items-center'>
-              <span>Weight:</span>
+              <span>Variants:</span>
               {product.weightInKg.map((weight) => (
                 <span
                   key={weight}
@@ -73,7 +73,7 @@ const ProductDetails = () => {
               <span>Stock Quantity:</span>
               <span className='text-black'>
                 {Object.entries(product.stock)
-                  .map(([key, value]) => `${key}KG: ${value}`)
+                  .map(([key, value]) => `${key}: ${value}`)
                   .join(', ')}
               </span>
             </div>
