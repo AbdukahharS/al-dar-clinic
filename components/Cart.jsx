@@ -91,7 +91,7 @@ const Cart = () => {
                       <div className='flex-1 flex flex-col justify-between'>
                         <div className='flex-1 flex flex-col justify-start'>
                           <span className='text-[12px] font-medium'>
-                            {el.weightInKg} KG
+                            {el.weightInKg}
                           </span>
                           <p className='text-lg'>{el.product.name}</p>
                         </div>
