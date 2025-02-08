@@ -13,18 +13,18 @@ import Animated from '../Animated'
 const contacts = [
   {
     branch: 'Dubai',
-    phone: '00971567761277',
-    email: 'aldarclinic@outlook.com',
+    phone: '00971 56 776 1277',
+    email: 'info@aldarinternational.com',
   },
   {
     branch: 'Oman',
     phone: '00968 9548 4273',
-    email: 'aldarclinic@outlook.com',
+    email: 'info@aldarinternational.com',
   },
   {
     branch: 'Iraq',
-    phone: '00964 7757766919',
-    email: 'aldarclinic@outlook.com',
+    phone: '00964 775 776 6919',
+    email: 'info@aldarinternational.com',
   },
 ]
 
