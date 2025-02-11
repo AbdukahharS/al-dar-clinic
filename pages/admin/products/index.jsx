@@ -167,12 +167,17 @@ const Products = () => {
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
                   {Object.entries(order.stock)
-                    .map(([key, value]) => `${key}: ${value}`)
+                    .map(
+                      ([key, value]) => `${key.replace(/^"|"$/g, '')}: ${value}`
+                    )
                     .join(', ')}
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap overflow-hidden max-w-64 truncate'>
                   {Object.entries(order.buyPrice)
-                    .map(([key, value]) => `${key}: $${value}`)
+                    .map(
+                      ([key, value]) =>
+                        `${key.replace(/^"|"$/g, '')}: $${value}`
+                    )
                     .join(', ')}
                 </td>
                 <td className='px-3 py-4 text-primary whitespace-nowrap'>
