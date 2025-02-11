@@ -1,4 +1,3 @@
-import toast from 'react-hot-toast'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -15,6 +14,7 @@ import {
   FaCalendarCheck,
   FaX,
   FaFolder,
+  FaCheckToSlot,
 } from 'react-icons/fa6'
 import { FaBars, FaHandHoldingUsd, FaSignOutAlt } from 'react-icons/fa'
 import { motion } from 'framer-motion'
@@ -68,6 +68,11 @@ const links = [
     name: 'Consulting Services',
     href: '/admin/consulting',
     icon: FaChalkboardUser,
+  },
+  {
+    name: 'Slot Management',
+    href: '/admin/slot',
+    icon: FaCheckToSlot,
   },
   {
     name: 'Location',
