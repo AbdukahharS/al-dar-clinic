@@ -20,12 +20,29 @@ const inter = Inter({
   display: 'swap',
 })
 
+function toLocalISOString(str) {
+  const date = new Date(str)
+  const pad = (num) => String(num).padStart(2, '0')
+
+  const year = date.getFullYear()
+  const month = pad(date.getMonth() + 1) // Months are zero-based
+  const day = pad(date.getDate())
+  const hours = pad(date.getHours())
+  const minutes = pad(date.getMinutes())
+  const seconds = pad(date.getSeconds())
+  const milliseconds = String(date.getMilliseconds()).padStart(3, '0')
+
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`
+}
+
 const Book = () => {
   const [loading, setLoading] = useState({
     book: false,
     serviceType: false,
     location: false,
+    slot: false,
   })
+  const [slots, setSlots] = useState(null)
   const [serviceTypes, setServiceTypes] = useState([])
   const [locations, setLocations] = useState([])
   const [message, setMessage] = useState()
@@ -33,6 +50,7 @@ const Book = () => {
     register,
     handleSubmit,
     control,
+    watch,
     formState: { errors },
     reset,
   } = useForm()
@@ -106,6 +124,8 @@ const Book = () => {
         '/appointments/create',
         {
           ...data,
+          date: toLocalISOString(data.date),
+          slotId: Number(data.slot),
           age: Number(data.age),
           serviceTypeId: data.serviceTypeId || serviceTypes[0].id,
           locationId: data.locationId || locations[0].id,
@@ -139,6 +159,7 @@ const Book = () => {
                 size='icon'
                 variant='ghost'
                 onClick={() => {
+                  setSlots(null)
                   reset()
                   toast.dismiss(t.id)
                 }}
@@ -167,6 +188,7 @@ const Book = () => {
                 <Button
                   size='sm'
                   onClick={() => {
+                    setSlots(null)
                     reset()
                     toast.dismiss(t.id)
                   }}
@@ -186,6 +208,7 @@ const Book = () => {
                 </Link>
                 <Button
                   onClick={() => {
+                    setSlots(null)
                     reset()
                     toast.dismiss(t.id)
                   }}
@@ -202,7 +225,7 @@ const Book = () => {
       console.log(error)
 
       toast.error(
-        error?.response?.data?.errors[0]?.message ||
+        error?.response?.data?.errors?.[0]?.message ||
           error?.response?.data?.message ||
           'Something went wrong with booking. Please, try again!'
       )
@@ -210,6 +233,24 @@ const Book = () => {
       setLoading((prev) => {
         return { ...prev, book: false }
       })
+    }
+  }
+
+  const fetchSlots = async (date) => {
+    setLoading((prev) => ({ ...prev, slot: true }))
+    try {
+      const isoDate = toLocalISOString(date)
+
+      const res = await axios.post('/slots/date', {
+        date: isoDate,
+      })
+      setSlots(res.data.data)
+    } catch (error) {
+      console.log(error)
+
+      toast.error(error.message || 'Something went wrong')
+    } finally {
+      setLoading((prev) => ({ ...prev, slot: false }))
     }
   }
 
@@ -351,7 +392,10 @@ const Book = () => {
                 <DatePicker
                   wrapperClassName='w-full'
                   selected={field.value}
-                  onChange={(date) => field.onChange(date)}
+                  onChange={(date) => {
+                    field.onChange(date)
+                    fetchSlots(date)
+                  }}
                   minDate={new Date()} // Disable past dates
                   placeholderText='Select a date'
                   className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
@@ -367,6 +411,54 @@ const Book = () => {
               className='text-red-500 text-sm mt-1'
             >
               {errors.date?.message || ' '}
+            </motion.p>
+          </Animated>
+          <Animated className='mb-4 w-full'>
+            <label htmlFor='slot' className='text-sm font-semibold text-black'>
+              Slots<span className='text-primary'>*</span>
+            </label>
+            {loading.slot ? (
+              <div className='flex justify-center items-center py-4'>
+                <div className='w-6 h-6 border-4 border-gray-300 border-t-primary rounded-full animate-spin'></div>
+              </div>
+            ) : slots === null ? (
+              <p className='text-gray-500'>Choose a date.</p>
+            ) : slots?.length > 0 ? (
+              <div className='flex flex-wrap gap-4 mt-1'>
+                {slots.map((slot) => (
+                  <label key={slot.id} className='relative cursor-pointer'>
+                    <input
+                      type='radio'
+                      name='slot'
+                      value={slot.id}
+                      {...register('slot', {
+                        required: 'Please select a slot',
+                      })}
+                      className='hidden'
+                    />
+                    <div
+                      className={`px-4 py-2 border rounded-lg transition-all duration-300 ${
+                        watch('slot') == slot.id
+                          ? 'border-primary bg-primary/20'
+                          : ''
+                      } `}
+                    >
+                      {slot.startTime}
+                    </div>
+                  </label>
+                ))}
+              </div>
+            ) : (
+              <p className='text-gray-500'>No slots available.</p>
+            )}
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: errors.slot ? 1 : 0 }}
+              transition={{ duration: 0.3 }}
+              className='text-red-500 text-sm mt-1'
+            >
+              {errors.slot?.message || ' '}
             </motion.p>
           </Animated>
           <Animated className='mb-4 w-full md:w-[calc(50%-20px)]'>
@@ -421,7 +513,7 @@ const Book = () => {
               {errors.postal?.message || ' '}
             </motion.p>
           </Animated>
-          <div className='mb-4 hidden md:block w-[calc(50%-20px)]'></div>
+          {/* <div className='mb-4 hidden md:block w-[calc(50%-20px)]'></div> */}
           <Animated className='mb-4 w-full md:w-[calc(50%-20px)]'>
             <label
               htmlFor='serviceType'
