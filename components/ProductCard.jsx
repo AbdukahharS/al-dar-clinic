@@ -3,7 +3,16 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Animated from './Animated'
 
-const ProductCard = ({ product }) => {
+function format(num) {
+  return num % 1 === 0
+    ? num.toLocaleString('en-US')
+    : num.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })
+}
+
+const ProductCard = ({ product, rate }) => {
   if (!product) return null
   return (
     <Animated>
@@ -31,7 +40,11 @@ const ProductCard = ({ product }) => {
           </motion.div>
           <div className='mt-5 mb-2 px-1'>
             <p className='text-lg'>{product.name}</p>
-            <p className='font-bold text-xl'>$ {product.price}</p>
+            <p className='font-semibold text-lg'>
+              OMR {format(product.price * rate['Omání rial'])} / IQD{' '}
+              {format(product.price * rate['Iraquí Dinar'])} / Dhs{' '}
+              {format(product.price * rate['Dirham'])}
+            </p>
           </div>
         </motion.div>
       </Link>
