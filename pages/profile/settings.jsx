@@ -13,8 +13,6 @@ const Settings = () => {
   const { loading, user, updateUser, addPFP } = useAuth()
   const { register, handleSubmit, reset } = useForm()
 
-  console.log(user)
-
   // Check if the form has any changes
   useEffect(() => {
     if (user) {
