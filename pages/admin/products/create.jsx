@@ -71,7 +71,7 @@ const CreateProduct = () => {
       .split(',')
       .map((q) => Number(q.trim()))
     const priceArray = price.split(',').map((p) => Number(p.trim()))
-    const weightArray = weight.split(',').map((w) => Number(w.trim()))
+    const weightArray = weight.split(',').map((w) => w.trim())
     console.log(data, priceArray)
 
     const formData = new FormData()
