@@ -10,6 +10,15 @@ import axios from 'axios'
 import toast from 'react-hot-toast'
 import useAuth from '@/hooks/useAuth'
 
+function format(num) {
+  return num % 1 === 0
+    ? num.toLocaleString('en-US')
+    : num.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })
+}
+
 const ProductPage = () => {
   const [loading, setLoading] = useState(true)
   const [product, setProduct] = useState(null)
@@ -58,7 +67,11 @@ const ProductPage = () => {
       toast('Quantity should be more than 0!')
       return
     }
-    router.push(`/order/rental?id=${params.productId}&w=${type}&q=${quantity}`)
+    router.push(
+      `/order/rental?id=${params.productId}&w=${type
+        .toString()
+        .replace(/^"|"$/g, '')}&q=${quantity}`
+    )
   }
 
   const increment = () => {
@@ -101,13 +114,25 @@ const ProductPage = () => {
                   <h1 className='text-4xl mt-3 mb-8'>{product.name}</h1>
                 </div>
                 <div>
-                  <p className='text-2xl'>
-                    ${' '}
-                    {type
-                      ? product.buyPrice[type]
-                      : product.buyPrice[Object.keys(product.buyPrice)[0]]}
-                    /Day
-                  </p>
+                  {type ? (
+                    <p className='text-2xl'>
+                      OMR{' '}
+                      {format(
+                        product.buyPrice[type] * product.currency['Omání rial']
+                      )}{' '}
+                      / IQD{' '}
+                      {format(
+                        product.buyPrice[type] *
+                          product.currency['Iraquí Dinar']
+                      )}{' '}
+                      / Dhs{' '}
+                      {format(
+                        product.buyPrice[type] * product.currency['Dirham']
+                      )}
+                    </p>
+                  ) : (
+                    ''
+                  )}
                 </div>
                 <div className='h-[1px] w-full bg-gray-300 my-9'></div>
                 <div className='flex flex-row gap-2 items-center'>
@@ -124,7 +149,7 @@ const ProductPage = () => {
                         }`}
                         onClick={() => setType(weight)}
                       >
-                        {weight}
+                        {weight.replace(/^"|"$/g, '')}
                       </span>
                     ))}
                 </div>
