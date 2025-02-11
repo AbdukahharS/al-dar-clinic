@@ -24,6 +24,15 @@ const orderStatuses = [
   'Cancelled',
 ]
 
+function format(num) {
+  return num % 1 === 0
+    ? num.toLocaleString('en-US')
+    : num.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })
+}
+
 const RentalOrderDetails = () => {
   const router = useRouter()
   const { rentalId } = router.query
@@ -44,7 +53,6 @@ const RentalOrderDetails = () => {
         error.response?.data.message || error.message || 'Something went wrong'
       )
       console.log(error)
-      
     }
   }
 
@@ -236,7 +244,7 @@ const RentalOrderDetails = () => {
                       <div className='flex-1 flex flex-col justify-between'>
                         <div className='flex-1 flex flex-col justify-start'>
                           <span className='text-[10px] font-medium'>
-                            {order.weightInKg} KG
+                            {order.weightInKg.replace(/^"|"$/g, '')}
                           </span>
                           <p className='text-lg'>{order.product?.name}</p>
                         </div>
@@ -246,7 +254,21 @@ const RentalOrderDetails = () => {
                       </div>
                       <div className='flex flex-col justify-end'>
                         <p className='text-xs font-medium'>
-                          $ {order.product?.rentPrice[order.weightInKg]}
+                          OMR{' '}
+                          {format(
+                            order.product.rentPrice[order.weightInKg] *
+                              order.currency['Omání rial']
+                          )}{' '}
+                          / IQD{' '}
+                          {format(
+                            order.product.rentPrice[order.weightInKg] *
+                              order.currency['Iraquí Dinar']
+                          )}{' '}
+                          / Dhs{' '}
+                          {format(
+                            order.product.rentPrice[order.weightInKg] *
+                              order.currency['Dirham']
+                          )}
                         </p>
                       </div>
                     </div>
@@ -254,7 +276,11 @@ const RentalOrderDetails = () => {
                 </div>
                 <div className='border-t border-gray-600 py-2 px-4 flex flex-row items-center justify-between mx-[11.5px] mb-4 md:mx-6'>
                   <p className='font-semibold text-gray-700'>Total</p>
-                  <p className='font-semibold text-gray-700'>$ {order.total}</p>
+                  <p className='font-semibold text-gray-700'>
+                    OMR {format(order.total * order.currency['Omání rial'])} /
+                    IQD {format(order.total * order.currency['Iraquí Dinar'])} /
+                    Dhs {format(order.total * order.currency['Dirham'])}
+                  </p>
                 </div>
               </Animated>
               <form onSubmit={handleSubmit} className='mb-6'>

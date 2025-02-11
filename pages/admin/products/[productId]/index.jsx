@@ -65,7 +65,7 @@ const ProductDetails = () => {
                   key={weight}
                   className={`text-xs inline-block py-[6px] px-3 cursor-pointer rounded-full bg-gray-200 text-black`}
                 >
-                  {weight}
+                  {weight.replace(/^"|"$/g, '')}
                 </span>
               ))}
             </div>
@@ -73,7 +73,9 @@ const ProductDetails = () => {
               <span>Stock Quantity:</span>
               <span className='text-black'>
                 {Object.entries(product.stock)
-                  .map(([key, value]) => `${key}: ${value}`)
+                  .map(
+                    ([key, value]) => `${key.replace(/^"|"$/g, '')}: ${value}`
+                  )
                   .join(', ')}
               </span>
             </div>

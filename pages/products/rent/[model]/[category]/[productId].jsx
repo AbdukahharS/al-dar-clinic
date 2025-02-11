@@ -67,11 +67,7 @@ const ProductPage = () => {
       toast('Quantity should be more than 0!')
       return
     }
-    router.push(
-      `/order/rental?id=${params.productId}&w=${type
-        .toString()
-        .replace(/^"|"$/g, '')}&q=${quantity}`
-    )
+    router.push(`/order/rental?id=${params.productId}&w=${type}&q=${quantity}`)
   }
 
   const increment = () => {

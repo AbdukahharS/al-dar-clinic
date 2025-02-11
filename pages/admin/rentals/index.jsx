@@ -22,6 +22,8 @@ const statusOptions = [
   'Cancelled',
 ]
 
+
+
 const RentalOrders = () => {
   const router = useRouter()
   const [data, setData] = useState([])
@@ -154,7 +156,7 @@ const RentalOrders = () => {
                     </div>
                   </td>
                   <td className='px-3 py-4 text-center whitespace-nowrap'>
-                    {order.quantity}
+                    $ {order.total}
                   </td>
                   <td className='px-3 py-4 text-primary whitespace-nowrap'>
                     <Link href={`/admin/rentals/${order.id}`}>

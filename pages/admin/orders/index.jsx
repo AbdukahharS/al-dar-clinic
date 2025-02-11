@@ -151,7 +151,7 @@ const Orders = () => {
                   </div>
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  {order.total}
+                  $ {order.total}
                 </td>
                 <td className='px-3 py-4 text-primary whitespace-nowrap'>
                   <Link href={`/admin/orders/${order.id}`}>

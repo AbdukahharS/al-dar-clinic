@@ -25,6 +25,15 @@ const orderStatuses = [
   'Cancelled',
 ]
 
+function format(num) {
+  return num % 1 === 0
+    ? num.toLocaleString('en-US')
+    : num.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })
+}
+
 const OrderDetails = () => {
   const router = useRouter()
   const params = useParams()
@@ -219,7 +228,11 @@ const OrderDetails = () => {
                 </div>
                 <div className='border-t border-gray-600 py-2 px-4 flex flex-row items-center justify-between mx-[11.5px] mb-4 md:mx-6'>
                   <p className='font-semibold text-gray-700'>Total</p>
-                  <p className='font-semibold text-gray-700'>$ {order.total}</p>
+                  <p className='font-semibold text-gray-700'>
+                    OMR {format(order.total * order.currency['Omání rial'])} /
+                    IQD {format(order.total * order.currency['Iraquí Dinar'])} /
+                    Dhs {format(order.total * order.currency['Dirham'])}
+                  </p>
                 </div>
               </Animated>
             </div>
