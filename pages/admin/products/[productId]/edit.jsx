@@ -56,7 +56,10 @@ const EditProduct = () => {
             .map(([_, value]) => value)
             .join(',')
         )
-        setValue('weightInKg', product.weightInKg.join(','))
+        setValue(
+          'weightInKg',
+          product.weightInKg.map((el) => el.replace(/^"|"$/g, '')).join(',')
+        )
         setValue('productDescription', product.description)
 
         if (product.images && product.images.length > 0) {
@@ -145,7 +148,7 @@ const EditProduct = () => {
       .split(',')
       .map((q) => Number(q.trim()))
     const priceArray = price.split(',').map((p) => Number(p.trim()))
-    const weightArray = weightInKg.split(',').map((w) => Number(w.trim()))
+    const weightArray = weightInKg.split(',').map((w) => w.trim())
 
     const formData = new FormData()
     formData.append('name', data.productName)
