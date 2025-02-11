@@ -36,6 +36,9 @@ const AppointmentDetails = () => {
     }
   }, [axios, params, axios.defaults.headers.common['Authorization']])
 
+  console.log(appointment)
+  
+
   return (
     <div>
       <div className='h-[104px]'></div>
