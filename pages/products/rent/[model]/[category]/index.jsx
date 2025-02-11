@@ -17,6 +17,7 @@ const Category = () => {
   const [category, setCategory] = useState({})
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
+  const [rate, setRate] = useState({})
 
   const fetchProducts = async () => {
     setLoading(true)
@@ -25,7 +26,14 @@ const Category = () => {
         categoryId: params.category,
       })
 
-      setProducts(res.data)
+      setRate(res.data.currency)
+      setProducts(
+        Object.entries(res.data)
+          .map(([key, value]) => {
+            if (key !== 'currency') return value
+          })
+          .filter((el) => el !== undefined)
+      )
     } catch (error) {
       console.error(error)
     } finally {
@@ -82,11 +90,12 @@ const Category = () => {
                   id: el.id,
                   name: el.name,
                   img: el.images[0].original,
-                  price: `${el.rentPrice[Object.keys(el.rentPrice)[0]]}/day`,
+                  price: el.rentPrice[Object.keys(el.rentPrice)[0]],
                   link: `/products/${el.productType.toLocaleLowerCase()}/${
                     params?.model
                   }/${params?.category}/${el.id}`,
                 }}
+                rate={rate}
               />
             ))}
           {!products.length && (
