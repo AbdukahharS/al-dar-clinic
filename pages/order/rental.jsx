@@ -30,15 +30,12 @@ const inter = Inter({
 
 const Rental = () => {
   const [open, setOpen] = useState(false)
-  const [message, setMessage] = useState()
   const searchParams = useSearchParams()
-  // const [fileName, setFileName] = useState('Upload ID')
   const [addresses, setAddresses] = useState([])
   const [address, setAddress] = useState(null)
   const router = useRouter()
 
   const {
-    register,
     handleSubmit,
     control,
     formState: { errors },
@@ -75,7 +72,7 @@ const Rental = () => {
       const res = await axios.post('/rent/create', {
         addressId: address.id,
         productId: Number(searchParams.get('id')),
-        weightInKg: Number(searchParams.get('w')),
+        weightInKg: searchParams.get('w'),
         quantity: Number(searchParams.get('q')),
         startDate: data.from,
         endDate: data.to,
