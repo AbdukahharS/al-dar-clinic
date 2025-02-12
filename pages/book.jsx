@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { Inter } from 'next/font/google'
 import { Controller, useForm } from 'react-hook-form'
@@ -13,6 +14,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 
 import Animated from '@/components/Animated'
 import Button from '@/components/Button'
+import asiaPay from '@/public/icons/asia-pay.svg'
 
 const inter = Inter({
   weight: ['400', '500', '600'],
@@ -138,6 +140,7 @@ const Book = () => {
           },
         }
       )
+
       toast.custom(
         (t) => (
           <motion.div
@@ -170,8 +173,19 @@ const Book = () => {
               <div>
                 <FaCircleCheck className='text-primary text-[100px] md:text-[136px] lg:text-[180px] xl:text-[218px] mx-auto' />
               </div>
-              <p className='text-xl font-medium md:text-2xl xl:text-4xl text-center py-12 md:mt-18 tracking-wide'>
+              <p className='text-xl font-medium md:text-2xl xl:text-4xl text-center pt-12 pb-0 md:mt-18 tracking-wide'>
                 Your Appointment is Confirmed
+              </p>
+              <p className='md:text-lg xl:text-xl text-center md:pt-6 pb-12 tracking-wide'>
+                We accept Asia Pay{' '}
+                <Image
+                  src={asiaPay}
+                  height={44}
+                  weight={44}
+                  alt='Asia Pay Icon'
+                  className='inline w-11 h-11'
+                />
+                and for contact 00964 775 776 6919
               </p>
 
               <div className='flex flex-row items-center justify-center gap-4 md:hidden'>

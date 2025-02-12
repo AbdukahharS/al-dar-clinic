@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { FaWallet, FaUser, FaClock, FaLocationDot } from 'react-icons/fa6'
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
@@ -6,6 +7,7 @@ import toast from 'react-hot-toast'
 
 import Header from '@/components/layout/Header'
 import useAuth from '@/hooks/useAuth'
+import asiaPay from '@/public/icons/asia-pay.svg'
 
 const calculateEndTime = (startTime, duration) => {
   // Convert 12-hour format to minutes
@@ -224,6 +226,19 @@ const Appointments = () => {
           </div>
         </div>
       )}
+      <div className='mt-8'>
+        <p className='md:text-lg xl:text-xl text-center md:pt-6 pb-12 tracking-wide'>
+          We accept Asia Pay{' '}
+          <Image
+            src={asiaPay}
+            height={44}
+            weight={44}
+            alt='Asia Pay Icon'
+            className='inline w-11 h-11'
+          />
+          and for contact 00964 775 776 6919
+        </p>
+      </div>
     </div>
   )
 }
