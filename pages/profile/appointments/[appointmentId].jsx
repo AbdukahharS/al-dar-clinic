@@ -236,7 +236,7 @@ const Appointments = () => {
             alt='Asia Pay Icon'
             className='inline w-11 h-11'
           />
-          and for contact 00964 775 776 6919
+          <span className='text-primary'>00964 775 776 6919</span>
         </p>
       </div>
     </div>
