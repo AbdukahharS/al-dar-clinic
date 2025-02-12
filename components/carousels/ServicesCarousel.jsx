@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation } from 'swiper/modules'
 
 import Carousel1 from '@/public/images/carousel 1.webp'
-import Carousel3 from '@/public/images/carousel 3.webp'
+import Carousel3 from '@/public/images/counseling.webp'
 import HomeCare from '@/public/images/home-care.webp'
 import LongTerm from '@/public/images/long-term.webp'
 import Physical from '@/public/images/physical-therapy.webp'
