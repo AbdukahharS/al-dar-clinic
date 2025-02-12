@@ -439,28 +439,58 @@ const Book = () => {
               <p className='text-gray-500'>Choose a date.</p>
             ) : slots?.length > 0 ? (
               <div className='flex flex-wrap gap-4 mt-1'>
-                {slots.map((slot) => (
-                  <label key={slot.id} className='relative cursor-pointer'>
-                    <input
-                      type='radio'
-                      name='slot'
-                      value={slot.id}
-                      {...register('slot', {
-                        required: 'Please select a slot',
-                      })}
-                      className='hidden'
-                    />
-                    <div
-                      className={`px-4 py-2 border rounded-lg transition-all duration-300 ${
-                        watch('slot') == slot.id
-                          ? 'border-primary bg-primary/20'
-                          : ''
-                      } `}
-                    >
-                      {slot.startTime}
-                    </div>
-                  </label>
-                ))}
+                {slots
+                  ?.filter((slot) => {
+                    const now = new Date()
+                    const selectedDateObj = new Date(watch('date')) // Assuming 'date' is the selected date
+                    const [slotHour, slotMinute] = slot.startTime
+                      .split(' ')[0]
+                      .split(':')
+                      .map(Number)
+
+                    if (
+                      selectedDateObj.toDateString() === now.toDateString() &&
+                      (slotHour < now.getHours() ||
+                        (slotHour === now.getHours() &&
+                          slotMinute <= now.getMinutes()))
+                    ) {
+                      return false // Filter out past slots
+                    }
+                    return true
+                  })
+                  .sort((a, b) => {
+                    const [aHour, aMinute] = a.startTime
+                      .split(' ')[0]
+                      .split(':')
+                      .map(Number)
+                    const [bHour, bMinute] = b.startTime
+                      .split(' ')[0]
+                      .split(':')
+                      .map(Number)
+                    return aHour * 60 + aMinute - (bHour * 60 + bMinute)
+                  })
+                  .map((slot) => (
+                    <label key={slot.id} className='relative cursor-pointer'>
+                      <input
+                        type='radio'
+                        name='slot'
+                        value={slot.id}
+                        {...register('slot', {
+                          required: 'Please select a slot',
+                        })}
+                        className='hidden'
+                      />
+                      <div
+                        className={`px-4 py-2 border rounded-lg transition-all duration-300 ${
+                          watch('slot') == slot.id
+                            ? 'border-primary bg-primary/20'
+                            : ''
+                        } `}
+                      >
+                        {slot.startTime}
+                      </div>
+                    </label>
+                  ))}
               </div>
             ) : (
               <p className='text-gray-500'>No slots available.</p>
