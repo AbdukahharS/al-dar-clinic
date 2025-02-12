@@ -112,7 +112,7 @@ const ProductPage = () => {
                 <div>
                   {type ? (
                     <p className='text-2xl'>
-                      OMR{' '}
+                      $ {format(product.buyPrice[type])} / OMR{' '}
                       {format(
                         product.buyPrice[type] * product.currency['Omání rial']
                       )}{' '}

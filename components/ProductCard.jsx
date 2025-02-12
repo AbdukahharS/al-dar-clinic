@@ -41,7 +41,8 @@ const ProductCard = ({ product, rate }) => {
           <div className='mt-5 mb-2 px-1'>
             <p className='text-lg'>{product.name}</p>
             <p className='font-semibold text-lg'>
-              OMR {format(product.price * rate['Omání rial'])} / IQD{' '}
+              $ {product.price} / OMR{' '}
+              {format(product.price * rate['Omání rial'])} / IQD{' '}
               {format(product.price * rate['Iraquí Dinar'])} / Dhs{' '}
               {format(product.price * rate['Dirham'])}
             </p>
