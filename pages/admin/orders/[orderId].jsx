@@ -152,7 +152,7 @@ const OrderDetails = () => {
               </Animated>
               <Animated className='border rounded-lg mt-5'>
                 <h3 className='font-semibold text-center mb-6 mt-3'>
-                  Billing Address
+                  Shipping Address
                 </h3>
                 <table className='table-auto w-full text-sm'>
                   <tbody>
