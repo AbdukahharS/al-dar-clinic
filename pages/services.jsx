@@ -176,8 +176,8 @@ const services = {
           physiotherapists, and athletic trainers, work collaboratively to
           provide individualized care, utilizing the latest diagnostic tools and
           evidence-based treatments to optimize your recovery and performance.
-          Whether you're a professional athlete or a weekend warrior, we're
-          committed to helping you achieve your athletic goals.
+          Whether you&apos;re a professional athlete or a weekend warrior,
+          we&apos;re committed to helping you achieve your athletic goals.
           <br />
           <b>Equipment :</b> ADR clinic utilize the latest technology and
           evidence-based practices to provide advanced diagnostics, personalized
