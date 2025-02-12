@@ -98,7 +98,7 @@ const CreateSlot = () => {
         
         toast.error(
           error.response?.data?.message === 'Invalid operation'
-            ? 'At least one of the slots already exists on this day'
+            ? 'Slot already exist'
             : error.message || 'Something went wrong'
         )
     } finally {
