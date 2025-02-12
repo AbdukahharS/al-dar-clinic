@@ -6,6 +6,15 @@ import Header from '@/components/layout/Header'
 import toast from 'react-hot-toast'
 import { useRouter, useSearchParams } from 'next/navigation'
 
+function format(num) {
+  return num % 1 === 0
+    ? num.toLocaleString('en-US')
+    : num.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })
+}
+
 const Orders = () => {
   const [data, setData] = useState([])
   const [page, setPage] = useState(1)
@@ -88,7 +97,7 @@ const Orders = () => {
                     </div>
                   </td>
                   <td className='px-3 py-4 text-center whitespace-nowrap'>
-                    $ {order.total}
+                    $ {format(order.total)}
                   </td>
                   <td className='px-3 py-4 text-primary whitespace-nowrap'>
                     <Link href={`/profile/orders/${order.id}`}>

@@ -23,6 +23,17 @@ const statusOptions = [
   'Failed',
 ]
 
+function format(num) {
+  if (num) {
+    return num % 1 === 0
+      ? num.toLocaleString('en-US')
+      : num.toLocaleString('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
+  }
+}
+
 const Orders = () => {
   const router = useRouter()
   const [data, setData] = useState([])
@@ -151,7 +162,7 @@ const Orders = () => {
                   </div>
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  $ {order.total}
+                  $ {format(order.total)}
                 </td>
                 <td className='px-3 py-4 text-primary whitespace-nowrap'>
                   <Link href={`/admin/orders/${order.id}`}>

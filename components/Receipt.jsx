@@ -6,6 +6,17 @@ const roboto = Roboto({
   display: 'swap',
 })
 
+function format(num) {
+  if (num) {
+    return num % 1 === 0
+      ? num.toLocaleString('en-US')
+      : num.toLocaleString('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
+  }
+}
+
 const Line = () => (
   <div className='text-center overflow-hidden whitespace-nowrap'>
     <span className='inline-block w-full font-bold'>
@@ -62,7 +73,7 @@ const Receipt = ({ order, refName }) => {
                 <p>{item.product.name}</p>
                 <small>Quantity : {1}</small>
               </div>
-              <p>$ {item.product.buyPrice[order.weightInKg]}</p>
+              <p>$ {format(item.product.buyPrice[order.weightInKg])}</p>
             </div>
           ))}
           <div className='flex flex-row items-start gap-6 text-2xl mb-3'>
@@ -70,7 +81,7 @@ const Receipt = ({ order, refName }) => {
             <div className='flex-1'>
               <p>Delivery Fee</p>
             </div>
-            <p>$ {order.deliveryCost}</p>
+            <p>$ {format(order.deliveryCost)}</p>
           </div>
           <div>
             <Line />
@@ -79,7 +90,7 @@ const Receipt = ({ order, refName }) => {
               <div className='flex-1'>
                 <p>Total</p>
               </div>
-              <p>$ {order.total}</p>
+              <p>$ {format(order.total)}</p>
             </div>
           </div>
           <Line />
