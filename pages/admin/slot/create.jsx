@@ -96,7 +96,11 @@ const CreateSlot = () => {
     } catch (error) {
         console.log(error);
         
-        toast.error(error.message || 'Something went wrong')
+        toast.error(
+          error.response?.data?.message === 'Invalid operation'
+            ? 'At least one of the slots already exists on this day'
+            : error.message || 'Something went wrong'
+        )
     } finally {
         setLoading(false)
     }
