@@ -1,15 +1,47 @@
 import { FaWallet, FaUser, FaClock, FaLocationDot } from 'react-icons/fa6'
-
-import Header from '@/components/layout/Header'
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+
+import Header from '@/components/layout/Header'
 import useAuth from '@/hooks/useAuth'
+
+const calculateEndTime = (startTime, duration) => {
+  // Convert 12-hour format to minutes
+  const timeToMinutes = (time) => {
+    let [timePart, period] = time.split(' ')
+    let [hours, minutes] = timePart.split(':').map(Number)
+
+    if (period === 'PM' && hours !== 12) hours += 12
+    if (period === 'AM' && hours === 12) hours = 0
+
+    return hours * 60 + minutes
+  }
+
+  // Convert minutes to 12-hour format with AM/PM
+  const formatTime = (minutes) => {
+    let hours = Math.floor(minutes / 60) % 24
+    let mins = minutes % 60
+    let period = hours >= 12 ? 'PM' : 'AM'
+
+    hours = hours % 12 || 12 // Convert 0 to 12 for 12-hour format
+    return `${String(hours).padStart(2, '0')}:${String(mins).padStart(
+      2,
+      '0'
+    )} ${period}`
+  }
+
+  let startMinutes = timeToMinutes(startTime)
+  let endMinutes = startMinutes + Number(duration)
+
+  return formatTime(endMinutes)
+}
 
 const Appointments = () => {
   const params = useParams()
   const [appointment, setAppointment] = useState({})
+  const [slot, setSlot] = useState({})
   const { isAuthenticated } = useAuth()
 
   useEffect(() => {
@@ -22,11 +54,25 @@ const Appointments = () => {
         toast.error('Something went wrong')
       }
     }
-
-    if (params?.appointmentId && axios.defaults.baseURL && isAuthenticated) {
+    if (params?.appointmentId && isAuthenticated) {
       fetchAppointment()
     }
-  }, [params, axios.defaults.baseURL, isAuthenticated])
+  }, [params, isAuthenticated])
+
+  useEffect(() => {
+    const fetchSlot = async () => {
+      try {
+        const res = await axios.get('/slots/' + appointment.slotsId)
+        setSlot(res.data.data)
+      } catch (error) {
+        console.error(error)
+        toast.error('Something went wrong')
+      }
+    }
+    if (appointment.slotsId) {
+      fetchSlot()
+    }
+  }, [appointment])
 
   return (
     <div>
@@ -140,8 +186,19 @@ const Appointments = () => {
                     <td className='px-4 py-1'>{appointment.location?.name}</td>
                   </tr>
                   <tr className='border-b'>
-                    <td className='font-bold px-4 pt-1 pb-3'>MEDIUM:</td>
-                    <td className='px-4 pt-1 pb-3'>{appointment.medium}</td>
+                    <td className='font-bold px-4 pt-1'>MEDIUM:</td>
+                    <td className='px-4 pt-1'>{appointment.medium}</td>
+                  </tr>
+                  <tr className='border-b'>
+                    <td className='font-bold px-4 pt-1 pb-3'>SLOT:</td>
+                    <td className='px-4 pt-1 pb-3'>
+                      {slot.id
+                        ? `${slot.startTime} - ${calculateEndTime(
+                            slot.startTime,
+                            slot.duration
+                          )}`
+                        : '-'}
+                    </td>
                   </tr>
                 </tbody>
               </table>
