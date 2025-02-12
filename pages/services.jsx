@@ -10,6 +10,7 @@ import speech from '@/public/images/speech-and-swallow.webp'
 import nursing from '@/public/images/nursing.webp'
 import rehabilitative from '@/public/images/rehabilitative.webp'
 import consultation from '@/public/images/consultation.webp'
+import sport from '@/public/images/sport.webp'
 import Animated from '@/components/Animated'
 
 const tags = ['Counseling', 'Spine', 'Geriatric', 'Pain', 'Neuro', 'Physio']
@@ -160,6 +161,30 @@ const services = {
           journeys. <br />
           These services prove highly advantageous, particularly for individuals
           with mobility challenges.
+        </>
+      ),
+    },
+    {
+      name: 'Sport clinic',
+      img: sport,
+      p: (
+        <>
+          <b>AL Dar&apos;s sports clinic</b> offers a complete range of services
+          tailored to the needs of athletes. We specialize in sports injury
+          management, performance enhancement, and injury prevention. ADR&apos;s
+          experienced sports medicine professionals, including physicians,
+          physiotherapists, and athletic trainers, work collaboratively to
+          provide individualized care, utilizing the latest diagnostic tools and
+          evidence-based treatments to optimize your recovery and performance.
+          Whether you're a professional athlete or a weekend warrior, we're
+          committed to helping you achieve your athletic goals.
+          <br />
+          <b>Equipment :</b> ADR clinic utilize the latest technology and
+          evidence-based practices to provide advanced diagnostics, personalized
+          treatment plans, and comprehensive rehabilitation programs. Our focus
+          is on not just treating injuries, but also enhancing performance and
+          preventing future problems. Our team of specialists is dedicated to
+          helping you reach your peak potential.
         </>
       ),
     },
