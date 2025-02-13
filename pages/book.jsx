@@ -26,13 +26,15 @@ const toLocalISO = (date) => {
   const dateObj = new Date(date)
   const now = new Date()
 
-  // Set current local time on the given date
-  dateObj.setHours(
-    now.getHours(),
-    now.getMinutes(),
-    now.getSeconds(),
-    now.getMilliseconds()
-  )
+  if (now.toLocaleDateString() === dateObj.toLocaleDateString()) {
+    // Set current local time on the given date
+    dateObj.setHours(
+      now.getHours(),
+      now.getMinutes(),
+      now.getSeconds(),
+      now.getMilliseconds()
+    )
+  }
 
   // Convert to UTC without shifting time
   return new Date(
@@ -266,6 +268,7 @@ const Book = () => {
     setLoading((prev) => ({ ...prev, slot: true }))
     try {
       const isoString = toLocalISO(date)
+      console.log(isoString)
 
       const res = await axios.post('/slots/date', { date: isoString })
 
