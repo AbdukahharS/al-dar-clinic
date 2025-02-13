@@ -61,6 +61,16 @@ const Orders = () => {
     setPage(Number(searchParams.get('page')) || 1)
   }, [searchParams])
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (data.some((order) => !order.deliveryCost)) {
+        fetchOrders()
+      }
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [data])
+
   return (
     <div>
       <Header pageTitle='Order History' />
@@ -110,7 +120,9 @@ const Orders = () => {
                     </div>
                   </td>
                   <td className='px-3 py-4 text-center whitespace-nowrap'>
-                    $ {format(order.total)}
+                    {order.deliveryCost
+                      ? `$ ${format(order.itemsCost + order.deliveryCost)}`
+                      : 'Calculating delivery cost...'}
                   </td>
                   <td className='px-3 py-4 text-primary whitespace-nowrap'>
                     <Link href={`/profile/orders/${order.id}`}>

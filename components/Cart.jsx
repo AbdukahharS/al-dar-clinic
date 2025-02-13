@@ -93,7 +93,9 @@ const Cart = () => {
                           <span className='text-[12px] font-medium'>
                             {el.weightInKg.replace(/^"|"$/g, '')}
                           </span>
-                          <p className='text-lg'>{el.product.name}</p>
+                          <p className='text-lg line-clamp-2'>
+                            {el.product.name}
+                          </p>
                         </div>
                         <div className='rounded-full bg-gray-200/70 h-fit p-1 w-fit flex gap-2 flex-row items-center'>
                           <button

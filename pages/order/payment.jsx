@@ -222,14 +222,14 @@ const Payment = () => {
                       <span className='text-[10px] font-medium'>
                         {el.weightInKg.replace(/^"|"$/g, '')}
                       </span>
-                      <p className='text-lg'>{el.product.name}</p>
+                      <p className='text-lg line-clamp-2'>{el.product.name}</p>
                     </div>
-                    <p className='text-[10px]'>Quantity: {el.quantity}</p>
-                  </div>
-                  <div className='flex flex-col justify-end'>
-                    <p className='text-xs font-medium'>
-                      $ {el.product.buyPrice[el.weightInKg]}
-                    </p>
+                    <div className='flex flex-row justify-between gap-2'>
+                      <p className='text-[10px]'>Quantity: {el.quantity}</p>
+                      <p className='text-xs font-medium'>
+                        $ {el.product.buyPrice[el.weightInKg]}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
