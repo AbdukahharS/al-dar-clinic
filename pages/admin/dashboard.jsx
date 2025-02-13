@@ -132,9 +132,9 @@ const Dashboard = () => {
             </div>
           ))}
         </div>
-        <div className='flex flex-col md:flex-row mt-9 gap-6 items-center'>
+        <div className='flex flex-col md:flex-row mt-9 gap-6 items-center flex-wrap justify-center'>
           {charts.total?.appointments ? (
-            <div className='flex-1 bg-gray-50 shadow-lg p-2 rounded-lg'>
+            <div className='flex-1 bg-gray-50 shadow-lg p-2 rounded-lg min-w-[308px]'>
               <h3 className='m-2'>Appointment Chart</h3>
               <ResponsiveContainer width='100%' height={280}>
                 <PieChart width={190} height={190}>
@@ -181,7 +181,7 @@ const Dashboard = () => {
             ''
           )}
           {charts.total?.orders ? (
-            <div className='flex-1 bg-gray-50 shadow-lg p-2 rounded-lg'>
+            <div className='flex-1 bg-gray-50 shadow-lg p-2 rounded-lg min-w-[308px]'>
               <h3 className='m-2'>Orders Chart</h3>
               <ResponsiveContainer width='100%' height={280}>
                 <PieChart width={190} height={190}>
@@ -229,7 +229,7 @@ const Dashboard = () => {
             ''
           )}
           {charts.total?.rentOrders ? (
-            <div className='flex-1 bg-gray-50 shadow-lg p-2 rounded-lg'>
+            <div className='flex-1 bg-gray-50 shadow-lg p-2 rounded-lg min-w-[308px] md:max-w-[50%]'>
               <h3 className='m-2'>Rental Orders Chart</h3>
               <ResponsiveContainer width='100%' height={280}>
                 <PieChart width={200} height={200}>
