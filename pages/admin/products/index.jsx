@@ -23,7 +23,7 @@ const Products = () => {
   const fetchProducts = async () => {
     try {
       const { data } = await axios.post('/products/filter', {
-        page: searchParams.get('page') || 1,
+        page: Number(searchParams.get('page')) || 1,
         limit,
         productType: filter !== 'all' ? filter.toUpperCase() : undefined,
         sort,
@@ -84,7 +84,11 @@ const Products = () => {
   }
 
   const handlePageChange = (newPage) => {
-    setPage(newPage)
+    if (!newPage || newPage === 1) {
+      router.push('/admin/products')
+    } else {
+      router.push('/admin/products?page=' + newPage)
+    }
   }
 
   const showingFrom = ((searchParams.get('page') || 1) - 1) * limit + 1
@@ -209,14 +213,15 @@ const Products = () => {
         <div className='flex flex-row items-center gap-2'>
           {Array.from({ length: Math.ceil(total / limit) }, (_, i) => i + 1)
             .filter(
-              (pageNumber) => pageNumber !== (searchParams.get('page') || 1)
+              (pageNumber) =>
+                pageNumber !== Number(searchParams.get('page') || 1)
             )
             .map((pageNumber) => (
               <button
                 key={pageNumber}
                 onClick={() => handlePageChange(pageNumber)}
                 className={`w-7 h-7 flex items-center justify-center rounded-full ${
-                  pageNumber === page
+                  pageNumber === searchParams.get('page') || 1
                     ? 'text-white bg-primary'
                     : 'text-primary border border-primary'
                 } cursor-pointer`}

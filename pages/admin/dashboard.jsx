@@ -58,18 +58,12 @@ const Dashboard = () => {
   }) => {
     const radius = innerRadius
       ? innerRadius + (outerRadius - innerRadius) * 0.3
-      : outerRadius / 2
+      : outerRadius + 35
     const x = cx + radius * Math.cos(-midAngle * RADIAN)
     const y = cy + radius * Math.sin(-midAngle * RADIAN)
 
     return (
-      <text
-        x={x}
-        y={y}
-        fill='white'
-        textAnchor={x > cx ? 'start' : 'end'}
-        dominantBaseline='central'
-      >
+      <text x={x} y={y} textAnchor='middle' dominantBaseline='central'>
         {`${(percent * 100).toFixed(0)}%`}
       </text>
     )
@@ -142,13 +136,13 @@ const Dashboard = () => {
           {charts.total?.appointments ? (
             <div className='flex-1 bg-gray-50 shadow-lg p-2 rounded-lg'>
               <h3 className='m-2'>Appointment Chart</h3>
-              <ResponsiveContainer width='100%' height={200}>
+              <ResponsiveContainer width='100%' height={280}>
                 <PieChart width={190} height={190}>
                   <Pie
                     data={charts.appointments}
                     cx='50%'
                     cy='50%'
-                    labelLine={false}
+                    labelLine
                     outerRadius={100}
                     dataKey='value'
                     label={renderCustomizedLabel}
@@ -189,13 +183,13 @@ const Dashboard = () => {
           {charts.total?.orders ? (
             <div className='flex-1 bg-gray-50 shadow-lg p-2 rounded-lg'>
               <h3 className='m-2'>Orders Chart</h3>
-              <ResponsiveContainer width='100%' height={200}>
+              <ResponsiveContainer width='100%' height={280}>
                 <PieChart width={190} height={190}>
                   <Pie
                     data={charts.orders}
                     cx='50%'
                     cy='50%'
-                    labelLine={false}
+                    labelLine
                     outerRadius={100}
                     // innerRadius={50}
                     dataKey='value'
@@ -237,15 +231,14 @@ const Dashboard = () => {
           {charts.total?.rentOrders ? (
             <div className='flex-1 bg-gray-50 shadow-lg p-2 rounded-lg'>
               <h3 className='m-2'>Rental Orders Chart</h3>
-              <ResponsiveContainer width='100%' height={200}>
-                <PieChart width={190} height={190}>
+              <ResponsiveContainer width='100%' height={280}>
+                <PieChart width={200} height={200}>
                   <Pie
                     data={charts.rentOrders}
                     cx='50%'
                     cy='50%'
-                    labelLine={false}
+                    labelLine
                     outerRadius={100}
-                    // innerRadius={50}
                     dataKey='value'
                     label={renderCustomizedLabel}
                   >
