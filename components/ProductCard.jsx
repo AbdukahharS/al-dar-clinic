@@ -39,7 +39,7 @@ const ProductCard = ({ product, rate }) => {
             />
           </motion.div>
           <div className='mt-5 mb-2 px-1'>
-            <p className='text-lg'>{product.name}</p>
+            <p className='text-lg line-clamp-2'>{product.name}</p>
             <p className='font-semibold text-lg'>
               $ {product.price} / OMR{' '}
               {format(product.price * rate['Omání rial'])} / IQD{' '}
