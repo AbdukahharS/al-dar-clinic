@@ -71,9 +71,9 @@ const Receipt = ({ order, refName }) => {
               <b>{i + 1}</b>
               <div className='flex-1'>
                 <p>{item.product.name}</p>
-                <small>Quantity : {1}</small>
+                <small>Quantity : {item.quantity}</small>
               </div>
-              <p>$ {format(item.product.buyPrice[order.weightInKg])}</p>
+              <p>$ {format(item.product.buyPrice[item.weightInKg])}</p>
             </div>
           ))}
           <div className='flex flex-row items-start gap-6 text-2xl mb-3'>

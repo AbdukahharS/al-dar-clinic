@@ -5,8 +5,10 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Header from '@/components/layout/Header'
 import { useSearchParams } from 'next/navigation'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 const Rental = () => {
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
   const [data, setData] = useState([])
   const [page, setPage] = useState(1)
@@ -19,6 +21,7 @@ const Rental = () => {
   }, [searchParams])
 
   const fetchRentals = async () => {
+    setLoading(true)
     try {
       const { data } = await axios.post('/rent/all', {
         page,
@@ -34,6 +37,8 @@ const Rental = () => {
           error.message ||
           'Something went wrong. Please refresh the page!'
       )
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -67,7 +72,15 @@ const Rental = () => {
             </tr>
           </thead>
           <tbody>
-            {data?.length ? (
+            {loading ? ( // Show loader when loading
+              <tr>
+                <td colSpan='5' className='text-center py-6'>
+                  <div className='flex justify-center items-center'>
+                    <AiOutlineLoading3Quarters className='animate-spin h-10 w-10 text-primary' />
+                  </div>
+                </td>
+              </tr>
+            ) : data?.length ? (
               data.map((order, index) => (
                 <tr key={index} className='border'>
                   <td className='px-3 py-4 whitespace-nowrap'>

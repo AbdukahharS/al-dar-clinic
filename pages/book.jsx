@@ -22,19 +22,30 @@ const inter = Inter({
   display: 'swap',
 })
 
-function toLocalISOString(str) {
-  const date = new Date(str)
-  const pad = (num) => String(num).padStart(2, '0')
+const toLocalISO = (date) => {
+  const dateObj = new Date(date)
+  const now = new Date()
 
-  const year = date.getFullYear()
-  const month = pad(date.getMonth() + 1) // Months are zero-based
-  const day = pad(date.getDate())
-  const hours = pad(date.getHours())
-  const minutes = pad(date.getMinutes())
-  const seconds = pad(date.getSeconds())
-  const milliseconds = String(date.getMilliseconds()).padStart(3, '0')
+  // Set current local time on the given date
+  dateObj.setHours(
+    now.getHours(),
+    now.getMinutes(),
+    now.getSeconds(),
+    now.getMilliseconds()
+  )
 
-  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`
+  // Convert to UTC without shifting time
+  return new Date(
+    Date.UTC(
+      dateObj.getFullYear(),
+      dateObj.getMonth(),
+      dateObj.getDate(),
+      dateObj.getHours(),
+      dateObj.getMinutes(),
+      dateObj.getSeconds(),
+      dateObj.getMilliseconds()
+    )
+  ).toISOString()
 }
 
 const Book = () => {
@@ -121,12 +132,13 @@ const Book = () => {
     setLoading((prev) => {
       return { ...prev, book: true }
     })
+
     try {
       const res = await axios.post(
         '/appointments/create',
         {
           ...data,
-          date: toLocalISOString(data.date),
+          date: toLocalISO(data.date),
           slotId: Number(data.slot),
           age: Number(data.age),
           serviceTypeId: data.serviceTypeId || serviceTypes[0].id,
@@ -253,15 +265,13 @@ const Book = () => {
   const fetchSlots = async (date) => {
     setLoading((prev) => ({ ...prev, slot: true }))
     try {
-      const isoDate = toLocalISOString(date)
+      const isoString = toLocalISO(date)
 
-      const res = await axios.post('/slots/date', {
-        date: isoDate,
-      })
+      const res = await axios.post('/slots/date', { date: isoString })
+
       setSlots(res.data.data)
     } catch (error) {
       console.log(error)
-
       toast.error(error.message || 'Something went wrong')
     } finally {
       setLoading((prev) => ({ ...prev, slot: false }))
@@ -440,33 +450,44 @@ const Book = () => {
             ) : slots?.length > 0 ? (
               <div className='flex flex-wrap gap-4 mt-1'>
                 {slots
-                  ?.filter((slot) => {
-                    const now = new Date()
-                    const selectedDateObj = new Date(watch('date')) // Assuming 'date' is the selected date
-                    const [slotHour, slotMinute] = slot.startTime
-                      .split(' ')[0]
-                      .split(':')
-                      .map(Number)
+                  // ?.filter((slot) => {
+                  //   const now = new Date()
+                  //   const selectedDateObj = new Date(watch('date')) // Assuming 'date' is the selected date
+                  //   const [slotHour, slotMinute] = slot.startTime
+                  //     .split(' ')[0]
+                  //     .split(':')
+                  //     .map(Number)
 
-                    if (
-                      selectedDateObj.toDateString() === now.toDateString() &&
-                      (slotHour < now.getHours() ||
-                        (slotHour === now.getHours() &&
-                          slotMinute <= now.getMinutes()))
-                    ) {
-                      return false // Filter out past slots
-                    }
-                    return true
-                  })
+                  //   if (
+                  //     selectedDateObj.toDateString() === now.toDateString() &&
+                  //     (slotHour < now.getHours() ||
+                  //       (slotHour === now.getHours() &&
+                  //         slotMinute <= now.getMinutes()))
+                  //   ) {
+                  //     return false // Filter out past slots
+                  //   }
+                  //   return true
+                  // })
                   .sort((a, b) => {
-                    const [aHour, aMinute] = a.startTime
-                      .split(' ')[0]
-                      .split(':')
-                      .map(Number)
-                    const [bHour, bMinute] = b.startTime
-                      .split(' ')[0]
-                      .split(':')
-                      .map(Number)
+                    const [aTime, aPeriod] = a.startTime.split(' ')
+                    let [aHour, aMinute] = aTime.split(':').map(Number)
+
+                    const [bTime, bPeriod] = b.startTime.split(' ')
+                    let [bHour, bMinute] = bTime.split(':').map(Number)
+
+                    // Convert to 24-hour format
+                    if (aPeriod.toLowerCase() === 'pm' && aHour !== 12) {
+                      aHour += 12
+                    } else if (aPeriod.toLowerCase() === 'am' && aHour === 12) {
+                      aHour = 0
+                    }
+
+                    if (bPeriod.toLowerCase() === 'pm' && bHour !== 12) {
+                      bHour += 12
+                    } else if (bPeriod.toLowerCase() === 'am' && bHour === 12) {
+                      bHour = 0
+                    }
+
                     return aHour * 60 + aMinute - (bHour * 60 + bMinute)
                   })
                   .map((slot) => (

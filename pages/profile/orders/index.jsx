@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Header from '@/components/layout/Header'
 import toast from 'react-hot-toast'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 function format(num) {
   return num % 1 === 0
@@ -16,6 +17,7 @@ function format(num) {
 }
 
 const Orders = () => {
+  const [loading, setLoading] = useState(false)
   const [data, setData] = useState([])
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
@@ -24,6 +26,7 @@ const Orders = () => {
   const limit = 8
 
   const fetchOrders = async () => {
+    setLoading(true)
     try {
       const { data } = await axios.post('/order/all', {
         page,
@@ -45,6 +48,8 @@ const Orders = () => {
           error.message ||
           'Something went wrong!'
       )
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -81,7 +86,15 @@ const Orders = () => {
             </tr>
           </thead>
           <tbody>
-            {data?.length ? (
+            {loading ? ( // Show loader when loading
+              <tr>
+                <td colSpan='5' className='text-center py-6'>
+                  <div className='flex justify-center items-center'>
+                    <AiOutlineLoading3Quarters className='animate-spin h-10 w-10 text-primary' />
+                  </div>
+                </td>
+              </tr>
+            ) : data?.length ? ( // Show data if available
               data.map((order, index) => (
                 <tr key={index} className='border'>
                   <td className='px-3 py-4 whitespace-nowrap'>
@@ -107,8 +120,11 @@ const Orders = () => {
                 </tr>
               ))
             ) : (
+              // Show "No orders found" when data is empty
               <tr>
-                <td colSpan='5' className='text-center py-4'></td>
+                <td colSpan='5' className='text-center py-4 text-gray-500'>
+                  No orders found.
+                </td>
               </tr>
             )}
           </tbody>

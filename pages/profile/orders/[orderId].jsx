@@ -282,26 +282,42 @@ const OrderDetails = () => {
                         <div className='flex-1 flex flex-col justify-between'>
                           <div className='flex-1 flex flex-col justify-start'>
                             <span className='text-[10px] font-medium'>
-                              {el.product.productType}
+                              {el.weightInKg.replace(/^"|"$/g, '')}
                             </span>
                             <p className='text-lg'>{el.product.name}</p>
                           </div>
-                          {/* <p className='text-[10px]'>
-                            Quantity: {el.product.quantity}
-                          </p> */}
+                          <div className='flex flex-row justify-between gap-2'>
+                            <p className='text-[10px]'>
+                              Quantity: {el.quantity}
+                            </p>
+                            <p className='text-xs font-medium text-right'>
+                              ${format(el.product.buyPrice[el.weightInKg])} /
+                              OMR{' '}
+                              {format(
+                                el.product.buyPrice[el.weightInKg] *
+                                  order.currency['Omání rial']
+                              )}{' '}
+                              / IQD{' '}
+                              {format(
+                                el.product.buyPrice[el.weightInKg] *
+                                  order.currency['Iraquí Dinar']
+                              )}{' '}
+                              / Dhs{' '}
+                              {format(
+                                el.product.buyPrice[el.weightInKg] *
+                                  order.currency['Dirham']
+                              )}
+                            </p>
+                          </div>
                         </div>
-                        {/* <div className='flex flex-col justify-end'>
-                          <p className='text-xs font-medium'>
-                            $ {el.product.price}
-                          </p>
-                        </div> */}
+                        <div className='flex flex-col justify-end'></div>
                       </div>
                     </div>
                   ))}
                 </div>
-                <div className='border-t border-gray-600 py-2 px-4 flex flex-row items-center justify-between mx-[11.5px] mb-4 md:mx-6'>
+                <div className='border-t border-gray-600 py-2 px-4 flex flex-row items-center justify-between gap-3 mx-[11.5px] mb-4 md:mx-6'>
                   <p className='font-semibold text-gray-700'>Total</p>
-                  <p className='font-semibold text-gray-700'>
+                  <p className='font-semibold text-gray-700 text-right'>
                     $ {format(order.total)} / OMR{' '}
                     {format(order.total * order.currency['Omání rial'])} / IQD{' '}
                     {format(order.total * order.currency['Iraquí Dinar'])} / Dhs{' '}
