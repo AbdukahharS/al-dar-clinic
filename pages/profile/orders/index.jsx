@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 import { FaCircleInfo } from 'react-icons/fa6'
 import Link from 'next/link'
@@ -24,8 +24,12 @@ const Orders = () => {
   const searchParams = useSearchParams()
   const router = useRouter()
   const limit = 8
+  const isMounted = useRef(true) // Ref to track component mount status
+  const dataFetched = useRef(false) // Ref to track if data has been fetched
 
   const fetchOrders = async () => {
+    if (!isMounted.current || dataFetched.current) return // Exit if unmounted or data already fetched
+
     setLoading(true)
     try {
       const { data } = await axios.post('/order/all', {
@@ -33,23 +37,29 @@ const Orders = () => {
         limit,
       })
 
-      console.log(data.data)
-
-      setTotal(data.total)
-      setData(data.data)
+      if (isMounted.current) {
+        // Check if component is still mounted before updating state
+        setTotal(data.total)
+        setData(data.data)
+        dataFetched.current = true // Set dataFetched to true after successful fetch
+      }
     } catch (error) {
-      toast.error(
-        error?.response?.data?.message ||
-          error.message ||
-          'Something went wrong!'
-      )
-      console.error(
-        error?.response?.data?.message ||
-          error.message ||
-          'Something went wrong!'
-      )
+      if (isMounted.current) {
+        toast.error(
+          error?.response?.data?.message ||
+            error.message ||
+            'Something went wrong!'
+        )
+        console.error(
+          error?.response?.data?.message ||
+            error.message ||
+            'Something went wrong!'
+        )
+      }
     } finally {
-      setLoading(false)
+      if (isMounted.current) {
+        setLoading(false)
+      }
     }
   }
 
@@ -63,12 +73,15 @@ const Orders = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (data.some((order) => !order.deliveryCost)) {
+      if (data.length > 0 && data.some((order) => !order.deliveryCost)) {
         fetchOrders()
       }
     }, 5000)
 
-    return () => clearInterval(interval)
+    return () => {
+      clearInterval(interval)
+      isMounted.current = false // Set isMounted to false on unmount
+    }
   }, [data])
 
   return (
