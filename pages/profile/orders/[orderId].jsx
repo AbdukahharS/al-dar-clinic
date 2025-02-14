@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
@@ -41,24 +41,39 @@ function format(num) {
 const OrderDetails = () => {
   const { toPDF, targetRef } = usePDF({ filename: 'receipt.pdf' })
   const params = useParams()
+  const router = useRouter()
+  const { user, isAuthenticated } = useAuth()
   const [order, setOrder] = useState({})
   const [currentStatus, setCurrentStatus] = useState('')
   const [loading, setLoading] = useState(true)
-  const router = useRouter()
-  const { user, isAuthenticated } = useAuth()
+  const dataFetched = useRef(false) // Ref to track if data has been fetched
+  const isMounted = useRef(true) // Ref to track component mount status
 
   const fetchOrder = async () => {
-    setLoading(true)
+    if (!isMounted.current) return // Exit if unmounted
+
+    if (!dataFetched.current) {
+      // Only show loading for the initial fetch
+      setLoading(true)
+    }
+
     try {
       const res = await axios.get(`/order/${params.orderId}`)
-      setOrder(res.data)
-      console.log(res.data)
 
-      setCurrentStatus(res.data.orderStatus)
+      if (isMounted.current) {
+        setOrder(res.data)
+        setCurrentStatus(res.data.orderStatus)
+        dataFetched.current = true // Set dataFetched to true after successful fetch
+      }
     } catch (error) {
-      toast.error(error.message || 'Something went wrong')
+      if (isMounted.current) {
+        toast.error(error.message || 'Something went wrong')
+      }
     } finally {
-      setLoading(false)
+      if (isMounted.current && !dataFetched.current) {
+        // Hide loading only after initial fetch
+        setLoading(false)
+      }
     }
   }
 
@@ -67,6 +82,22 @@ const OrderDetails = () => {
       fetchOrder()
     }
   }, [params, axios.defaults.baseURL, isAuthenticated])
+
+  useEffect(() => {
+    let intervalId
+
+    if (order.id && !order.deliveryCost && dataFetched.current) {
+      // Check dataFetched here
+      intervalId = setInterval(() => {
+        fetchOrder() // Fetch again if deliveryCost is still missing
+      }, 5000)
+    }
+
+    return () => {
+      clearInterval(intervalId)
+      isMounted.current = false // Set isMounted to false on unmount
+    }
+  }, [order.id, order.deliveryCost, dataFetched.current]) // Add dataFetched to dependency array
 
   const handleCancel = () => {
     const cancelOrder = async (id) => {
@@ -284,7 +315,9 @@ const OrderDetails = () => {
                             <span className='text-[10px] font-medium'>
                               {el.weightInKg.replace(/^"|"$/g, '')}
                             </span>
-                            <p className='text-lg'>{el.product.name}</p>
+                            <p className='text-lg line-clamp-2'>
+                              {el.product.name}
+                            </p>
                           </div>
                           <div className='flex flex-row justify-between gap-2'>
                             <p className='text-[10px]'>
@@ -318,10 +351,27 @@ const OrderDetails = () => {
                 <div className='border-t border-gray-600 py-2 px-4 flex flex-row items-center justify-between gap-3 mx-[11.5px] mb-4 md:mx-6'>
                   <p className='font-semibold text-gray-700'>Total</p>
                   <p className='font-semibold text-gray-700 text-right'>
-                    $ {format(order.total)} / OMR{' '}
-                    {format(order.total * order.currency['Omání rial'])} / IQD{' '}
-                    {format(order.total * order.currency['Iraquí Dinar'])} / Dhs{' '}
-                    {format(order.total * order.currency['Dirham'])}
+                    {order.deliveryCost ? (
+                      <>
+                        $ {format(order.deliveryCost + order.itemsCost)} / OMR{' '}
+                        {format(
+                          (order.deliveryCost + order.itemsCost) *
+                            order.currency['Omání rial']
+                        )}{' '}
+                        / IQD{' '}
+                        {format(
+                          (order.deliveryCost + order.itemsCost) *
+                            order.currency['Iraquí Dinar']
+                        )}{' '}
+                        / Dhs{' '}
+                        {format(
+                          (order.deliveryCost + order.itemsCost) *
+                            order.currency['Dirham']
+                        )}
+                      </>
+                    ) : (
+                      'Calculating delivery cost...'
+                    )}
                   </p>
                 </div>
               </Animated>
