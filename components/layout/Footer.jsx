@@ -18,7 +18,7 @@ const contacts = [
   },
   {
     branch: 'Oman',
-    phone: '+9689199 2031 , +96871757380',
+    phone: '+968 9199 2031, +968 7175 7380',
     email: 'info@aldarinternational.com',
   },
   {

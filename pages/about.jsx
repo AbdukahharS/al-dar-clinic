@@ -207,7 +207,7 @@ const About = () => {
             <div className='h-[1px] bg-primary w-full'></div>
             <p className='mt-4 text-sm'>
               <FaPhoneVolume className='mr-2 text-base inline' />
-              +9689199 2031 , +96871757380
+              +968 9199 2031, +968 7175 7380
             </p>
             <p className='mt-4 text-sm'>
               <FaRegEnvelope className='mr-2 text-base inline' />
