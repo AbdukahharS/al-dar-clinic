@@ -184,7 +184,7 @@ const Appointments = () => {
                     </td>
                   </tr>
                   <tr className='border-b'>
-                    <td className='font-bold px-4 py-1'>LOCATION:</td>
+                    <td className='font-bold px-4 py-1'>CLINIC LOCATION:</td>
                     <td className='px-4 py-1'>{appointment.location?.name}</td>
                   </tr>
                   <tr className='border-b'>
@@ -217,7 +217,7 @@ const Appointments = () => {
                     <td className='px-4 pt-3 pb-1'>{appointment.address}</td>
                   </tr>
                   <tr className='border-b'>
-                    <td className='font-bold px-4 pt-1 pb-3'>POSTAL CODE:</td>
+                    <td className='font-bold px-4 pt-1 pb-3'>AREA/CITY:</td>
                     <td className='px-4 pt-1 pb-3'>{appointment.postalCode}</td>
                   </tr>
                 </tbody>
@@ -228,15 +228,8 @@ const Appointments = () => {
       )}
       <div className='mt-8'>
         <p className='md:text-lg xl:text-xl text-center md:pt-6 pb-12 tracking-wide'>
-          We accept Asia Pay{' '}
-          <Image
-            src={asiaPay}
-            height={44}
-            weight={44}
-            alt='Asia Pay Icon'
-            className='inline w-11 h-11'
-          />
-          <span className='text-primary'>00964 775 776 6919</span>
+          We accept payment: Iraq/ Asia pay +964 775 776 6919 OMAN / MOBILE
+          PAYMENT +968 9199 2031
         </p>
       </div>
     </div>
