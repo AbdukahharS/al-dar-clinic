@@ -191,15 +191,8 @@ const Book = () => {
                 Your Appointment is Confirmed
               </p>
               <p className='md:text-lg xl:text-xl text-center md:pt-6 pb-12 tracking-wide'>
-                We accept Asia Pay{' '}
-                <Image
-                  src={asiaPay}
-                  height={44}
-                  weight={44}
-                  alt='Asia Pay Icon'
-                  className='inline w-11 h-11'
-                />
-                <span className='text-primary'>00964 775 776 6919</span>
+                We accept payment: Iraq/ Asia pay +964 775 776 6919 OMAN /
+                MOBILE PAYMENT +968 9199 2031
               </p>
 
               <div className='flex flex-row items-center justify-center gap-4 md:hidden'>
@@ -560,13 +553,13 @@ const Book = () => {
               htmlFor='postal'
               className='text-sm font-semibold text-black'
             >
-              Postal Code<span className='text-primary'>*</span>
+              Area/City<span className='text-primary'>*</span>
             </label>
             <input
               type='text'
               id='postal'
               {...register('postalCode', {
-                required: 'Postal code is required',
+                required: 'Area/City is required',
               })}
               className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
                 errors.postal ? 'border-red-500' : 'border-gray-300'
@@ -634,7 +627,8 @@ const Book = () => {
               htmlFor='location'
               className='text-sm font-semibold text-black'
             >
-              Location<span className='text-primary'>*</span>
+              Clinic Location
+              <span className='text-primary'>*</span>
             </label>
             <select
               name='location'
@@ -642,7 +636,9 @@ const Book = () => {
               className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
                 errors.locationId ? 'border-red-500' : 'border-gray-300'
               }`}
-              {...register('locationId', { required: 'Location is required' })}
+              {...register('locationId', {
+                required: 'Clinic Location is required',
+              })}
             >
               {loading.location ? (
                 <option>Loading...</option>
