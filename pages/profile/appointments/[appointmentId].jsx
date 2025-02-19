@@ -228,8 +228,16 @@ const Appointments = () => {
       )}
       <div className='mt-8'>
         <p className='md:text-lg xl:text-xl text-center md:pt-6 pb-12 tracking-wide'>
-          We accept payment: Iraq/ Asia pay +964 775 776 6919 OMAN / MOBILE
-          PAYMENT +968 9199 2031
+          We accept payment: Iraq / AsiaPay{' '}
+          <Image
+            src={asiaPay}
+            height={44}
+            weight={44}
+            alt='Asia Pay Icon'
+            className='inline w-11 h-11'
+          />{' '}
+          <span className='text-primary'>+964 775 776 6919</span> <br /> OMAN /
+          MOBILE PAYMENT <span className='text-primary'>+968 9199 2031</span>
         </p>
       </div>
     </div>
