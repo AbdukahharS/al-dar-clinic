@@ -3,16 +3,21 @@ import React, { useEffect, useState } from 'react'
 
 import Card from '@/components/Card'
 import Animated from '@/components/Animated'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 const ProductsHome = () => {
   const [business, setBusiness] = useState([])
+  const [loading, setLoading] = useState(true)
 
   const fetchBusinesses = async () => {
+    setLoading(true)
     try {
       const res = await axios.get('/business')
       setBusiness(res.data)
     } catch (error) {
       console.error(error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -21,6 +26,31 @@ const ProductsHome = () => {
       fetchBusinesses()
     }
   }, [axios.defaults.baseURL])
+
+  const renderProducts = (orderType) => {
+    if (loading) {
+      return (
+        <AiOutlineLoading3Quarters className='animate-spin h-20 w-20 text-primary mx-auto' />
+      )
+    }
+    const filteredBusiness = business.filter((el) => el.orderType === orderType)
+    if (filteredBusiness.length === 0) {
+      return (
+        <p className='text-center text-xl md:text-4xl mx-auto'>Coming Soon</p>
+      )
+    }
+    return filteredBusiness.map((el) => (
+      <Card
+        data={{
+          name: el.name,
+          img: el.image.original,
+          link: `/products/${orderType.toLowerCase()}/${el.id}`,
+        }}
+        key={el.id}
+      />
+    ))
+  }
+
   return (
     <div className='flex-1'>
       <Animated
@@ -31,18 +61,7 @@ const ProductsHome = () => {
         <div className='bg-primary h-[1px] md:flex-1'></div>
       </Animated>
       <div className='flex flex-col md:flex-row gap-20 w-full max-w-7xl mx-auto px-7 mt-16 mb-28'>
-        {business
-          .filter((el) => el.orderType === 'BUY')
-          .map((el) => (
-            <Card
-              data={{
-                name: el.name,
-                img: el.image.original,
-                link: '/products/buy/' + el.id,
-              }}
-              key={el.id}
-            />
-          ))}
+        {renderProducts('BUY')}
       </div>
       <Animated
         animationType='fadeInLeft'
@@ -52,20 +71,7 @@ const ProductsHome = () => {
         <div className='bg-primary h-[1px] md:flex-1'></div>
       </Animated>
       <div className='flex flex-col md:flex-row gap-20 w-full max-w-7xl mx-auto px-7 mt-16 mb-28'>
-        {business
-          .filter((el) => el.orderType === 'RENT')
-          .map((el) => (
-            <Card
-              data={{
-                name: el.name,
-                img: el.image.original,
-                link: '/products/rent/' + el.id,
-              }}
-              key={el.id}
-            />
-          ))}
-        {/* <Card data={{ name: 'B2B', img: b2b, link: '/products/rent/b2b' }} /> */}
-        {/* <Card data={{ name: 'B2C', img: b2c, link: '/products/rent/b2c' }} /> */}
+        {renderProducts('RENT')}
       </div>
     </div>
   )
