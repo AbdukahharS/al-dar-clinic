@@ -15,6 +15,7 @@ import {
   FaX,
   FaFolder,
   FaCheckToSlot,
+  FaRegImages,
 } from 'react-icons/fa6'
 import { FaBars, FaHandHoldingUsd, FaSignOutAlt } from 'react-icons/fa'
 import { motion } from 'framer-motion'
@@ -83,6 +84,11 @@ const links = [
     name: 'Team Management',
     href: '/admin/team',
     icon: FaUsersLine,
+  },
+  {
+    name: 'Gallery Management',
+    href: '/admin/gallery',
+    icon: FaRegImages,
   },
 ]
 
