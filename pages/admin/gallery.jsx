@@ -17,6 +17,7 @@ import 'swiper/css'
 import 'swiper/css/effect-coverflow'
 
 import Button from '@/components/Button'
+import confirm from '@/components/Confirm'
 
 const GalleryManagement = () => {
   const [data, setData] = useState([])
@@ -70,12 +71,15 @@ const GalleryManagement = () => {
         console.error('Error uploading image:', error)
       } finally {
         setUploading(false) // end upload loading
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '' // Reset file input value
+        }
       }
     }
   }
 
   const handleDelete = async (id) => {
-    if (isAuthenticated) {
+    const removeFromList = async () => {
       setDeleting(id) // Set the id of the item being deleted
       try {
         await axios.delete('/gallery/' + id)
@@ -87,6 +91,12 @@ const GalleryManagement = () => {
         setDeleting(null) // Reset deleting state
       }
     }
+    confirm(
+      'Delete Gallery Image',
+      'Are you sure you want to delete this image?',
+      'Delete',
+      removeFromList
+    )
   }
 
   if (isLoading) {
@@ -103,6 +113,19 @@ const GalleryManagement = () => {
 
       <div className='bg-primary text-white px-8 md:px-20 py-8 flex justify-between items-center fixed top-[155px] md:top-0 w-full md:w-[calc(100%-288px)] z-10 right-0'>
         <h1 className='text-2xl font-medium'>Gallery Management</h1>
+        <Button
+          className='bg-white !text-primary rounded-lg p-2'
+          onClick={handleAddImage}
+        >
+          {uploading ? (
+            <>
+              <AiOutlineLoading3Quarters className='animate-spin text-primary inline' />{' '}
+              Adding Gallery Image
+            </>
+          ) : (
+            'Add Gallery Image'
+          )}
+        </Button>
       </div>
 
       <input
@@ -177,7 +200,7 @@ const GalleryManagement = () => {
                       <AiOutlineLoading3Quarters className='animate-spin text-white text-5xl lg:text-[60px] bg-black/50 p-3 rounded-full' />
                     ) : (
                       <FaTrash
-                        className='text-red-500 text-5xl lg:text-[60px] bg-black/50 p-3 rounded-full cursor-pointer'
+                        className='text-red-500 w-[60px] h-[60px] cursor-pointer'
                         onClick={() => handleDelete(img?.id)}
                       />
                     )}
