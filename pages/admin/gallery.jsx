@@ -34,7 +34,7 @@ const GalleryManagement = () => {
       try {
         const response = await axios.get('/gallery')
         const imageUrls = response.data.data
-        setData([...imageUrls, ''])
+        setData(imageUrls)
       } catch (error) {
         console.error('Error fetching gallery images:', error)
       } finally {
@@ -160,72 +160,51 @@ const GalleryManagement = () => {
         className='gallery py-9 mt-10 md:mt-16 lg:mt-20 max-w-[1400px]'
       >
         {data.map((img, ind) => (
-          <React.Fragment key={img?.id + ind}>
-            {ind !== data.length - 1 ? (
-              <SwiperSlide
-                key={img?.id}
-                className='!w-2/3 h-[470px] overflow-hidden rounded-3xl shadow-[0px_6px_20px_0px_rgba(0,0,0,0.15)] relative'
-                onMouseEnter={() => setHoveredIndex(ind)}
-                onMouseLeave={() => setHoveredIndex(null)}
-              >
-                <motion.div
-                  className='relative h-[300px] md:h-[470px]'
-                  animate={{
-                    filter:
-                      ind === hoveredIndex || ind !== active
-                        ? 'brightness(60%)'
-                        : 'brightness(100%)',
-                  }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Image
-                    src={img?.image.original}
-                    alt={'Gallery item'}
-                    fill
-                    loading={ind === 0 ? 'eager' : 'lazy'}
-                    priority={ind === 0}
-                    style={{ objectFit: 'cover', objectPosition: 'center' }}
-                  />
-                </motion.div>
+          <SwiperSlide
+            key={img?.id}
+            className='!w-2/3 h-[470px] overflow-hidden rounded-3xl shadow-[0px_6px_20px_0px_rgba(0,0,0,0.15)] relative'
+            onMouseEnter={() => setHoveredIndex(ind)}
+            onMouseLeave={() => setHoveredIndex(null)}
+          >
+            <motion.div
+              className='relative h-[300px] md:h-[470px]'
+              animate={{
+                filter:
+                  ind === hoveredIndex || ind !== active
+                    ? 'brightness(60%)'
+                    : 'brightness(100%)',
+              }}
+              transition={{ duration: 0.3 }}
+            >
+              <Image
+                src={img?.image.original}
+                alt={'Gallery item'}
+                fill
+                loading={ind === 0 ? 'eager' : 'lazy'}
+                priority={ind === 0}
+                style={{ objectFit: 'cover', objectPosition: 'center' }}
+              />
+            </motion.div>
 
-                {hoveredIndex === ind && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{ duration: 0.2 }}
-                    className='absolute inset-0 flex justify-center items-center'
-                  >
-                    {deleting === img?.id ? (
-                      <AiOutlineLoading3Quarters className='animate-spin text-white text-5xl lg:text-[60px] bg-black/50 p-3 rounded-full' />
-                    ) : (
-                      <FaTrash
-                        className='text-red-500 w-[60px] h-[60px] cursor-pointer'
-                        onClick={() => handleDelete(img?.id)}
-                      />
-                    )}
-                  </motion.div>
-                )}
-              </SwiperSlide>
-            ) : (
-              <SwiperSlide
-                key={'add-slide'}
-                className='!w-2/3 h-[470px] overflow-hidden rounded-3xl shadow-[0px_6px_20px_0px_rgba(0,0,0,0.15)] cursor-pointer'
-                onClick={handleAddImage}
+            {hoveredIndex === ind && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.2 }}
+                className='absolute inset-0 flex justify-center items-center'
               >
-                <motion.div
-                  className='relative h-[300px] md:h-[470px] bg-primary flex justify-center items-center'
-                  transition={{ duration: 0.3 }}
-                >
-                  {uploading ? (
-                    <AiOutlineLoading3Quarters className='animate-spin text-white text-5xl lg:text-[68px]' />
-                  ) : (
-                    <FaCirclePlus className='text-white text-5xl lg:text-[68px]' />
-                  )}
-                </motion.div>
-              </SwiperSlide>
+                {deleting === img?.id ? (
+                  <AiOutlineLoading3Quarters className='animate-spin text-white text-5xl lg:text-[60px] bg-black/50 p-3 rounded-full' />
+                ) : (
+                  <FaTrash
+                    className='text-red-500 w-[60px] h-[60px] cursor-pointer'
+                    onClick={() => handleDelete(img?.id)}
+                  />
+                )}
+              </motion.div>
             )}
-          </React.Fragment>
+          </SwiperSlide>
         ))}
         <div className='slider-controler mt-16 flex flex-row gap-4 justify-center'>
           <Button size='icon' className='swiper-gallery-prev'>
