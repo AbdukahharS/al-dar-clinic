@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { FaArrowLeft, FaTrashCan } from 'react-icons/fa6'
 import { useForm } from 'react-hook-form'
@@ -7,6 +7,7 @@ import axios from 'axios'
 import toast from 'react-hot-toast'
 
 import Button from '@/components/Button'
+import useAuth from '@/hooks/useAuth'
 
 const weekdays = [
   'SUNDAY',
@@ -24,6 +25,11 @@ const CreateSlot = () => {
   const [loading, setLoading] = useState(false)
   const [day, setDay] = useState()
   const [duration, setDuration] = useState()
+  const { isAuthenticated } = useAuth()
+  const [therapists, setTherapists] = useState([])
+  const [teamMemberId, setTeamMemberId] = useState()
+
+  console.log(therapists)
 
   const {
     register,
@@ -32,10 +38,26 @@ const CreateSlot = () => {
     formState: { errors },
   } = useForm()
 
+  useEffect(() => {
+    const fetchTherapists = async () => {
+      try {
+        const response = await axios.get('/team-member/all')
+        setTherapists(response.data.data)
+      } catch (error) {
+        console.error('Error fetching therapists:', error)
+      }
+    }
+
+    if (isAuthenticated) {
+      fetchTherapists()
+    }
+  }, [isAuthenticated])
+
   const onCreate = async (data) => {
     const { startTime, endTime, duration, buffer, day } = data
     setDay(day)
     setDuration(Number(duration))
+    setTeamMemberId(data.therapist)
 
     // Convert time to minutes
     const timeToMinutes = (time) => {
@@ -86,23 +108,24 @@ const CreateSlot = () => {
     setLoading(true)
     const data = {
       dayOfWeek: day,
-      startTime: slots.map(slot => slot.startTime),
-      duration
+      startTime: slots.map((slot) => slot.startTime),
+      duration,
+      teamMemberId,
     }
     try {
-        await axios.post('/slots/create', data)
-        toast.success('Slots saved succesfully!')
-        router.push('/admin/slot')
+      await axios.post('/slots/create', data)
+      toast.success('Slots saved succesfully!')
+      router.push('/admin/slot')
     } catch (error) {
-        console.log(error);
-        
-        toast.error(
-          error.response?.data?.message === 'Invalid operation'
-            ? 'Slot already exist'
-            : error.message || 'Something went wrong'
-        )
+      console.log(error)
+
+      toast.error(
+        error.response?.data?.message === 'Invalid operation'
+          ? 'Slot already exist'
+          : error.message || 'Something went wrong'
+      )
     } finally {
-        setLoading(false)
+      setLoading(false)
     }
   }
 
@@ -141,7 +164,7 @@ const CreateSlot = () => {
                 </option>
               ))}
             </select>
-            
+
             {errors.day && (
               <motion.p
                 initial={{ opacity: 0 }}
@@ -149,6 +172,36 @@ const CreateSlot = () => {
                 className='text-red-500 text-sm mt-1'
               >
                 {errors.day.message}
+              </motion.p>
+            )}
+          </div>
+          <div>
+            <label className='block text-lg font-medium text-gray-700'>
+              Therapist
+            </label>
+            <select
+              {...register('therapist', {
+                required: 'Therapist is required',
+              })}
+              className={`mt-1 block w-full border p-2 ${
+                errors.therapist ? 'border-red-500' : 'border-gray-300'
+              } rounded-md shadow-sm sm:text-sm`}
+            >
+              <option value=''>Select a therapist</option>
+              {therapists.map((therapist, i) => (
+                <option key={i} value={therapist.id}>
+                  {therapist.name}
+                </option>
+              ))}
+            </select>
+
+            {errors.therapist && (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className='text-red-500 text-sm mt-1'
+              >
+                {errors.therapist.message}
               </motion.p>
             )}
           </div>
