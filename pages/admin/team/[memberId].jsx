@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { use, useEffect, useState } from 'react'
 import { FaArrowLeft, FaTrash, FaPlus } from 'react-icons/fa6'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm, Controller, set } from 'react-hook-form'
 import { motion } from 'framer-motion'
 import axios from 'axios'
 import Button from '@/components/Button'
@@ -10,6 +10,7 @@ import useAuth from '@/hooks/useAuth'
 
 const EditTeamMember = () => {
   const router = useRouter()
+  const [locations, setLocations] = useState([])
   const { memberId } = router.query
   const { isAuthenticated } = useAuth()
 
@@ -29,6 +30,8 @@ const EditTeamMember = () => {
 
         setValue('name', data.name)
         setValue('position', data.position)
+        setValue('location', data.location?.id || '')
+        setValue('specialty', data.specialty || '')
         const imageFile = await fetch(data.image.original) // Fetch the image from the URL (if URL is used)
           .then((res) => res.blob())
           .then(
@@ -37,17 +40,31 @@ const EditTeamMember = () => {
                 type: blob.type,
               })
           )
-        console.log(imageFile)
         setValue('picture', imageFile)
       } catch (error) {
         console.error('Error fetching team member:', error)
       }
     }
 
-    if (memberId && isAuthenticated) {
+    if (memberId && isAuthenticated && locations.length) {
       fetchTeamMember()
     }
-  }, [memberId, setValue, isAuthenticated])
+  }, [memberId, setValue, isAuthenticated, locations])
+
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        const response = await axios.get('/location/all')
+        setLocations(response.data.data)
+      } catch (error) {
+        console.error('Error fetching locations:', error)
+      }
+    }
+
+    if (isAuthenticated) {
+      fetchLocations()
+    }
+  }, [isAuthenticated])
 
   const onSubmit = async (data) => {
     try {
@@ -57,6 +74,8 @@ const EditTeamMember = () => {
       if (data.picture) {
         formData.append('file', data.picture)
       }
+      formData.append('locationId', data.location)
+      formData.append('specialty', data.specialty)
 
       await axios.put(`/team-member/update/${memberId}`, formData, {
         headers: {
@@ -130,6 +149,66 @@ const EditTeamMember = () => {
                 className='text-red-500 text-sm mt-1'
               >
                 {errors.position.message}
+              </motion.p>
+            )}
+          </div>
+
+          <div>
+            <label className='block text-lg font-medium text-gray-700'>
+              Clinic Location
+            </label>
+
+            {locations.length ? (
+              <select
+                {...register('location', {
+                  required: 'Location is required',
+                })}
+                className={`mt-1 block w-full border p-2 ${
+                  errors.location ? 'border-red-500' : 'border-gray-300'
+                } rounded-md shadow-sm sm:text-sm`}
+              >
+                <option value=''>Select Location</option>
+                {locations.map((location) => (
+                  <option key={location.id} value={location.id}>
+                    {location.name}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              ''
+            )}
+
+            {errors.location && (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className='text-red-500 text-sm mt-1'
+              >
+                {errors.location.message}
+              </motion.p>
+            )}
+          </div>
+
+          <div>
+            <label className='block text-lg font-medium text-gray-700'>
+              Specialty
+            </label>
+            <input
+              type='text'
+              {...register('specialty', {
+                required: 'Specialty is required',
+              })}
+              className={`mt-1 block w-full border p-2 ${
+                errors.specialty ? 'border-red-500' : 'border-gray-300'
+              } rounded-md shadow-sm sm:text-sm`}
+            />
+            {errors.specialty && (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className='text-red-500 text-sm mt-1'
+              >
+                {errors.specialty.message}
               </motion.p>
             )}
           </div>
