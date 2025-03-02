@@ -50,7 +50,7 @@ const AppointmentDetails = () => {
   useEffect(() => {
     const fetchAppointment = async () => {
       try {
-        const res = await axios.get('/appointments/' + params.appointmentId)
+        const res = await axios.get('/appointments/' + params?.appointmentId)
         setAppointment(res.data.data)
       } catch (error) {
         console.error(error)
@@ -165,13 +165,13 @@ const AppointmentDetails = () => {
         <div className='w-full md:w-[calc(50%-10px)]'>
           <div className='border rounded-lg bg-white'>
             <div className='flex items-center flex-row p-4 font-semibold justify-between border-b'>
-            <div className='flex items-center flex-row font-semibold gap-3'>
-              <FaClock className='text-primary text-xl' />
-              Schedule Information
-            </div>
-            <Link href={`/admin/appointments/${params.appointmentId}/edit`}>
-              <FaPen className='text-primary' />
-            </Link>
+              <div className='flex items-center flex-row font-semibold gap-3'>
+                <FaClock className='text-primary text-xl' />
+                Schedule Information
+              </div>
+              <Link href={`/admin/appointments/${params?.appointmentId}/edit`}>
+                <FaPen className='text-primary' />
+              </Link>
             </div>
             <table className='table-auto w-full border-collapse'>
               <tbody>
@@ -214,9 +214,7 @@ const AppointmentDetails = () => {
                 <tr className='border-b'>
                   <td className='font-bold px-4 pt-1 pb-3'>Therapist:</td>
                   <td className='px-4 pt-1 pb-3'>
-                    {slot.teamMember
-                      ? slot.teamMember.name
-                      : '-'}
+                    {slot.teamMember ? slot.teamMember.name : '-'}
                   </td>
                 </tr>
               </tbody>

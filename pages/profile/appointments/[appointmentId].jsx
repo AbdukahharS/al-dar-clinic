@@ -49,7 +49,7 @@ const Appointments = () => {
   useEffect(() => {
     const fetchAppointment = async () => {
       try {
-        const res = await axios.get('/appointments/' + params.appointmentId)
+        const res = await axios.get('/appointments/' + params?.appointmentId)
         setAppointment(res.data.data)
       } catch (error) {
         console.error(error)

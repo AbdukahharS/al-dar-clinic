@@ -104,7 +104,7 @@ const ChangeAppointmentSlot = () => {
   useEffect(() => {
     const fetchAppointment = async () => {
       try {
-        const res = await axios.get('/appointments/' + params.appointmentId)
+        const res = await axios.get('/appointments/' + params?.appointmentId)
         setAppointment(res.data.data)
       } catch (error) {
         console.error(error)
@@ -132,10 +132,7 @@ const ChangeAppointmentSlot = () => {
 
         // If the slot data contains location information, set it here
         if (res.data.data.teamMember?.location?.id) {
-          setValue(
-            'locationId',
-            res.data.data.teamMember.location.id
-          )
+          setValue('locationId', res.data.data.teamMember.location.id)
         }
 
         setSlot(res.data.data)
@@ -186,7 +183,7 @@ const ChangeAppointmentSlot = () => {
   }
 
   useEffect(() => {
-    if (axios.defaults.baseURL && isAuthenticated ) {
+    if (axios.defaults.baseURL && isAuthenticated) {
       fetchLocations()
     }
   }, [axios.defaults, isAuthenticated])
@@ -217,22 +214,24 @@ const ChangeAppointmentSlot = () => {
 
   const onSubmit = async (formData) => {
     if (loading.update) return
-    setLoading(prev => ({ ...prev, update: true }))
+    setLoading((prev) => ({ ...prev, update: true }))
     const data = {
-      id: params.appointmentId,
+      id: params?.appointmentId,
       date: toLocalISO(formData.date),
       slotsId: Number(formData.slot),
     }
     try {
       await axios.put('/appointments/update', data)
       toast.success('Appointment slot updated succesfully!')
-      router.push('/admin/appointments/'+ params.appointmentId)
+      router.push('/admin/appointments/' + params?.appointmentId)
     } catch (error) {
       console.log(error)
 
-      toast.error(error.response?.data?.message ||error.message || 'Something went wrong')
+      toast.error(
+        error.response?.data?.message || error.message || 'Something went wrong'
+      )
     } finally {
-      setLoading(prev => ({ ...prev, update: false }))
+      setLoading((prev) => ({ ...prev, update: false }))
     }
   }
 
