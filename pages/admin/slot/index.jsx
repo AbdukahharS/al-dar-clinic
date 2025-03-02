@@ -91,6 +91,8 @@ const SlotManagement = () => {
     )
   }
 
+  console.log(data)
+  
   return (
     <div>
       <div className='h-[104px]'></div>
@@ -153,6 +155,7 @@ const SlotManagement = () => {
                           <FaTrashCan />
                         </Button>
                       </div>
+                      <p>{slot.teamMember?.name}</p>
                       <p>
                         {slot.startTime} -{' '}
                         {calculateEndTime(slot.startTime, slot.duration)}
