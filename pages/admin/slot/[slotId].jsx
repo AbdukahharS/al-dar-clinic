@@ -36,6 +36,7 @@ const EditSlot = () => {
   const params = useParams()
   const [loading, setLoading] = useState(false)
   const [day, setDay] = useState()
+  const [therapist, setTherapist] = useState()
   const { isAuthenticated } = useAuth()
 
   const {
@@ -52,6 +53,7 @@ const EditSlot = () => {
         const data = response.data.data
 
         setDay(data.dayOfWeek)
+        setTherapist(data.teamMember)
         setValue('duration', data.duration)
         setValue('startTime', convertTo24Hour(data.startTime))
       } catch (error) {
@@ -105,6 +107,9 @@ const EditSlot = () => {
           <div>
             <label className='block text-lg font-medium text-gray-700'>
               Day of week: {day}
+            </label>
+            <label className='block text-lg font-medium text-gray-700 mt-2'>
+              Name of the therapist: {therapist?.name}
             </label>
 
             {errors.day && (
