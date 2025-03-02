@@ -5,9 +5,14 @@ import { motion } from 'framer-motion'
 import Button from '@/components/Button'
 import Image from 'next/image'
 import axios from 'axios'
+import { useEffect, useState } from 'react'
+import useAuth from '@/hooks/useAuth'
 
 const AddTeamMember = () => {
   const router = useRouter()
+  const [locations, setLocations] = useState([])
+  const [loading, setLoading] = useState(true)
+  const { isAuthenticated } = useAuth()
 
   const {
     register,
@@ -16,14 +21,32 @@ const AddTeamMember = () => {
     formState: { errors },
   } = useForm()
 
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        const response = await axios.get('/location/all')
+        setLocations(response.data.data)
+        setLoading(false)
+      } catch (error) {
+        console.error('Error fetching locations:', error)
+      }
+    }
+
+    if (isAuthenticated) {
+      fetchLocations()
+    }
+  }, [isAuthenticated])
+
   const onSubmit = async (data) => {
     try {
       const formData = new FormData()
       formData.append('name', data.name)
       formData.append('position', data.position)
       formData.append('file', data.picture)
+      formData.append('locationId', data.location)
+      formData.append('specialty', data.specialty)
 
-      const response = await axios.post('/team-member/create', formData, {
+      await axios.post('/team-member/create', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -95,6 +118,75 @@ const AddTeamMember = () => {
                 className='text-red-500 text-sm mt-1'
               >
                 {errors.position.message}
+              </motion.p>
+            )}
+          </div>
+
+          <div>
+            <label className='block text-lg font-medium text-gray-700'>
+              Clinic Location
+            </label>
+            {loading ? (
+              <></>
+            ) : (
+              locations.length && (
+                <select
+                  {...register('location', {
+                    required: 'Location is required',
+                  })}
+                  className={`mt-1 block w-full border p-2 ${
+                    errors.location ? 'border-red-500' : 'border-gray-300'
+                  } rounded-md shadow-sm sm:text-sm`}
+                >
+                  <option value=''>Select Location</option>
+                  {locations.map((location) => (
+                    <option key={location.id} value={location.id}>
+                      {location.name}
+                    </option>
+                  ))}
+                </select>
+              )
+            )}
+            {/* <input
+              type='text'
+              {...register('position', {
+                required: 'Position is required',
+              })}
+              className={`mt-1 block w-full border p-2 ${
+                errors.position ? 'border-red-500' : 'border-gray-300'
+              } rounded-md shadow-sm sm:text-sm`}
+            /> */}
+            {errors.location && (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className='text-red-500 text-sm mt-1'
+              >
+                {errors.location.message}
+              </motion.p>
+            )}
+          </div>
+
+          <div>
+            <label className='block text-lg font-medium text-gray-700'>
+              Specialty
+            </label>
+            <input
+              type='text'
+              {...register('specialty', {
+                required: 'Specialty is required',
+              })}
+              className={`mt-1 block w-full border p-2 ${
+                errors.specialty ? 'border-red-500' : 'border-gray-300'
+              } rounded-md shadow-sm sm:text-sm`}
+            />
+            {errors.specialty && (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className='text-red-500 text-sm mt-1'
+              >
+                {errors.specialty.message}
               </motion.p>
             )}
           </div>
