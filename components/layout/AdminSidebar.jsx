@@ -76,7 +76,7 @@ const links = [
     icon: FaCheckToSlot,
   },
   {
-    name: 'Location',
+    name: 'Clinic Location',
     href: '/admin/location',
     icon: FaLocationDot,
   },
