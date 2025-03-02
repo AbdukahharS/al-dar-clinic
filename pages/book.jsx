@@ -15,6 +15,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import Animated from '@/components/Animated'
 import Button from '@/components/Button'
 import asiaPay from '@/public/icons/asia-pay.svg'
+import useAuth from '@/hooks/useAuth'
 
 const inter = Inter({
   weight: ['400', '500', '600'],
@@ -51,16 +52,22 @@ const toLocalISO = (date) => {
 }
 
 const Book = () => {
+  const { isAuthenticated } = useAuth()
   const [loading, setLoading] = useState({
     book: false,
     serviceType: false,
     location: false,
     slot: false,
+    therapist: false,
   })
   const [slots, setSlots] = useState(null)
   const [serviceTypes, setServiceTypes] = useState([])
   const [locations, setLocations] = useState([])
+  const [therapists, setTherapists] = useState([])
   const [message, setMessage] = useState()
+  const [therapist, setTherapist] = useState()
+  const [date, setDate] = useState()
+
   const {
     register,
     handleSubmit,
@@ -69,6 +76,32 @@ const Book = () => {
     formState: { errors },
     reset,
   } = useForm()
+
+  const fetchTherapists = async (locationId) => {
+    console.log(locationId)
+
+    setLoading((prev) => {
+      return { ...prev, therapist: true }
+    })
+    try {
+      const res = await axios.post('/team-member/location', {
+        locationId: locationId.target.value,
+      })
+
+      setTherapists(res.data.data)
+    } catch (error) {
+      console.log(error)
+
+      toast.error(
+        error?.response?.data?.message ||
+          'Something went wrong while fetching therapists. Please, try again!'
+      )
+    } finally {
+      setLoading((prev) => {
+        return { ...prev, therapist: false }
+      })
+    }
+  }
 
   const fetchServiceTypes = async () => {
     setLoading((prev) => {
@@ -124,11 +157,12 @@ const Book = () => {
   }
 
   useEffect(() => {
-    if (axios.defaults.baseURL) {
+    if (axios.defaults.baseURL && isAuthenticated) {
       fetchServiceTypes()
       fetchLocations()
+      // fetchTherapists()
     }
-  }, [axios.defaults])
+  }, [axios.defaults, isAuthenticated])
 
   const onSubmit = async (data) => {
     setLoading((prev) => {
@@ -266,13 +300,16 @@ const Book = () => {
     }
   }
 
-  const fetchSlots = async (date) => {
+  const fetchSlots = async () => {
     setLoading((prev) => ({ ...prev, slot: true }))
     try {
       const isoString = toLocalISO(date)
       console.log(isoString)
 
-      const res = await axios.post('/slots/date', { date: isoString })
+      const res = await axios.post('/slots/date', {
+        date: isoString,
+        teamMemberId: therapist,
+      })
 
       setSlots(res.data.data)
     } catch (error) {
@@ -282,6 +319,14 @@ const Book = () => {
       setLoading((prev) => ({ ...prev, slot: false }))
     }
   }
+
+  useEffect(() => {
+    if (date && therapist) {
+      fetchSlots()
+    } else {
+      setSlots(null)
+    }
+  }, [date, therapist])
 
   return (
     <div
@@ -423,7 +468,7 @@ const Book = () => {
                   selected={field.value}
                   onChange={(date) => {
                     field.onChange(date)
-                    fetchSlots(date)
+                    setDate(date)
                   }}
                   minDate={new Date()} // Disable past dates
                   placeholderText='Select a date'
@@ -442,6 +487,94 @@ const Book = () => {
               {errors.date?.message || ' '}
             </motion.p>
           </Animated>
+          <Animated className='mb-4 w-full md:w-[calc(50%-20px)]'>
+            <label
+              htmlFor='location'
+              className='text-sm font-semibold text-black'
+            >
+              Clinic Location
+              <span className='text-primary'>*</span>
+            </label>
+            <Controller
+              name='locationId'
+              control={control}
+              rules={{
+                required: 'Clinic location is required',
+              }}
+              render={({ field }) => (
+                <select
+                  name='location'
+                  onChange={(location) => {
+                    field.onChange(location)
+                    fetchTherapists(location)
+                  }}
+                  id='location'
+                  className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
+                    errors.locationId ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                >
+                  {loading.location ? (
+                    <option>Loading...</option>
+                  ) : locations?.length > 0 ? (
+                    <>
+                      <option value=''>Select a location</option>
+                      {locations.map((el) => (
+                        <option key={el.id} value={el.id}>
+                          {el.name}
+                        </option>
+                      ))}
+                    </>
+                  ) : (
+                    <option value=''>No locations available</option>
+                  )}
+                </select>
+              )}
+            />
+          </Animated>
+          <Animated className='mb-4 w-full md:w-[calc(50%-20px)]'>
+            <label
+              htmlFor='therapist'
+              className='text-sm font-semibold text-black'
+            >
+              Therapist
+              <span className='text-primary'>*</span>
+            </label>
+            <Controller
+              name='therapistId'
+              control={control}
+              rules={{
+                required: 'Therapist is required',
+              }}
+              render={({ field }) => (
+                <select
+                  name='therapistId'
+                  onChange={(therapistId) => {
+                    field.onChange(therapistId)
+                    setTherapist(therapistId.target.value)
+                  }}
+                  id='therapistId'
+                  className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
+                    errors.therapistId ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                >
+                  {loading.therapist ? (
+                    <option>Loading...</option>
+                  ) : therapists?.length > 0 ? (
+                    <>
+                      <option value=''>Select a therapist</option>
+                      {therapists.map((el) => (
+                        <option key={el.id} value={el.id}>
+                          {el.name}
+                        </option>
+                      ))}
+                    </>
+                  ) : (
+                    <option value=''>No therapists available</option>
+                  )}
+                </select>
+              )}
+            />
+          </Animated>
           <Animated className='mb-4 w-full'>
             <label htmlFor='slot' className='text-sm font-semibold text-black'>
               Slots<span className='text-primary'>*</span>
@@ -451,28 +584,12 @@ const Book = () => {
                 <div className='w-6 h-6 border-4 border-gray-300 border-t-primary rounded-full animate-spin'></div>
               </div>
             ) : slots === null ? (
-              <p className='text-gray-500'>Choose a date.</p>
+              <p className='text-gray-500'>
+                Choose a date, a clinic location and a therapist.
+              </p>
             ) : slots?.length > 0 ? (
               <div className='flex flex-wrap gap-4 mt-1'>
                 {slots
-                  // ?.filter((slot) => {
-                  //   const now = new Date()
-                  //   const selectedDateObj = new Date(watch('date')) // Assuming 'date' is the selected date
-                  //   const [slotHour, slotMinute] = slot.startTime
-                  //     .split(' ')[0]
-                  //     .split(':')
-                  //     .map(Number)
-
-                  //   if (
-                  //     selectedDateObj.toDateString() === now.toDateString() &&
-                  //     (slotHour < now.getHours() ||
-                  //       (slotHour === now.getHours() &&
-                  //         slotMinute <= now.getMinutes()))
-                  //   ) {
-                  //     return false // Filter out past slots
-                  //   }
-                  //   return true
-                  // })
                   .sort((a, b) => {
                     const [aTime, aPeriod] = a.startTime.split(' ')
                     let [aHour, aMinute] = aTime.split(':').map(Number)
@@ -631,37 +748,7 @@ const Book = () => {
               <option value='FEMALE'>Female</option>
             </select>
           </Animated>
-          <Animated className='mb-4 w-full md:w-[calc(50%-20px)]'>
-            <label
-              htmlFor='location'
-              className='text-sm font-semibold text-black'
-            >
-              Clinic Location
-              <span className='text-primary'>*</span>
-            </label>
-            <select
-              name='location'
-              id='location'
-              className={`w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
-                errors.locationId ? 'border-red-500' : 'border-gray-300'
-              }`}
-              {...register('locationId', {
-                required: 'Clinic Location is required',
-              })}
-            >
-              {loading.location ? (
-                <option>Loading...</option>
-              ) : locations?.length > 0 ? (
-                locations.map((el) => (
-                  <option key={el.id} value={el.id}>
-                    {el.name}
-                  </option>
-                ))
-              ) : (
-                <option value=''>No locations available</option>
-              )}
-            </select>
-          </Animated>
+
           <Animated className='mb-4 w-full md:w-[calc(50%-20px)]'>
             <label
               htmlFor='medium'
