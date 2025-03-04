@@ -46,6 +46,9 @@ const Appointments = () => {
   const [slot, setSlot] = useState({})
   const { isAuthenticated } = useAuth()
 
+  console.log('appointment', appointment)
+  
+
   useEffect(() => {
     const fetchAppointment = async () => {
       try {
@@ -192,14 +195,20 @@ const Appointments = () => {
                     <td className='px-4 pt-1'>{appointment.medium}</td>
                   </tr>
                   <tr className='border-b'>
-                    <td className='font-bold px-4 pt-1 pb-3'>SLOT:</td>
-                    <td className='px-4 pt-1 pb-3'>
+                    <td className='font-bold px-4 pt-1'>SLOT:</td>
+                    <td className='px-4 pt-1'>
                       {slot.id
                         ? `${slot.startTime} - ${calculateEndTime(
                             slot.startTime,
                             slot.duration
                           )}`
                         : '-'}
+                    </td>
+                  </tr>
+                  <tr className='border-b'>
+                    <td className='font-bold px-4 pt-1 pb-3'>THERAPIST:</td>
+                    <td className='px-4 pt-1 pb-3'>
+                      {slot.teamMember ? slot.teamMember.name : '-'}
                     </td>
                   </tr>
                 </tbody>
