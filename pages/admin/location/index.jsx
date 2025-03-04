@@ -166,8 +166,8 @@ const LocationManagement = () => {
             {...register('locationName', {
               required: 'Location Name is required',
               validate: (value) =>
-                value.length < 3
-                  ? 'Location Name must be at least 3 characters'
+                value.length < 2
+                  ? 'Location Name must be at least 2 characters'
                   : true,
             })}
             className={`mt-1 block w-full border p-2 ${
