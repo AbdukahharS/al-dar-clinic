@@ -201,7 +201,7 @@ const AppointmentDetails = () => {
                   <td className='px-4 pt-1'>{appointment.medium}</td>
                 </tr>
                 <tr className='border-b'>
-                  <td className='font-bold px-4 pt-1 pb-3'>SLOT:</td>
+                  <td className='font-bold px-4 pt-1'>SLOT:</td>
                   <td className='px-4 pt-1'>
                     {slot.id
                       ? `${slot.startTime} - ${calculateEndTime(
@@ -232,7 +232,7 @@ const AppointmentDetails = () => {
                   <td className='px-4 pt-3 pb-1'>{appointment.address}</td>
                 </tr>
                 <tr className='border-b'>
-                  <td className='font-bold px-4 pt-1 pb-3'>POSTAL CODE:</td>
+                  <td className='font-bold px-4 pt-1 pb-3'>AREA/CITY:</td>
                   <td className='px-4 pt-1 pb-3'>{appointment.postalCode}</td>
                 </tr>
               </tbody>
