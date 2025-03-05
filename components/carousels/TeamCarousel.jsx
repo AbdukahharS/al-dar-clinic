@@ -1,18 +1,12 @@
 import Image from 'next/image'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation } from 'swiper/modules'
-
-import Carousel1 from '@/public/images/carousel 1.webp'
-import Carousel3 from '@/public/images/counseling-short.webp'
-import HomeCare from '@/public/images/home-care.webp'
-import LongTerm from '@/public/images/long-term.webp'
-import Physical from '@/public/images/physical-therapy.webp'
-import Speech from '@/public/images/speech-and-swallow.webp'
-import 'swiper/css'
-import Button from '../Button'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa6'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+import 'swiper/css'
+
+import Button from '../Button'
 import Animated from '../Animated'
 
 const TeamCard = ({ item }) => {
