@@ -29,7 +29,7 @@ const TeamCard = ({ item }) => {
       <h4 className='font-medium text-2xl text-[#151515] text-center mt-5 mb-2'>
         {item.name}
       </h4>
-      <p className='text-center opacity-70 font-medium'>{item.position}</p>
+      <p className='text-center opacity-70 font-medium'>{item.specialty}</p>
       <p className='text-center opacity-90 font-medium mt-1'>
         {item.location?.name}
       </p>
