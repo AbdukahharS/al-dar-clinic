@@ -188,7 +188,10 @@ const Appointments = () => {
                   </tr>
                   <tr className='border-b'>
                     <td className='font-bold px-4 py-1'>CLINIC LOCATION:</td>
-                    <td className='px-4 py-1'>{appointment.location?.name}</td>
+                    <td className='px-4 py-1'>
+                      {slot?.teamMember?.location.name ||
+                        appointment.location?.name}
+                    </td>
                   </tr>
                   <tr className='border-b'>
                     <td className='font-bold px-4 pt-1'>MEDIUM:</td>
