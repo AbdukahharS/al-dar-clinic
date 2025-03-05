@@ -13,30 +13,9 @@ import Connector from '@/public/icons/connector.svg'
 import Recovery from '@/public/images/patient-recovery.webp'
 import Button from '@/components/Button'
 import GalleryCarousel from '@/components/carousels/GalleryCarousel'
+import TeamCarousel from '@/components/carousels/TeamCarousel'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-
-const TeamCard = ({ item }) => {
-  return (
-    <Animated className='w-72 min-w-72 h-96 max-w-[calc(100vw-54px)] lg:h-[450px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.15)] rounded-2xl'>
-      <Image
-        src={item.image.original}
-        alt={item.name}
-        loading='lazy'
-        height={320}
-        width={320}
-        className='shadow-[0px_4px_10px_0px_rgba(0,0,0,0.15)] bg-white rounded-2xl h-64 lg:h-[320px]'
-      />
-      <h4 className='font-medium text-2xl text-[#151515] text-center mt-5 mb-2'>
-        {item.name}
-      </h4>
-      <p className='text-center opacity-70 font-medium'>{item.position}</p>
-      <p className='text-center opacity-90 font-medium mt-1'>
-        {item.location?.name}
-      </p>
-    </Animated>
-  )
-}
 
 const variants = {
   open: {
@@ -272,34 +251,7 @@ export default function Home() {
             </h3>
             <div className='bg-primary hidden md:block h-[1px] flex-1'></div>
           </Animated>
-          <div className='flex flex-col items-center md:flex-row gap-20 md:gap-32 justify-center flex-wrap'>
-            {team.slice(0, 3).map((item, ind) => (
-              <TeamCard key={ind} item={item} />
-            ))}
-          </div>
-          {team.length > 3 && (
-            <>
-              <motion.div
-                initial='closed'
-                animate={isOpen ? 'open' : 'closed'}
-                variants={variants}
-                className='flex flex-col md:!h-auto md:flex-row gap-20 md:gap-12 lg:gap-20 justify-between py-8 md:mt-14 items-center overflow-hidden px-7 md:px-2 flex-wrap'
-              >
-                {team.slice(3).map((item, ind) => (
-                  <TeamCard key={ind} item={item} />
-                ))}
-              </motion.div>
-              <div className='flex justify-center mt-7'>
-                <Button
-                  onClick={() => setIsOpen(!isOpen)}
-                  size='lg'
-                  className='md:hidden'
-                >
-                  Show {isOpen ? 'Less' : 'More'}
-                </Button>
-              </div>
-            </>
-          )}
+          <TeamCarousel />
         </div>
         <div className='w-full mt-16 md:mt-20'>
           <Animated
