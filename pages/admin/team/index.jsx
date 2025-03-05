@@ -66,6 +66,12 @@ const TeamManagement = () => {
                 Position
               </th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
+                Clinic Location
+              </th>
+              <th className='px-4 py-5 font-medium whitespace-nowrap'>
+                Specialty
+              </th>
+              <th className='px-4 py-5 font-medium whitespace-nowrap'>
                 Picture
               </th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
@@ -84,6 +90,12 @@ const TeamManagement = () => {
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
                   {member.position}
+                </td>
+                <td className='px-3 py-4 text-center whitespace-nowrap'>
+                  {member.location?.name}
+                </td>
+                <td className='px-3 py-4 text-center whitespace-nowrap'>
+                  {member.specialty}
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
                   <Image
