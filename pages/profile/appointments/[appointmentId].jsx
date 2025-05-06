@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { FaWallet, FaUser, FaClock, FaLocationDot } from 'react-icons/fa6'
+import { FaWallet, FaUser, FaClock, FaLocationDot, FaCross, FaX } from 'react-icons/fa6'
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import axios from 'axios'
@@ -77,7 +77,10 @@ const Appointments = () => {
     if (appointment.slotsId) {
       fetchSlot()
     }
-  }, [appointment])
+  }, [ appointment ])
+  
+
+  // console.log("appointment", appointment)
 
   return (
     <div>
@@ -237,7 +240,20 @@ const Appointments = () => {
             </div>
           </div>
         </div>
-      )}
+      ) }
+      
+      {
+        appointment?.isCancelled && (
+          <div className='flex flex-col gap-5 justify-center items-center mt-8'>
+            <div className='bg-red-600 rounded-full p-4'>
+            <FaX className='text-white text-3xl' />
+            </div>
+            <p className='text-red-500 font-medium lg:text-xl text-center'>
+              Your Appointment has been Cancelled
+            </p>
+          </div>
+        )
+      }
       <div className='mt-8'>
         <p className='md:text-lg xl:text-xl text-center md:pt-6 pb-12 tracking-wide'>
           We accept payment: Iraq / AsiaPay{' '}
