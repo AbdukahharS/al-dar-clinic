@@ -362,12 +362,10 @@ const AppointmentDetails = () => {
         <div className='border-8 border-red-500 rounded-full w-fit mx-auto my-5'>
                     <FaExclamation className='text-red-500 text-5xl' />
                   </div>
-                  <p className='text-xl lg:text-3xl font-medium  text-center  mt-4 tracking-wide'>
-                    Are you sure?
+                  <p className='text-xl lg:text-2xl font-medium  text-center  my-8 tracking-wide'>
+                   Please confirm — cancel this appointment?
                   </p>
-                  <p className='text-center my-4 '>
-                    You will not be able to recover the deleted record!
-                  </p>
+                  
       <div className="flex justify-center gap-4">
         <button
           className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 font-semibold"

@@ -136,7 +136,7 @@ const calculateEndTime = (startTime, duration) => {
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
                 Patient Name
               </th>
-              <th className='px-4 py-5 font-medium whitespace-nowrap'>Type</th>
+              
               <th className='px-4 py-5 font-medium whitespace-nowrap'>Email</th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
                 Schedule
@@ -162,9 +162,7 @@ const calculateEndTime = (startTime, duration) => {
                 <td className='px-3 py-4 whitespace-nowrap text-center'>
                   {order.fullname}
                 </td>
-                <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  {order.medium}
-                </td>
+                
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
                   {order.email}
                 </td>
