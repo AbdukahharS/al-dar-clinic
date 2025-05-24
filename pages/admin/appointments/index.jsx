@@ -60,6 +60,40 @@ const Appointments = () => {
   const showingFrom = (page - 1) * limit + 1
   const showingTo = Math.min(page * limit, total)
 
+  console.log('Appointments:', data);
+
+const calculateEndTime = (startTime, duration) => {
+  // Convert 12-hour format to minutes
+  const timeToMinutes = (time) => {
+    let [timePart, period] = time.split(' ')
+    let [hours, minutes] = timePart.split(':').map(Number)
+
+    if (period === 'PM' && hours !== 12) hours += 12
+    if (period === 'AM' && hours === 12) hours = 0
+
+    return hours * 60 + minutes
+  }
+
+  // Convert minutes to 12-hour format with AM/PM
+  const formatTime = (minutes) => {
+    let hours = Math.floor(minutes / 60) % 24
+    let mins = minutes % 60
+    let period = hours >= 12 ? 'PM' : 'AM'
+
+    hours = hours % 12 || 12 // Convert 0 to 12 for 12-hour format
+    return `${String(hours).padStart(2, '0')}:${String(mins).padStart(
+      2,
+      '0'
+    )} ${period}`
+  }
+
+  let startMinutes = timeToMinutes(startTime)
+  let endMinutes = startMinutes + Number(duration)
+
+  return formatTime(endMinutes)
+}
+  
+
   return (
     <div>
       <div className='h-[104px]'></div>
@@ -102,11 +136,18 @@ const Appointments = () => {
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
                 Patient Name
               </th>
-              <th className='px-4 py-5 font-medium whitespace-nowrap'>Type</th>
+              
               <th className='px-4 py-5 font-medium whitespace-nowrap'>Email</th>
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
                 Schedule
               </th>
+              <th className='px-4 py-5 font-medium whitespace-nowrap'>
+                Slot
+              </th>
+              <th className='px-4 py-5 font-medium whitespace-nowrap'>
+                Therapist
+              </th>
+              
               <th className='px-4 py-5 font-medium whitespace-nowrap'>
                 Action
               </th>
@@ -121,14 +162,23 @@ const Appointments = () => {
                 <td className='px-3 py-4 whitespace-nowrap text-center'>
                   {order.fullname}
                 </td>
-                <td className='px-3 py-4 text-center whitespace-nowrap'>
-                  {order.medium}
-                </td>
+                
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
                   {order.email}
                 </td>
                 <td className='px-3 py-4 text-center whitespace-nowrap'>
                   {new Date(order.date).toLocaleDateString()}
+                </td>
+                <td className='px-3 py-4 text-center whitespace-nowrap'>
+                  {order?.Slots
+                      ? `${order?.Slots?.startTime} - ${calculateEndTime(
+                          order?.Slots?.startTime,
+                          order?.Slots?.duration
+                        )}`
+                      : '-'}
+                </td>
+                 <td className='px-3 py-4 text-center whitespace-nowrap'>
+                  {order?.Slots?.teamMember?.name}
                 </td>
                 <td className='px-3 py-4 text-primary whitespace-nowrap'>
                   <Link href={`/admin/appointments/${order.id}`}>
