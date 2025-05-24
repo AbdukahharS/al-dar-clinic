@@ -126,7 +126,11 @@ const useAuth = () => {
       toast.success(
         'Congrats! You have successfully logged in with your phone!'
       )
-      router.push('/')
+      const redirectTo = localStorage.getItem('redirectTo')
+      if (redirectTo) {
+        localStorage.removeItem('redirectTo')
+      }
+      router.push(redirectTo || '/')
     } catch (error) {
       console.error('Login with phone error:', error)
       toast.error(
@@ -191,7 +195,13 @@ const useAuth = () => {
       localStorage.setItem('userToken', res.data.token)
       localStorage.setItem('userId', res.data.id)
       toast.success('You have logged in successfully!')
-      router.push('/')
+      const redirectTo = localStorage.getItem('redirectTo')
+      console.log('RedirectTo:', redirectTo);
+      
+      if (redirectTo) {
+        localStorage.removeItem('redirectTo')
+      }
+      router.push(redirectTo || '/')
     } catch (err) {
       console.error(err)
       toast.error(err?.response?.data?.message || 'Error')
@@ -212,7 +222,11 @@ const useAuth = () => {
       localStorage.setItem('userToken', res.data.token)
       localStorage.setItem('userId', res.data.id)
       toast.success('You have logged in successfully!')
-      router.push('/')
+      const redirectTo = localStorage.getItem('redirectTo')
+      if (redirectTo) {
+        localStorage.removeItem('redirectTo')
+      }
+      router.push(redirectTo || '/')
     } catch (err) {
       console.error(err)
       toast.error(err?.response?.data?.message || 'Error')

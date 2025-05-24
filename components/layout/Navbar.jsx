@@ -64,7 +64,7 @@ const Navbar = () => {
             Products
           </AnimatedLink>
           <Link href={isAuthenticated ? '/book' : '/auth'}>
-            <Button variant='primary'>Book now</Button>
+            <Button variant='primary' onClick={() => localStorage.setItem('redirectTo', '/book')}>Book now</Button>
           </Link>
           {isAuthenticated && !loading?.user && (
             <>

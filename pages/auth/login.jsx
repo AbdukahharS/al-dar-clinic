@@ -26,7 +26,11 @@ const Login = () => {
   } = useForm()
 
   const onSubmit = async (data) => {
-    await login(data)
+    const redirectTo = localStorage.getItem('redirectTo')
+    if (redirectTo) {
+      localStorage.removeItem('redirectTo')
+    }
+    await login(data, redirectTo)
   }
 
   // State to toggle password visibility
